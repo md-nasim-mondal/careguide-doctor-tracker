@@ -12,11 +12,17 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetchApi("/auth/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      localStorage.setItem("token", res.data.accessToken);
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+      
       router.push("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
