@@ -18,9 +18,9 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
   let error = "";
 
   try {
-    const res = await fetchServerApi(`/doctors?page=${page}&limit=${limit}&searchTerm=${search}`);
+    const res = await fetchServerApi(`/doctors?page=${page}&limit=${limit}&search=${search}`);
     initialDoctors = res.data?.doctors || [];
-    totalPages = res.data?.meta?.totalPages || 1;
+    totalPages = Math.ceil((res.data?.total || 0) / limit) || 1;
   } catch (err: unknown) {
     if (err instanceof Error) {
       error = err.message;

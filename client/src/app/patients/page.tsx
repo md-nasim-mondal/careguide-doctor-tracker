@@ -1,56 +1,65 @@
-"use client";
-import { useEffect, useState } from "react";
-import { fetchApi } from "@/lib/api";
+import { fetchServerApi } from "@/lib/serverApi";
+import { PatientClientShell } from "@/components/patients/PatientClientShell";
 
-export default function Patients() {
-  const [patients, setPatients] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const instant = false;
 
-  useEffect(() => {
-    fetchApi("/patients?page=1&limit=50")
-      .then((res) => {
-        setPatients(res.data.patients || []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+type PageProps = {
+  searchParams: Promise<{ page?: string; search?: string; condition?: string; date?: string }>;
+};
 
-  if (loading) return <div className="p-8">Loading patients...</div>;
+export default async function PatientsPage({ searchParams }: PageProps) {
+  const resolvedSearchParams = await searchParams;
+  const page = parseInt(resolvedSearchParams.page || "1", 10);
+  const search = resolvedSearchParams.search || "";
+  const condition = resolvedSearchParams.condition || "";
+  const date = resolvedSearchParams.date || "";
+  const limit = 10;
+
+  let initialPatients = [];
+  let doctorsList = [];
+  let totalPages = 1;
+  let error = "";
+
+  try {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      ...(search && { search }),
+      ...(condition && { condition }),
+      ...(date && { date }),
+    });
+
+    const [patientsRes, doctorsRes] = await Promise.all([
+      fetchServerApi(`/patients?${params.toString()}`),
+      fetchServerApi(`/doctors?limit=1000`) // fetch a large limit of doctors for the dropdown
+    ]);
+
+    initialPatients = patientsRes.data?.patients || [];
+    totalPages = Math.ceil((patientsRes.data?.total || 0) / limit) || 1;
+    doctorsList = doctorsRes.data?.doctors || [];
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      error = err.message;
+    } else {
+      error = "An unknown error occurred.";
+    }
+  }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Patient Management</h1>
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-4 border-b">Name</th>
-              <th className="p-4 border-b">Age</th>
-              <th className="p-4 border-b">Condition</th>
-              <th className="p-4 border-b">Assigned Doctor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {patients.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="p-4 text-center">No patients found.</td>
-              </tr>
-            ) : (
-              patients.map((pat: { _id: string; name: string; age: number; condition: string; doctor?: { name: string } }) => (
-                <tr key={pat._id} className="hover:bg-gray-50">
-                  <td className="p-4 border-b">{pat.name}</td>
-                  <td className="p-4 border-b">{pat.age}</td>
-                  <td className="p-4 border-b">{pat.condition}</td>
-                  <td className="p-4 border-b">{pat.doctor?.name || "N/A"}</td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+    <div className="p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-foreground">Patient Management</h1>
+      
+      {error && <div className="mb-4 p-4 bg-destructive/10 text-destructive rounded shadow-sm">{error}</div>}
+
+      <PatientClientShell 
+        initialPatients={initialPatients} 
+        doctors={doctorsList}
+        totalPages={totalPages} 
+        currentPage={page} 
+        currentSearch={search}
+        currentCondition={condition}
+        currentDate={date}
+      />
     </div>
   );
 }
