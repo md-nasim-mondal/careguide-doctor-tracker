@@ -2,6 +2,7 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 
@@ -12,6 +13,7 @@ const startServer = async () => {
     });
 
     console.log("✅ Connected to Database successfully!");
+    await seedSuperAdmin();
 
     server = app.listen(envVars.PORT, () => {
       console.log(`🚀 Server is listening at http://localhost:${envVars.PORT}`);

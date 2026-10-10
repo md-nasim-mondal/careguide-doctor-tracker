@@ -48,8 +48,18 @@ The application runs a clean separation of concerns:
    *Why we chose it:* We leveraged React Server Components exclusively for all list rendering and native paginations (`DoctorsPage`, `PatientsPage`) instead of traditional CSR `useEffect` hydration blocks. This ensures Next.js performs network interactions natively alongside the Node.js server, pre-building HTML skeletons, preventing "flickering" UI, scaling SEO potential, and securing `BACKEND_API_URL` solely behind Node's private networking scope. Interactivity (Form modals, pagination buttons, `recharts`) was stripped to isolated Client "Shells" rendering only explicit, sanitized inputs.
 
 ## Visual Evidence
-*(Screenshots will be placed here)*
-- **Dashboard Desktop**: `docs/screenshots/dashboard_desktop.png`
-- **Dashboard Mobile**: `docs/screenshots/dashboard_mobile.png`
-- **Doctors List Desktop**: `docs/screenshots/doctors_desktop.png`
-- **Patients List Desktop**: `docs/screenshots/patients_desktop.png`
+
+### Dashboard (Desktop)
+![Dashboard Desktop](docs/screenshots/dashboard_desktop.png)
+
+### Dashboard (Mobile)
+![Dashboard Mobile](docs/screenshots/dashboard_mobile.png)
+
+### Doctors List
+![Doctors List](docs/screenshots/doctors_desktop.png)
+
+### Patients List
+![Patients List](docs/screenshots/patients_desktop.png)
+
+### Analytics Dashboard
+![Analytics](docs/screenshots/analytics_desktop.png)
