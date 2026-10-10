@@ -1,46 +1,63 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { fetchApi } from "@/lib/api";
+import { fetchServerApi } from "@/lib/serverApi";
+import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
+import Link from "next/link";
 
-export default function Dashboard() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+export const instant = false;
 
-  useEffect(() => {
-    fetchApi("/dashboard")
-      .then((res) => {
-        setData(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        router.push("/login");
-      });
-  }, [router]);
+export default async function DashboardPage() {
+  let analytics = {
+    totalDoctors: 0,
+    totalPatients: 0,
+    patientsPerDoctor: [],
+    registrationsOverTime: []
+  };
+  let error = "";
 
-  if (loading) return <div className="p-8">Loading dashboard...</div>;
+  try {
+    const res = await fetchServerApi("/dashboard");
+    analytics = res.data || analytics;
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      error = err.message;
+    } else {
+      error = "An unknown error occurred loading the dashboard.";
+    }
+  }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 bg-blue-100 rounded shadow">
-          <h2 className="text-xl">Total Doctors</h2>
-          <p className="text-3xl font-semibold">{data.totalDoctors}</p>
-        </div>
-        <div className="p-4 bg-green-100 rounded shadow">
-          <h2 className="text-xl">Total Patients</h2>
-          <p className="text-3xl font-semibold">{data.totalPatients}</p>
-        </div>
-      </div>
-      <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Navigation</h2>
-        <div className="flex gap-4">
-          <button onClick={() => router.push("/doctors")} className="px-4 py-2 bg-blue-500 text-white rounded">Manage Doctors</button>
-          <button onClick={() => router.push("/patients")} className="px-4 py-2 bg-green-500 text-white rounded">Manage Patients</button>
+    <div className="p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-foreground">Analytics Dashboard</h1>
+        <div className="space-x-4">
+          <Link href="/doctors" className="text-primary hover:underline font-medium">Manage Doctors</Link>
+          <Link href="/patients" className="text-primary hover:underline font-medium">Manage Patients</Link>
+          <form action="/api/auth/logout" method="POST" className="inline">
+            <button type="submit" className="text-destructive hover:underline font-medium">Logout</button>
+          </form>
         </div>
       </div>
+
+      {error && (
+        <div className="mb-6 p-4 bg-destructive/10 text-destructive rounded shadow-sm border border-destructive/20">
+          {error}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-primary text-primary-foreground p-6 rounded shadow-md flex flex-col justify-center items-center">
+          <h2 className="text-lg font-medium opacity-90">Total Doctors</h2>
+          <p className="text-5xl font-bold mt-2">{analytics.totalDoctors}</p>
+        </div>
+        <div className="bg-success text-success-foreground p-6 rounded shadow-md flex flex-col justify-center items-center">
+          <h2 className="text-lg font-medium opacity-90">Total Patients</h2>
+          <p className="text-5xl font-bold mt-2">{analytics.totalPatients}</p>
+        </div>
+      </div>
+
+      <DashboardCharts 
+        patientsPerDoctor={analytics.patientsPerDoctor} 
+        registrationsOverTime={analytics.registrationsOverTime} 
+      />
     </div>
   );
 }
