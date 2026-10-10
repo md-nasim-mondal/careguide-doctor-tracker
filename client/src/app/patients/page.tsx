@@ -39,7 +39,7 @@ export default function Patients() {
                 <td colSpan={4} className="p-4 text-center">No patients found.</td>
               </tr>
             ) : (
-              patients.map((pat: any) => (
+              patients.map((pat: { _id: string; name: string; age: number; condition: string; doctor?: { name: string } }) => (
                 <tr key={pat._id} className="hover:bg-gray-50">
                   <td className="p-4 border-b">{pat.name}</td>
                   <td className="p-4 border-b">{pat.age}</td>

@@ -36,8 +36,12 @@ export default function Doctors() {
       setShowAddForm(false);
       setFormData({ name: '', specialization: '', hospital: '', phone: '', email: '' });
       loadDoctors();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 
@@ -82,7 +86,7 @@ export default function Doctors() {
             {doctors.length === 0 ? (
               <tr><td colSpan={5} className="p-4 text-center">No doctors found.</td></tr>
             ) : (
-              doctors.map((doc: any) => (
+              doctors.map((doc: { _id: string; name: string; specialization: string; hospital: string; phone: string; email: string }) => (
                 <tr key={doc._id} className="hover:bg-gray-50">
                   <td className="p-4 border-b">{doc.name}</td>
                   <td className="p-4 border-b">{doc.specialization}</td>
