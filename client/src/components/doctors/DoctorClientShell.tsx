@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createDoctorAction, removePatientFromDoctorAction } from "@/app/doctors/actions";
+import { createDoctorAction, removePatientFromDoctorAction, updateDoctorAction, deleteDoctorAction } from "@/app/doctors/actions";
 
 type Doctor = { _id: string; name: string; specialization: string; hospital: string; phone: string; email: string };
 type Patient = { _id: string; name: string; age: number; condition: string };
@@ -22,6 +22,8 @@ export function DoctorClientShell({
   // Modals & UI state
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   // Data for selected doctor (Ideally fetched separately via API route/Server action, we will simulate or use a client fetch for just the patients list to keep details fresh)
   const [doctorPatients, setDoctorPatients] = useState<Patient[]>([]);
@@ -42,6 +44,44 @@ export function DoctorClientShell({
     if (result.success) {
       setShowAddForm(false);
       // form resets via HTML automatically on unmount or we can ref it
+    } else {
+      alert(result.message);
+    }
+  };
+
+  const handleUpdateDoctor = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedDoctor) return;
+    const formData = new FormData(e.currentTarget);
+    const result = await updateDoctorAction(selectedDoctor._id, formData);
+    if (result.success) {
+      setIsEditing(false);
+      // Update local state selectively or rely on Server Action revalidation
+      // We rely on Server Action revalidation to refresh the list, but we update selected doc
+      setSelectedDoctor({
+        _id: selectedDoctor._id,
+        name: formData.get("name") as string,
+        specialization: formData.get("specialization") as string,
+        hospital: formData.get("hospital") as string,
+        phone: formData.get("phone") as string,
+        email: formData.get("email") as string,
+      });
+    } else {
+      alert(result.message);
+    }
+  };
+
+  const handleDeleteDoctor = async () => {
+    if (!selectedDoctor) return;
+    if (!confirm("Are you sure you want to delete this doctor?")) return;
+    
+    setIsDeleting(true);
+    const result = await deleteDoctorAction(selectedDoctor._id);
+    setIsDeleting(false);
+    
+    if (result.success) {
+      setSelectedDoctor(null);
+      setIsEditing(false);
     } else {
       alert(result.message);
     }
@@ -141,11 +181,33 @@ export function DoctorClientShell({
             <div className="bg-card border border-border rounded p-6 sticky top-6 text-foreground">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-xl font-bold">{selectedDoctor.name}</h3>
-                <button onClick={() => setSelectedDoctor(null)} className="text-muted-foreground hover:text-foreground">&times;</button>
+                <div className="flex gap-2">
+                  <button onClick={() => setIsEditing(!isEditing)} className="text-primary hover:underline text-sm">
+                    {isEditing ? "Cancel" : "Edit"}
+                  </button>
+                  <button onClick={handleDeleteDoctor} disabled={isDeleting} className="text-destructive hover:underline text-sm disabled:opacity-50">
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </button>
+                  <button onClick={() => { setSelectedDoctor(null); setIsEditing(false); }} className="text-muted-foreground hover:text-foreground text-sm">&times;</button>
+                </div>
               </div>
-              <p className="text-sm mb-1"><strong>Spec:</strong> {selectedDoctor.specialization}</p>
-              <p className="text-sm mb-1"><strong>Hospital:</strong> {selectedDoctor.hospital}</p>
-              <p className="text-sm"><strong>Contact:</strong> {selectedDoctor.phone} / {selectedDoctor.email}</p>
+              
+              {isEditing ? (
+                <form onSubmit={handleUpdateDoctor} className="flex flex-col gap-3">
+                  <input name="name" defaultValue={selectedDoctor.name} className="p-2 border border-input rounded bg-background text-sm" placeholder="Full Name" required />
+                  <input name="specialization" defaultValue={selectedDoctor.specialization} className="p-2 border border-input rounded bg-background text-sm" placeholder="Specialization" required />
+                  <input name="hospital" defaultValue={selectedDoctor.hospital} className="p-2 border border-input rounded bg-background text-sm" placeholder="Hospital" required />
+                  <input name="phone" defaultValue={selectedDoctor.phone} className="p-2 border border-input rounded bg-background text-sm" placeholder="Phone" required />
+                  <input name="email" type="email" defaultValue={selectedDoctor.email} className="p-2 border border-input rounded bg-background text-sm" placeholder="Email" required />
+                  <button type="submit" className="px-4 py-2 mt-2 bg-success text-success-foreground rounded hover:opacity-90 text-sm">Update Doctor</button>
+                </form>
+              ) : (
+                <>
+                  <p className="text-sm mb-1"><strong>Spec:</strong> {selectedDoctor.specialization}</p>
+                  <p className="text-sm mb-1"><strong>Hospital:</strong> {selectedDoctor.hospital}</p>
+                  <p className="text-sm"><strong>Contact:</strong> {selectedDoctor.phone} / {selectedDoctor.email}</p>
+                </>
+              )}
             </div>
           ) : (
             <div className="bg-muted border-2 border-dashed border-border rounded p-8 text-center text-muted-foreground sticky top-6">

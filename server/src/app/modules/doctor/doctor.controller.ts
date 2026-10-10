@@ -51,3 +51,36 @@ export const removePatientFromDoctor = catchAsync(async (req: Request, res: Resp
   await Patient.findOneAndDelete({ _id: req.params.patientId, doctor: req.params.id });
   sendResponse(res, { statusCode: 200, success: true, message: 'Patient removed from doctor', data: null });
 });
+
+export const updateDoctor = catchAsync(async (req: Request, res: Response) => {
+  const allowedFields = ['name', 'specialization', 'hospital', 'phone', 'email'];
+  const updateData: Record<string, any> = {};
+  
+  for (const field of allowedFields) {
+    if (req.body[field] !== undefined) {
+      updateData[field] = req.body[field];
+    }
+  }
+
+  const doctor = await Doctor.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
+  if (!doctor) {
+    throw new Error('Doctor not found');
+  }
+
+  sendResponse(res, { statusCode: 200, success: true, message: 'Doctor updated', data: doctor });
+});
+
+export const deleteDoctor = catchAsync(async (req: Request, res: Response) => {
+  const doctor = await Doctor.findById(req.params.id);
+  if (!doctor) {
+    throw new Error('Doctor not found');
+  }
+
+  const patientCount = await Patient.countDocuments({ doctor: req.params.id });
+  if (patientCount > 0) {
+    throw new Error(`Cannot delete doctor with ${patientCount} associated patient(s). Please reassign or delete these patients first.`);
+  }
+
+  await doctor.deleteOne();
+  sendResponse(res, { statusCode: 200, success: true, message: 'Doctor deleted', data: null });
+});

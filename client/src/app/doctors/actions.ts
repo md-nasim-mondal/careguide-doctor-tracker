@@ -39,3 +39,40 @@ export async function removePatientFromDoctorAction(doctorId: string, patientId:
     return { success: false, message: "An unknown error occurred" };
   }
 }
+
+export async function updateDoctorAction(id: string, formData: FormData) {
+  const name = formData.get("name") as string;
+  const specialization = formData.get("specialization") as string;
+  const hospital = formData.get("hospital") as string;
+  const phone = formData.get("phone") as string;
+  const email = formData.get("email") as string;
+
+  try {
+    await fetchServerApi(`/doctors/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({ name, specialization, hospital, phone, email }),
+    });
+    revalidatePath("/doctors");
+    return { success: true };
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return { success: false, message: err.message };
+    }
+    return { success: false, message: "An unknown error occurred" };
+  }
+}
+
+export async function deleteDoctorAction(id: string) {
+  try {
+    await fetchServerApi(`/doctors/${id}`, {
+      method: "DELETE",
+    });
+    revalidatePath("/doctors");
+    return { success: true };
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      return { success: false, message: err.message };
+    }
+    return { success: false, message: "An unknown error occurred" };
+  }
+}
