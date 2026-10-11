@@ -23,7 +23,10 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
   }
 
   if (isUserExist.isActive !== IsActive.ACTIVE) {
-    throw new AppError(httpStatus.FORBIDDEN, `This user is ${isUserExist.isActive}`);
+    if (isUserExist.role === "SENDER" && isUserExist.isActive === IsActive.INACTIVE) {
+      throw new AppError(httpStatus.FORBIDDEN, "Your doctor account is pending admin approval. You will be able to log in once approved by an administrator.");
+    }
+    throw new AppError(httpStatus.FORBIDDEN, `This user account is ${isUserExist.isActive.toLowerCase()}`);
   }
 
   if (!isUserExist.password) {

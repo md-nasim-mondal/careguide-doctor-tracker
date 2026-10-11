@@ -29,6 +29,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
 
   let initialPatients: PatientItem[] = [];
   let doctorsList: DoctorOption[] = [];
+  let conditionsList: string[] = [];
   let totalPages = 1;
   let fetchError = "";
 
@@ -41,13 +42,15 @@ export default async function PatientsPage({ searchParams }: PageProps) {
       ...(date && { date }),
     });
 
-    const [patientsRes, doctorsRes] = await Promise.all([
+    const [patientsRes, doctorsRes, conditionsRes] = await Promise.all([
       fetchServerApi(`/patients?${params.toString()}`),
       fetchServerApi("/doctors?limit=100"),
+      fetchServerApi("/patients/conditions").catch(() => ({ data: [] })),
     ]);
 
     initialPatients = patientsRes.data?.patients || [];
     doctorsList = doctorsRes.data?.doctors || [];
+    conditionsList = conditionsRes.data || [];
     totalPages = Math.ceil((patientsRes.data?.total || 0) / limit) || 1;
   } catch (err: unknown) {
     if (err instanceof Error) {
@@ -103,6 +106,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
         search={search}
         condition={condition}
         date={date}
+        conditionsList={conditionsList}
         showAddForm={showAddForm}
         buildQuery={buildQuery}
       />

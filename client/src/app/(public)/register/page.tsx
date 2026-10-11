@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { registerAction } from "@/actions/auth";
 import { BrandLogoIcon } from "@/components/common/BrandLogo";
+import RegisterForm from "@/components/auth/RegisterForm";
 
 export const instant = false;
 
@@ -46,83 +46,7 @@ export default async function RegisterPage({ searchParams }: PageProps) {
         )}
 
         {/* Register Form using SSR Server Action */}
-        <form action={registerAction} className="space-y-3.5">
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-              Full Name *
-            </label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Dr. John Doe / Sarah Smith"
-              className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-              Email Address *
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="john@example.com"
-              className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-              Password *
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Pass@1234"
-              className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-                Phone (Optional)
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="+8801700000000"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-                City / Address (Optional)
-              </label>
-              <input
-                type="text"
-                name="address"
-                placeholder="Dhaka, Bangladesh"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              />
-            </div>
-          </div>
-
-          <p className="text-[11px] text-muted-foreground">
-            Password tip: minimum 8 characters with uppercase, number and special character.
-          </p>
-
-          <button
-            type="submit"
-            className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 transition cursor-pointer"
-          >
-            Create Account
-          </button>
-        </form>
+        <RegisterForm />
 
         {/* Footer Link */}
         <div className="mt-6 text-center text-xs sm:text-sm text-muted-foreground">

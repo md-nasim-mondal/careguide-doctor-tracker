@@ -109,10 +109,16 @@ const deletePatient = async (id: string) => {
   });
 };
 
+const getDistinctConditions = async () => {
+  const conditions = await Patient.distinct('condition');
+  return conditions.filter(Boolean).sort();
+};
+
 export const PatientServices = {
   createPatient,
   getAllPatients,
   getPatientById,
   updatePatient,
   deletePatient,
+  getDistinctConditions,
 };

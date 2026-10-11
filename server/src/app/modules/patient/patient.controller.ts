@@ -54,10 +54,21 @@ export const deletePatient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+export const getConditions = catchAsync(async (_req: Request, res: Response) => {
+  const conditions = await PatientServices.getDistinctConditions();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Distinct conditions fetched',
+    data: conditions,
+  });
+});
+
 export const PatientControllers = {
   createPatient,
   getPatients,
   getPatient,
   updatePatient,
   deletePatient,
+  getConditions,
 };

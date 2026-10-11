@@ -5,6 +5,7 @@ export default function PatientFilterBar({
   search,
   condition,
   date,
+  conditionsList = [],
   showAddForm,
   buildQuery,
 }: PatientFilterBarProps) {
@@ -18,12 +19,22 @@ export default function PatientFilterBar({
           defaultValue={search}
           className="p-2.5 border border-input rounded bg-card text-foreground text-xs sm:text-sm focus:ring-2 focus:ring-ring"
         />
-        <input
+        <select
           name="condition"
-          placeholder="Filter condition..."
           defaultValue={condition}
           className="p-2.5 border border-input rounded bg-card text-foreground text-xs sm:text-sm focus:ring-2 focus:ring-ring"
-        />
+        >
+          <option value="">All Conditions (Filter)</option>
+          {conditionsList.map((cond) => (
+            <option key={cond} value={cond}>
+              {cond}
+            </option>
+          ))}
+          {/* If the current query condition is not in conditionsList yet, render it as an option so selection is preserved */}
+          {condition && !conditionsList.includes(condition) && (
+            <option value={condition}>{condition}</option>
+          )}
+        </select>
         <input
           type="date"
           name="date"

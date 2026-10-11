@@ -21,6 +21,7 @@ export interface PatientFilterBarProps {
   search: string;
   condition: string;
   date: string;
+  conditionsList?: string[];
   showAddForm: boolean;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }

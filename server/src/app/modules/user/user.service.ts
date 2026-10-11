@@ -4,8 +4,9 @@ import { JwtPayload } from "jsonwebtoken";
 import mongoose from "mongoose";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
-import { IAuthProvider, IUser, Role } from "./user.interface";
+import { IAuthProvider, IUser, IsActive, Role } from "./user.interface";
 import { User } from "./user.model";
+import { Doctor } from "../doctor/doctor.model";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { userSearchableFields } from "./user.constant";
 import { sendEmail } from "../../utils/sendEmail";
@@ -13,8 +14,11 @@ import { ms } from "../../utils/ms";
 
 import { withTransaction } from "../../utils/withTransaction";
 
-const createUser = async (payload: Partial<IUser>) => {
-  const { email, password, ...rest } = payload;
+const createUser = async (payload: Partial<IUser> & { specialization?: string; hospital?: string }) => {
+  const { email, password, specialization, hospital, role: reqRole, ...rest } = payload;
+
+  const role = reqRole || Role.RECEIVER; // Default new registrations to RECEIVER (Patient)
+  const isDoctorRegistration = role === Role.SENDER;
 
   const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
   const verificationCodeExpires = new Date(Date.now() + ms(envVars.OTP_EXPIRES));
@@ -36,6 +40,10 @@ const createUser = async (payload: Partial<IUser>) => {
       providerId: email as string,
     };
 
+    // If registering as Doctor (SENDER), default to INACTIVE pending admin approval
+    // If registering as Patient (RECEIVER), activate immediately
+    const initialStatus = isDoctorRegistration ? IsActive.INACTIVE : IsActive.ACTIVE;
+
     const [newUser] = await User.create(
       [
         {
@@ -44,11 +52,33 @@ const createUser = async (payload: Partial<IUser>) => {
           auths: [authProvider],
           verificationCode,
           verificationCodeExpires,
+          role,
+          isActive: initialStatus,
+          isVerified: !isDoctorRegistration,
           ...rest,
         },
       ],
       session ? { session } : {}
     );
+
+    // If Doctor registered, also link/create Doctor profile if specialization & hospital provided
+    if (isDoctorRegistration) {
+      const existingDoc = await Doctor.findOne({ email }).session(session || null);
+      if (!existingDoc) {
+        await Doctor.create(
+          [
+            {
+              name: newUser.name,
+              email: newUser.email,
+              phone: newUser.phone || "01700000000",
+              specialization: specialization || "General Medicine",
+              hospital: hospital || "DocPulse Medical Center",
+            },
+          ],
+          session ? { session } : {}
+        );
+      }
+    }
 
     return newUser;
   });
@@ -194,6 +224,47 @@ const verifyEmail = async (email: string, code: string) => {
   return user;
 };
 
+const deleteUser = async (userId: string, decodedToken: JwtPayload) => {
+  if (
+    decodedToken.role !== Role.SUPER_ADMIN &&
+    decodedToken.role !== Role.ADMIN
+  ) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to delete users");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (user.role === Role.SUPER_ADMIN && decodedToken.role !== Role.SUPER_ADMIN) {
+    throw new AppError(httpStatus.FORBIDDEN, "Only a Super Admin can delete another Super Admin");
+  }
+
+  await User.findByIdAndDelete(userId);
+  return null;
+};
+
+const approveDoctorUser = async (userId: string, decodedToken: JwtPayload) => {
+  if (
+    decodedToken.role !== Role.SUPER_ADMIN &&
+    decodedToken.role !== Role.ADMIN
+  ) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized to approve doctors");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  user.isActive = IsActive.ACTIVE;
+  user.isVerified = true;
+  await user.save();
+
+  return user;
+};
+
 export const UserServices = {
   createUser,
   getAllUsers,
@@ -201,4 +272,6 @@ export const UserServices = {
   getSingleUser,
   getMe,
   verifyEmail,
+  deleteUser,
+  approveDoctorUser,
 };

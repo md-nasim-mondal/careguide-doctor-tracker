@@ -85,13 +85,16 @@ export async function registerAction(formData: FormData) {
     redirect(`/register?error=${encodeURIComponent(validation.error)}`);
   }
 
-  const { name, email, password, phone } = validation.data;
+  const { name, email, password, phone, role, specialization, hospital } = validation.data;
   const address = formData.get("address") as string | null;
 
   try {
     const payload: Record<string, unknown> = { name, email, password };
     if (phone) payload.phone = phone;
     if (address && address.trim()) payload.address = address.trim();
+    if (role) payload.role = role;
+    if (specialization && specialization.trim()) payload.specialization = specialization.trim();
+    if (hospital && hospital.trim()) payload.hospital = hospital.trim();
 
     const response = await fetch(`${BACKEND_API_URL}/user/register`, {
       method: "POST",
@@ -108,7 +111,11 @@ export async function registerAction(formData: FormData) {
     redirect(`/register?error=${encodeURIComponent(message)}`);
   }
 
-  redirect(`/login?success=${encodeURIComponent("Account registered successfully! Please sign in.")}`);
+  const successMsg = role === "SENDER"
+    ? "Doctor account registered successfully! Your account is pending Admin approval before you can sign in."
+    : "Account registered successfully! Please sign in.";
+
+  redirect(`/login?success=${encodeURIComponent(successMsg)}`);
 }
 
 /**

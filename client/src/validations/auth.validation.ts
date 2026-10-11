@@ -24,6 +24,9 @@ export const registerValidationSchema = z.object({
       (val) => !val || /^(?:\+8801\d{9}|01\d{9})$/.test(val),
       "Phone number must be valid for Bangladesh (e.g., 01XXXXXXXXX or +8801XXXXXXXXX)"
     ),
+  role: z.enum(["RECEIVER", "SENDER"]).optional(),
+  specialization: z.string().optional(),
+  hospital: z.string().optional(),
 });
 
 export const forgotPasswordValidationSchema = z.object({

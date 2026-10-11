@@ -25,10 +25,20 @@ router.get(
   UserControllers.getSingleUser
 );
 router.patch(
+  "/:id/approve-doctor",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  UserControllers.approveDoctor
+);
+router.patch(
   "/:id",
   validateRequest(updateUserZodSchema),
   checkAuth(...Object.values(Role)),
   UserControllers.updateUser
+);
+router.delete(
+  "/:id",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  UserControllers.deleteUser
 );
 // /api/v1/user/:id
 export const UserRoutes = router;

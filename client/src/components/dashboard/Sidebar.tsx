@@ -28,7 +28,7 @@ export function Sidebar({ user }: SidebarProps) {
 
     if (role === "SENDER") {
       return [
-        { name: "Care Coordinator", href: "/dashboard", icon: "🏥" },
+        { name: "Doctor Dashboard", href: "/dashboard", icon: "🏥" },
         { name: "Doctors Directory", href: "/dashboard/doctors", icon: "🩺" },
         { name: "Patient Care", href: "/dashboard/patients", icon: "👥" },
         { name: "Change Password", href: "/dashboard/change-password", icon: "🔒" },
@@ -40,6 +40,7 @@ export function Sidebar({ user }: SidebarProps) {
       { name: "Dashboard Overview", href: "/dashboard", icon: "📊" },
       { name: "Doctor Management", href: "/dashboard/doctors", icon: "🩺" },
       { name: "Patient Management", href: "/dashboard/patients", icon: "👥" },
+      { name: "User Management", href: "/dashboard/users", icon: "🛡️" },
       { name: "Change Password", href: "/dashboard/change-password", icon: "🔒" },
     ];
   };
@@ -62,13 +63,13 @@ export function Sidebar({ user }: SidebarProps) {
         };
       case "SENDER":
         return {
-          label: "Care Staff",
+          label: "Doctor / Specialist",
           badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800",
           dotClass: "bg-emerald-600",
         };
       case "RECEIVER":
         return {
-          label: "Patient / User",
+          label: "Patient",
           badgeClass: "bg-slate-100 text-slate-800 border-slate-200/80 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
           dotClass: "bg-slate-500",
         };

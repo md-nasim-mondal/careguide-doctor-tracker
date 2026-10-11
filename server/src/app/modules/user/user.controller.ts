@@ -86,6 +86,32 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const verifiedToken = req.user;
+  await UserServices.deleteUser(id, verifiedToken as JwtPayload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User deleted successfully",
+    data: null,
+  });
+});
+
+const approveDoctor = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const verifiedToken = req.user;
+  const result = await UserServices.approveDoctorUser(id, verifiedToken as JwtPayload);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Doctor account approved successfully",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createUser,
   getAllUsers,
@@ -93,6 +119,8 @@ export const UserControllers = {
   updateUser,
   getSingleUser,
   verifyEmail,
+  deleteUser,
+  approveDoctor,
 };
 
 // route matching -> controller -> service -> model -> DB
