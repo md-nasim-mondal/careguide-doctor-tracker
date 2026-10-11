@@ -63,15 +63,15 @@ export function Sidebar({ user }: SidebarProps) {
   const getRoleColor = () => {
     switch (role) {
       case "SUPER_ADMIN":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300";
+        return "bg-purple-700 text-white font-bold border border-purple-800 shadow-xs";
       case "ADMIN":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300";
+        return "bg-blue-700 text-white font-bold border border-blue-800 shadow-xs";
       case "SENDER":
-        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300";
+        return "bg-emerald-700 text-white font-bold border border-emerald-800 shadow-xs";
       case "RECEIVER":
-        return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
+        return "bg-amber-700 text-white font-bold border border-amber-800 shadow-xs";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-slate-700 text-white font-bold border border-slate-800 shadow-xs";
     }
   };
 
@@ -136,7 +136,7 @@ export function Sidebar({ user }: SidebarProps) {
                 {user?.name || "Care User"}
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${getRoleColor()}`}>
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-md tracking-wide ${getRoleColor()}`}>
                   {getRoleLabel()}
                 </span>
               </div>
