@@ -1,4 +1,5 @@
 import httpStatus from 'http-status-codes';
+import mongoose from 'mongoose';
 import AppError from '../../errorHelpers/AppError';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { Patient } from '../patient/patient.model';
@@ -50,21 +51,53 @@ const getDoctorPatients = async (doctorId: string) => {
 };
 
 const addPatientToDoctor = async (doctorId: string, payload: Partial<IPatient>) => {
-  const doctor = await Doctor.findById(doctorId);
-  if (!doctor) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
-  }
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-  const patient = await Patient.create({ ...payload, doctor: doctorId });
-  return patient;
+    const doctor = await Doctor.findById(doctorId).session(session);
+    if (!doctor) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
+    }
+
+    const [patient] = await Patient.create([{ ...payload, doctor: doctorId }], { session });
+
+    await session.commitTransaction();
+    return patient;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
 };
 
 const removePatientFromDoctor = async (doctorId: string, patientId: string) => {
-  const patient = await Patient.findOneAndDelete({ _id: patientId, doctor: doctorId });
-  if (!patient) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Patient not found for this doctor');
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const doctor = await Doctor.findById(doctorId).session(session);
+    if (!doctor) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
+    }
+
+    const patient = await Patient.findOneAndDelete(
+      { _id: patientId, doctor: doctorId },
+      { session }
+    );
+    if (!patient) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Patient not found for this doctor');
+    }
+
+    await session.commitTransaction();
+    return patient;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
   }
-  return patient;
 };
 
 const updateDoctor = async (id: string, payload: Partial<IDoctor>) => {
@@ -90,21 +123,33 @@ const updateDoctor = async (id: string, payload: Partial<IDoctor>) => {
 };
 
 const deleteDoctor = async (id: string) => {
-  const doctor = await Doctor.findById(id);
-  if (!doctor) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
-  }
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-  const patientCount = await Patient.countDocuments({ doctor: id });
-  if (patientCount > 0) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `Cannot delete doctor with ${patientCount} associated patient(s). Please reassign or delete these patients first.`
-    );
-  }
+    const doctor = await Doctor.findById(id).session(session);
+    if (!doctor) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
+    }
 
-  await doctor.deleteOne();
-  return null;
+    const patientCount = await Patient.countDocuments({ doctor: id }).session(session);
+    if (patientCount > 0) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Cannot delete doctor with ${patientCount} associated patient(s). Please reassign or delete these patients first.`
+      );
+    }
+
+    await doctor.deleteOne({ session });
+
+    await session.commitTransaction();
+    return null;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
 };
 
 export const DoctorServices = {

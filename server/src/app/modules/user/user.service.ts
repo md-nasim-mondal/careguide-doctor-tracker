@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
+import mongoose from "mongoose";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
 import { IAuthProvider, IUser, Role } from "./user.interface";
@@ -13,45 +14,62 @@ import { ms } from "../../utils/ms";
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
 
-  const isUserExist = await User.findOne({ email });
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-  if (isUserExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "User Already Exist");
+    const isUserExist = await User.findOne({ email }).session(session);
+
+    if (isUserExist) {
+      throw new AppError(httpStatus.BAD_REQUEST, "User Already Exist");
+    }
+
+    const hashedPassword = await bcryptjs.hash(
+      password as string,
+      Number(envVars.BCRYPT_SALT_ROUND)
+    );
+
+    const authProvider: IAuthProvider = {
+      provider: "credentials",
+      providerId: email as string,
+    };
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
+    const verificationCodeExpires = new Date(Date.now() + ms(envVars.OTP_EXPIRES));
+
+    const [user] = await User.create(
+      [
+        {
+          email,
+          password: hashedPassword,
+          auths: [authProvider],
+          verificationCode,
+          verificationCodeExpires,
+          ...rest,
+        },
+      ],
+      { session }
+    );
+
+    await session.commitTransaction();
+
+    await sendEmail({
+      to: user.email,
+      subject: "Verify Your Email",
+      templateName: "verifyEmail",
+      templateData: {
+        name: user.name,
+        code: verificationCode,
+      },
+    });
+
+    return user;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
   }
-
-  const hashedPassword = await bcryptjs.hash(
-    password as string,
-    Number(envVars.BCRYPT_SALT_ROUND)
-  );
-
-  const authProvider: IAuthProvider = {
-    provider: "credentials",
-    providerId: email as string,
-  };
-
-  const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
-  const verificationCodeExpires = new Date(Date.now() + ms(envVars.OTP_EXPIRES));
-
-  const user = await User.create({
-    email,
-    password: hashedPassword,
-    auths: [authProvider],
-    verificationCode,
-    verificationCodeExpires,
-    ...rest,
-  });
-
-  await sendEmail({
-    to: user.email,
-    subject: "Verify Your Email",
-    templateName: "verifyEmail",
-    templateData: {
-      name: user.name,
-      code: verificationCode,
-    },
-  });
-
-  return user;
 };
 
 const updateUser = async (
