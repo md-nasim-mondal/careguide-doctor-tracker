@@ -47,7 +47,7 @@ src/
 ### 1. Prerequisites
 -   Node.js (v16+)
 -   MongoDB (Local or Atlas)
--   npm or yarn
+-   pnpm (v11+ / v12+)
 
 ### 2. Installation
 ```bash
@@ -55,7 +55,7 @@ src/
 git clone <your-repo-url>
 
 # Install dependencies
-npm install
+pnpm install --frozen-lockfile
 ```
 
 ### 3. Environment Setup
@@ -67,13 +67,13 @@ cp .env.example .env
 ### 4. Running the Application
 ```bash
 # Development mode
-npm run dev
+pnpm run dev
 
 # Build the project
-npm run build
+pnpm run build
 
 # Production mode
-npm start
+pnpm start
 ```
 
 ---
@@ -92,11 +92,11 @@ AUTH_SYSTEM=passport # Uses Passport.js (Sessions + Google OAuth)
 
 ## 🛠️ Scripts
 
--   `npm run dev`: Start development server with ts-node-dev.
--   `npm run build`: Compile TypeScript to JavaScript.
--   `npm start`: Run the compiled production build.
--   `npm run lint`: Check for linting errors.
--   `npm run fix`: Automatically fix linting errors.
+-   `pnpm run dev`: Start development server with ts-node-dev.
+-   `pnpm run build`: Compile TypeScript to JavaScript.
+-   `pnpm start`: Run the compiled production build.
+-   `pnpm run lint`: Check for linting errors.
+-   `pnpm run lint:fix`: Automatically fix linting errors.
 
 ---
 

@@ -15,20 +15,20 @@ To set up the project locally:
 2. **Backend Setup**:
    ```bash
    cd server
-   npm install
+   pnpm install --frozen-lockfile
    cp .env.example .env
    # Make sure you have MongoDB running locally or replace DB_URL with a MongoDB Atlas URI in .env
-   npm run dev
+   pnpm run dev
    ```
    *The backend runs on `http://localhost:5000` by default. Super Admin credentials can be configured in `.env` and initialized.*
 
 3. **Frontend Setup**:
    ```bash
    cd ../client
-   npm install
+   pnpm install --frozen-lockfile
    cp .env.example .env
    # Starts the client application
-   npm run dev
+   pnpm run dev
    ```
    *The frontend runs on `http://localhost:3000`.*
 

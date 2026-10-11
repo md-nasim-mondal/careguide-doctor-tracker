@@ -77,9 +77,5 @@
     "redis": "^5.8.2",
     "zod": "^4.1.5"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "core-js"
-    ]
-  }
+  "packageManager": "pnpm@11.22.0"
 }
