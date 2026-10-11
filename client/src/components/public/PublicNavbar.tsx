@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import BrandLogo from "@/components/common/BrandLogo";
 
 export default function PublicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,16 +11,7 @@ export default function PublicNavbar() {
     <header className="border-b border-border bg-card/95 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 sm:gap-6 min-w-0">
-          <Link
-            href="/"
-            className="text-base sm:text-xl font-bold text-primary flex items-center gap-1.5 hover:opacity-90 transition-opacity shrink-0"
-          >
-            <span className="text-xl">🩺</span>
-            <span className="tracking-tight text-foreground">
-              <span className="inline">CareGuide</span>
-              <span className="hidden xs:inline"> Tracker</span>
-            </span>
-          </Link>
+          <BrandLogo href="/" size="sm" />
 
           <nav className="hidden md:flex items-center gap-5 text-sm font-medium">
             <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">

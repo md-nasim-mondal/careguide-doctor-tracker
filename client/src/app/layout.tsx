@@ -22,8 +22,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CareGuide - Doctor & Patient Tracking System",
-  description: "Administrative healthcare portal for doctor and patient management",
+  title: "DocPulse - Doctor & Patient Tracking System",
+  description: "Administrative healthcare portal for doctor and patient relationship management, workload distribution, and clinical analytics",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({

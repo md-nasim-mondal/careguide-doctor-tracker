@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IUserProfile } from "@/types";
 import { logoutAction } from "@/actions/auth";
+import BrandLogo from "@/components/common/BrandLogo";
 
 interface SidebarProps {
   user: IUserProfile | null;
@@ -79,10 +80,7 @@ export function Sidebar({ user }: SidebarProps) {
     <>
       {/* Mobile Top Navbar with Hamburger */}
       <div className="md:hidden flex items-center justify-between px-3 sm:px-4 h-14 bg-card border-b border-border sticky top-0 z-40">
-        <Link href="/dashboard" className="flex items-center gap-2 font-bold text-base text-primary">
-          <span>🩺</span>
-          <span className="truncate">CareGuide</span>
-        </Link>
+        <BrandLogo size="sm" href="/dashboard" />
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle Navigation Menu"
@@ -108,14 +106,7 @@ export function Sidebar({ user }: SidebarProps) {
       >
         {/* Brand Header */}
         <div className="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-border">
-          <Link
-            href="/dashboard"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-2.5 font-bold text-lg text-primary"
-          >
-            <span className="text-2xl">🩺</span>
-            <span className="tracking-tight text-foreground">CareGuide</span>
-          </Link>
+          <BrandLogo size="md" href="/dashboard" />
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close Sidebar"

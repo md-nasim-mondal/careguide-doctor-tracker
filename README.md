@@ -1,7 +1,7 @@
-# Doctor Tracker
+# DocPulse - Doctor Tracker
 
 ## Description
-Doctor Tracker is a secure administrative web application tailored for managing doctors and their corresponding patients. It provides authenticated super admins with an interactive dashboard with visualization charts, optimized Server-Side Rendered (SSR) interfaces, and a clean user experience (UX) to manage healthcare records. The project natively scales between a Next.js (App Router) client frontend and an Express.js (Node.js) backend utilizing MongoDB for structured data storage.
+DocPulse (Doctor Tracker) is a secure administrative web application tailored for managing doctors and their corresponding patients. It provides authenticated super admins with an interactive dashboard with visualization charts, optimized Server-Side Rendered (SSR) interfaces, and a clean user experience (UX) to manage healthcare records. The project natively scales between a Next.js (App Router) client frontend and an Express.js (Node.js) backend utilizing MongoDB for structured data storage.
 
 ## Setup Guide
 To set up the project locally:

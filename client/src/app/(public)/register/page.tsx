@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { registerAction } from "@/actions/auth";
+import { BrandLogoIcon } from "@/components/common/BrandLogo";
 
 export const instant = false;
 
@@ -17,14 +18,14 @@ export default async function RegisterPage({ searchParams }: PageProps) {
       <div className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-4 sm:p-8 transition-all">
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary text-2xl mb-3">
-            ✨
+          <div className="inline-flex items-center justify-center mb-3">
+            <BrandLogoIcon size={44} />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
             Create an Account
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Join the CareGuide Doctor Tracker platform
+            Join the DocPulse Doctor Tracker platform
           </p>
         </div>
 

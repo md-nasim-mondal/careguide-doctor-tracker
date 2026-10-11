@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
 export const metadata: Metadata = {
-  title: "CareGuide Doctor Tracker - Dashboard",
+  title: "DocPulse - Dashboard",
   description: "Doctor and patient management tracking platform",
 };
 

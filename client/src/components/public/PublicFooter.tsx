@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandLogo from "@/components/common/BrandLogo";
 
 export default function PublicFooter() {
   return (
@@ -6,10 +7,7 @@ export default function PublicFooter() {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
           <div className="md:col-span-2 space-y-3">
-            <div className="text-base sm:text-lg font-bold text-primary flex items-center gap-2">
-              <span>🩺</span>
-              <span>CareGuide Doctor Tracker</span>
-            </div>
+            <BrandLogo href="/" size="sm" />
             <p className="text-xs sm:text-sm text-muted-foreground max-w-md leading-relaxed">
               Empowering clinical teams with intelligent doctor-patient relationship tracking, real-time workload allocation, and administrative analytics.
             </p>
@@ -42,7 +40,7 @@ export default function PublicFooter() {
         </div>
 
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] sm:text-xs text-muted-foreground gap-3 sm:gap-4 text-center sm:text-left">
-          <p>© 2026 CareGuide Doctor Tracker. Built with Next.js, Express &amp; TypeScript.</p>
+          <p>© 2026 DocPulse Doctor Tracker. Built with Next.js, Express &amp; TypeScript.</p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
             <span>Privacy Policy</span>
             <span>•</span>

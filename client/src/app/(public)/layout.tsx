@@ -3,7 +3,7 @@ import PublicNavbar from "@/components/public/PublicNavbar";
 import PublicFooter from "@/components/public/PublicFooter";
 
 export const metadata: Metadata = {
-  title: "CareGuide Doctor Tracker - Clinical Operations & Analytics",
+  title: "DocPulse - Clinical Operations & Analytics",
   description: "Next-generation healthcare management and doctor-patient tracking platform for clinics and hospitals.",
 };
 

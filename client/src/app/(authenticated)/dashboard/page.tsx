@@ -46,7 +46,7 @@ export default async function DashboardPage() {
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              Your personal CareGuide patient portal and medical appointment overview.
+              Your personal DocPulse patient portal and medical appointment overview.
             </p>
           </div>
           <Link
@@ -73,7 +73,7 @@ export default async function DashboardPage() {
               <span className="text-xs font-medium text-muted-foreground">Hospital Network</span>
               <span className="text-base">🏥</span>
             </div>
-            <p className="text-lg sm:text-xl font-bold text-foreground mt-2">CareGuide Health</p>
+            <p className="text-lg sm:text-xl font-bold text-foreground mt-2">DocPulse Health</p>
             <p className="text-[11px] text-muted-foreground mt-0.5">Multi-specialty network</p>
           </div>
 
@@ -126,7 +126,7 @@ export default async function DashboardPage() {
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
               In case of medical emergencies, please reach out directly to the 24/7 hotline or
-              visit the nearest CareGuide affiliated medical centre.
+              visit the nearest DocPulse affiliated medical centre.
             </p>
             <div className="mt-4 p-3 bg-primary/10 text-primary rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2">
               <span>🚨</span>
