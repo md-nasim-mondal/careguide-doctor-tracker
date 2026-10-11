@@ -17,7 +17,7 @@ export async function createDoctorAction(formData: FormData) {
 
   const { name, specialization, hospital, phone, email } = validation.data;
 
-  let redirectUrl = "/dashboard/doctors";
+  let redirectUrl = "/dashboard/doctors?success=" + encodeURIComponent("Doctor created successfully!");
   try {
     await fetchServerApi("/doctors", {
       method: "POST",
@@ -39,7 +39,7 @@ export async function updateDoctorAction(id: string, formData: FormData) {
 
   const { name, specialization, hospital, phone, email } = validation.data;
 
-  let redirectUrl = `/dashboard/doctors?doctorId=${id}`;
+  let redirectUrl = `/dashboard/doctors?doctorId=${id}&success=` + encodeURIComponent("Doctor updated successfully!");
   try {
     await fetchServerApi(`/doctors/${id}`, {
       method: "PUT",
@@ -54,7 +54,7 @@ export async function updateDoctorAction(id: string, formData: FormData) {
 }
 
 export async function deleteDoctorAction(id: string) {
-  let redirectUrl = "/dashboard/doctors";
+  let redirectUrl = "/dashboard/doctors?success=" + encodeURIComponent("Doctor deleted successfully!");
   try {
     await fetchServerApi(`/doctors/${id}`, {
       method: "DELETE",
@@ -68,7 +68,7 @@ export async function deleteDoctorAction(id: string) {
 }
 
 export async function removePatientFromDoctorAction(doctorId: string, patientId: string) {
-  let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}`;
+  let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}&success=` + encodeURIComponent("Patient removed from doctor!");
   try {
     await fetchServerApi(`/doctors/${doctorId}/patients/${patientId}`, {
       method: "DELETE",
@@ -89,7 +89,7 @@ export async function addPatientToDoctorAction(doctorId: string, formData: FormD
 
   const { name, age, condition } = validation.data;
 
-  let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}`;
+  let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}&success=` + encodeURIComponent("Patient added to doctor successfully!");
   try {
     await fetchServerApi(`/doctors/${doctorId}/patients`, {
       method: "POST",

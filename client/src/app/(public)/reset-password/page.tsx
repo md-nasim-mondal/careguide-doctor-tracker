@@ -3,6 +3,7 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "@/components/common/Toast";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -26,22 +27,30 @@ function ResetPasswordForm() {
     setSuccess("");
 
     if (newPassword !== confirmPassword) {
-      setError("New password and confirm password do not match.");
+      const msg = "New password and confirm password do not match.";
+      setError(msg);
+      toast.error(msg, "Validation Error");
       return;
     }
 
     if (newPassword.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      const msg = "Password must be at least 6 characters long.";
+      setError(msg);
+      toast.error(msg, "Validation Error");
       return;
     }
 
     if (code.trim().length !== 4) {
-      setError("Reset code must be exactly 4 digits.");
+      const msg = "Reset code must be exactly 4 digits.";
+      setError(msg);
+      toast.error(msg, "Validation Error");
       return;
     }
 
     if (!id.trim() || !token.trim()) {
-      setError("Missing user ID or token. Please click the reset link sent to you.");
+      const msg = "Missing user ID or token. Please click the reset link sent to you.";
+      setError(msg);
+      toast.error(msg, "Missing Information");
       return;
     }
 
@@ -66,15 +75,14 @@ function ResetPasswordForm() {
       }
 
       setSuccess("Password has been reset successfully! Redirecting to login...");
+      toast.success("Password has been reset successfully! Redirecting to login...", "Success");
       setTimeout(() => {
         router.push("/login");
       }, 1500);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setError(msg);
+      toast.error(msg, "Reset Error");
     } finally {
       setIsLoading(false);
     }

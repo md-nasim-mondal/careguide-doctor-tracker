@@ -16,7 +16,7 @@ export async function createPatientAction(formData: FormData) {
 
   const { name, age, condition, doctor } = validation.data;
 
-  let redirectUrl = "/dashboard/patients";
+  let redirectUrl = "/dashboard/patients?success=" + encodeURIComponent("Patient created successfully!");
   try {
     await fetchServerApi("/patients", {
       method: "POST",
@@ -38,7 +38,7 @@ export async function updatePatientAction(id: string, formData: FormData) {
 
   const { name, age, condition, doctor } = validation.data;
 
-  let redirectUrl = "/dashboard/patients";
+  let redirectUrl = "/dashboard/patients?success=" + encodeURIComponent("Patient updated successfully!");
   try {
     await fetchServerApi(`/patients/${id}`, {
       method: "PUT",
@@ -53,7 +53,7 @@ export async function updatePatientAction(id: string, formData: FormData) {
 }
 
 export async function deletePatientAction(id: string) {
-  let redirectUrl = "/dashboard/patients";
+  let redirectUrl = "/dashboard/patients?success=" + encodeURIComponent("Patient deleted successfully!");
   try {
     await fetchServerApi(`/patients/${id}`, {
       method: "DELETE",

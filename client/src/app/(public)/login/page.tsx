@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "@/components/common/Toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,14 +30,13 @@ export default function LoginPage() {
         throw new Error(data.message || "Login failed. Please check credentials.");
       }
 
+      toast.success("Welcome back! Redirecting to dashboard...", "Login Successful");
       router.push("/dashboard");
       router.refresh();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setError(msg);
+      toast.error(msg, "Login Error");
     } finally {
       setIsLoading(false);
     }

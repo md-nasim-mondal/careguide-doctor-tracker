@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "@/components/common/Toast";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -32,12 +33,16 @@ export default function RegisterPage() {
     setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+      const msg = "Passwords do not match.";
+      setError(msg);
+      toast.error(msg, "Validation Error");
       return;
     }
 
     if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters long.");
+      const msg = "Password must be at least 8 characters long.";
+      setError(msg);
+      toast.error(msg, "Validation Error");
       return;
     }
 
@@ -76,15 +81,14 @@ export default function RegisterPage() {
       }
 
       setSuccess("Account registered successfully! Redirecting to login...");
+      toast.success("Account registered successfully! Please sign in.", "Welcome!");
       setTimeout(() => {
         router.push("/login");
       }, 1500);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setError(msg);
+      toast.error(msg, "Registration Error");
     } finally {
       setIsLoading(false);
     }

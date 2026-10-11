@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "@/components/common/Toast";
 
 export default function ChangePasswordPage() {
   const [oldPassword, setOldPassword] = useState("");
@@ -16,12 +17,16 @@ export default function ChangePasswordPage() {
     setSuccess("");
 
     if (newPassword !== confirmPassword) {
-      setError("New password and confirmation do not match.");
+      const msg = "New password and confirmation do not match.";
+      setError(msg);
+      toast.error(msg, "Validation Error");
       return;
     }
 
     if (newPassword.length < 6) {
-      setError("New password must be at least 6 characters long.");
+      const msg = "New password must be at least 6 characters long.";
+      setError(msg);
+      toast.error(msg, "Validation Error");
       return;
     }
 
@@ -40,16 +45,16 @@ export default function ChangePasswordPage() {
         throw new Error(data.message || "Failed to change password.");
       }
 
-      setSuccess("Your password has been changed successfully!");
+      const msg = "Your password has been changed successfully!";
+      setSuccess(msg);
+      toast.success(msg, "Password Changed");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setError(msg);
+      toast.error(msg, "Error");
     } finally {
       setIsLoading(false);
     }

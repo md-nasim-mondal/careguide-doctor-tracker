@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { toast } from "@/components/common/Toast";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -28,16 +29,15 @@ export default function ForgotPasswordPage() {
         throw new Error(data.message || "Failed to submit request.");
       }
 
-      setMessage(
+      const successMsg =
         data.message ||
-          "Password reset link generated! Check your email or check the server terminal in local development mode."
-      );
+        "Password reset link generated! Check your email or check the server terminal in local development mode.";
+      setMessage(successMsg);
+      toast.success(successMsg, "Instructions Sent");
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred. Please try again.");
-      }
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
+      setError(msg);
+      toast.error(msg, "Error");
     } finally {
       setIsLoading(false);
     }
