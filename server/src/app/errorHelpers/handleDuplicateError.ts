@@ -14,5 +14,3 @@ export const handleDuplicateError = (err: IMongoDuplicateError): TGenericErrorRe
   };
 };
 
-export const handlerDuplicateError = handleDuplicateError;
-

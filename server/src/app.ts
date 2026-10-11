@@ -10,6 +10,7 @@ import notFound from "./app/middlewares/notFound";
 import { router } from "./app/routes";
 
 const app = express();
+app.set("trust proxy", 1);
 
 // Security Middlewares
 app.use(helmet());
@@ -37,7 +38,6 @@ app.use("/api", limiter);
 // Standard Body Parsers & Cookies
 app.use(cookieParser());
 app.use(express.json());
-app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
 
 // Mount Application Routes
