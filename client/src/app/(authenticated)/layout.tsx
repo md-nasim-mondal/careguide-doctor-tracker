@@ -28,13 +28,13 @@ export default function AuthenticatedLayout({
                 Dashboard
               </Link>
               <Link
-                href="/doctors"
+                href="/dashboard/doctors"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Doctors
               </Link>
               <Link
-                href="/patients"
+                href="/dashboard/patients"
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Patients

@@ -10,16 +10,16 @@ export async function createDoctorAction(formData: FormData) {
   const phone = formData.get("phone") as string;
   const email = formData.get("email") as string;
 
-  let redirectUrl = "/doctors";
+  let redirectUrl = "/dashboard/doctors";
   try {
     await fetchServerApi("/doctors", {
       method: "POST",
       body: JSON.stringify({ name, specialization, hospital, phone, email }),
     });
-    revalidatePath("/doctors");
+    revalidatePath("/dashboard/doctors");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
-    redirectUrl = `/doctors?action=add&error=${encodeURIComponent(message)}`;
+    redirectUrl = `/dashboard/doctors?action=add&error=${encodeURIComponent(message)}`;
   }
   redirect(redirectUrl);
 }
@@ -31,44 +31,44 @@ export async function updateDoctorAction(id: string, formData: FormData) {
   const phone = formData.get("phone") as string;
   const email = formData.get("email") as string;
 
-  let redirectUrl = `/doctors?doctorId=${id}`;
+  let redirectUrl = `/dashboard/doctors?doctorId=${id}`;
   try {
     await fetchServerApi(`/doctors/${id}`, {
       method: "PUT",
       body: JSON.stringify({ name, specialization, hospital, phone, email }),
     });
-    revalidatePath("/doctors");
+    revalidatePath("/dashboard/doctors");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
-    redirectUrl = `/doctors?doctorId=${id}&action=edit&error=${encodeURIComponent(message)}`;
+    redirectUrl = `/dashboard/doctors?doctorId=${id}&action=edit&error=${encodeURIComponent(message)}`;
   }
   redirect(redirectUrl);
 }
 
 export async function deleteDoctorAction(id: string) {
-  let redirectUrl = "/doctors";
+  let redirectUrl = "/dashboard/doctors";
   try {
     await fetchServerApi(`/doctors/${id}`, {
       method: "DELETE",
     });
-    revalidatePath("/doctors");
+    revalidatePath("/dashboard/doctors");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
-    redirectUrl = `/doctors?error=${encodeURIComponent(message)}`;
+    redirectUrl = `/dashboard/doctors?error=${encodeURIComponent(message)}`;
   }
   redirect(redirectUrl);
 }
 
 export async function removePatientFromDoctorAction(doctorId: string, patientId: string) {
-  let redirectUrl = `/doctors?doctorId=${doctorId}`;
+  let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}`;
   try {
     await fetchServerApi(`/doctors/${doctorId}/patients/${patientId}`, {
       method: "DELETE"
     });
-    revalidatePath("/doctors");
+    revalidatePath("/dashboard/doctors");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
-    redirectUrl = `/doctors?doctorId=${doctorId}&error=${encodeURIComponent(message)}`;
+    redirectUrl = `/dashboard/doctors?doctorId=${doctorId}&error=${encodeURIComponent(message)}`;
   }
   redirect(redirectUrl);
 }

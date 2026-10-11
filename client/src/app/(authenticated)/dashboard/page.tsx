@@ -29,8 +29,8 @@ export default async function DashboardPage() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-foreground">Analytics Dashboard</h1>
         <div className="space-x-4">
-          <Link href="/doctors" className="text-primary hover:underline font-medium">Manage Doctors</Link>
-          <Link href="/patients" className="text-primary hover:underline font-medium">Manage Patients</Link>
+          <Link href="/dashboard/doctors" className="text-primary hover:underline font-medium">Manage Doctors</Link>
+          <Link href="/dashboard/patients" className="text-primary hover:underline font-medium">Manage Patients</Link>
           <form action="/api/auth/logout" method="POST" className="inline">
             <button type="submit" className="text-destructive hover:underline font-medium">Logout</button>
           </form>

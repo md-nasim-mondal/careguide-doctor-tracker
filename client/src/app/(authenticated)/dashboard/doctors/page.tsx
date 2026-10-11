@@ -90,7 +90,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
 
       {/* Search and Action Bar */}
       <div className="flex justify-between items-center mb-6 gap-4">
-        <form method="GET" action="/doctors" className="w-1/2 flex gap-2">
+        <form method="GET" action="/dashboard/doctors" className="w-1/2 flex gap-2">
           <input
             type="text"
             name="search"
@@ -106,7 +106,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
           </button>
           {search && (
             <Link
-              href="/doctors"
+              href="/dashboard/doctors"
               className="px-3 py-2 bg-muted text-foreground border border-border rounded hover:bg-muted/80 flex items-center text-sm"
             >
               Clear
@@ -117,14 +117,14 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
         <div>
           {showAddForm ? (
             <Link
-              href={`/doctors${buildQuery({ action: undefined })}`}
+              href={`/dashboard/doctors${buildQuery({ action: undefined })}`}
               className="px-4 py-2 bg-muted text-foreground border border-border rounded hover:bg-muted/80 text-sm font-medium inline-block"
             >
               Cancel
             </Link>
           ) : (
             <Link
-              href={`/doctors${buildQuery({ action: "add", doctorId: undefined })}`}
+              href={`/dashboard/doctors${buildQuery({ action: "add", doctorId: undefined })}`}
               className="px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 text-sm font-medium inline-block"
             >
               Add Doctor
@@ -172,7 +172,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
           />
           <div className="col-span-2 flex justify-end gap-2">
             <Link
-              href={`/doctors${buildQuery({ action: undefined })}`}
+              href={`/dashboard/doctors${buildQuery({ action: undefined })}`}
               className="px-4 py-2 border border-border rounded hover:bg-muted text-sm font-medium flex items-center"
             >
               Cancel
@@ -214,7 +214,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
                     <td className="p-4">{doc.hospital}</td>
                     <td className="p-4">
                       <Link
-                        href={`/doctors${buildQuery({ doctorId: doc._id, action: undefined })}`}
+                        href={`/dashboard/doctors${buildQuery({ doctorId: doc._id, action: undefined })}`}
                         className="text-primary hover:underline font-medium"
                       >
                         View
@@ -230,7 +230,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
           <div className="flex items-center justify-between p-4 bg-muted border-t border-border">
             {page > 1 ? (
               <Link
-                href={`/doctors${buildQuery({ page: page - 1 })}`}
+                href={`/dashboard/doctors${buildQuery({ page: page - 1 })}`}
                 className="px-3 py-1 bg-card border border-border rounded text-sm hover:bg-card/80"
               >
                 Previous
@@ -247,7 +247,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
 
             {page < totalPages ? (
               <Link
-                href={`/doctors${buildQuery({ page: page + 1 })}`}
+                href={`/dashboard/doctors${buildQuery({ page: page + 1 })}`}
                 className="px-3 py-1 bg-card border border-border rounded text-sm hover:bg-card/80"
               >
                 Next
@@ -269,14 +269,14 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
                 <div className="flex gap-2 items-center">
                   {isEditing ? (
                     <Link
-                      href={`/doctors${buildQuery({ doctorId: selectedDoctor._id, action: undefined })}`}
+                      href={`/dashboard/doctors${buildQuery({ doctorId: selectedDoctor._id, action: undefined })}`}
                       className="text-primary hover:underline text-sm font-medium"
                     >
                       Cancel
                     </Link>
                   ) : (
                     <Link
-                      href={`/doctors${buildQuery({ doctorId: selectedDoctor._id, action: "edit" })}`}
+                      href={`/dashboard/doctors${buildQuery({ doctorId: selectedDoctor._id, action: "edit" })}`}
                       className="text-primary hover:underline text-sm font-medium"
                     >
                       Edit
@@ -293,7 +293,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
                   </form>
 
                   <Link
-                    href={`/doctors${buildQuery({ doctorId: undefined, action: undefined })}`}
+                    href={`/dashboard/doctors${buildQuery({ doctorId: undefined, action: undefined })}`}
                     className="text-muted-foreground hover:text-foreground text-sm font-bold ml-1"
                     title="Close"
                   >

@@ -9,16 +9,16 @@ export async function createPatientAction(formData: FormData) {
   const condition = formData.get("condition") as string;
   const doctor = formData.get("doctor") as string;
 
-  let redirectUrl = "/patients";
+  let redirectUrl = "/dashboard/patients";
   try {
     await fetchServerApi("/patients", {
       method: "POST",
       body: JSON.stringify({ name, age, condition, doctor }),
     });
-    revalidatePath("/patients");
+    revalidatePath("/dashboard/patients");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
-    redirectUrl = `/patients?action=add&error=${encodeURIComponent(message)}`;
+    redirectUrl = `/dashboard/patients?action=add&error=${encodeURIComponent(message)}`;
   }
   redirect(redirectUrl);
 }
@@ -29,30 +29,30 @@ export async function updatePatientAction(id: string, formData: FormData) {
   const condition = formData.get("condition") as string;
   const doctor = formData.get("doctor") as string;
 
-  let redirectUrl = "/patients";
+  let redirectUrl = "/dashboard/patients";
   try {
     await fetchServerApi(`/patients/${id}`, {
       method: "PUT",
       body: JSON.stringify({ name, age, condition, doctor }),
     });
-    revalidatePath("/patients");
+    revalidatePath("/dashboard/patients");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
-    redirectUrl = `/patients?action=edit&patientId=${id}&error=${encodeURIComponent(message)}`;
+    redirectUrl = `/dashboard/patients?action=edit&patientId=${id}&error=${encodeURIComponent(message)}`;
   }
   redirect(redirectUrl);
 }
 
 export async function deletePatientAction(id: string) {
-  let redirectUrl = "/patients";
+  let redirectUrl = "/dashboard/patients";
   try {
     await fetchServerApi(`/patients/${id}`, {
       method: "DELETE",
     });
-    revalidatePath("/patients");
+    revalidatePath("/dashboard/patients");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
-    redirectUrl = `/patients?error=${encodeURIComponent(message)}`;
+    redirectUrl = `/dashboard/patients?error=${encodeURIComponent(message)}`;
   }
   redirect(redirectUrl);
 }

@@ -109,7 +109,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
       )}
 
       {/* URL Filter Form */}
-      <form method="GET" action="/patients" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <form method="GET" action="/dashboard/patients" className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <input
           name="search"
           placeholder="Search patients..."
@@ -136,7 +136,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
             Filter
           </button>
           <Link
-            href="/patients"
+            href="/dashboard/patients"
             className="px-4 py-2 bg-muted text-foreground border border-border rounded hover:bg-muted/80 flex items-center justify-center text-sm font-medium"
           >
             Reset
@@ -148,14 +148,14 @@ export default async function PatientsPage({ searchParams }: PageProps) {
       <div className="flex justify-end mb-4">
         {showAddForm ? (
           <Link
-            href={`/patients${buildQuery({ action: undefined })}`}
+            href={`/dashboard/patients${buildQuery({ action: undefined })}`}
             className="px-4 py-2 bg-muted text-foreground border border-border rounded text-sm font-medium"
           >
             Cancel
           </Link>
         ) : (
           <Link
-            href={`/patients${buildQuery({ action: "add", patientId: undefined })}`}
+            href={`/dashboard/patients${buildQuery({ action: "add", patientId: undefined })}`}
             className="px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 text-sm font-medium"
           >
             Add Patient
@@ -202,7 +202,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
           </select>
           <div className="col-span-2 flex justify-end gap-2">
             <Link
-              href={`/patients${buildQuery({ action: undefined })}`}
+              href={`/dashboard/patients${buildQuery({ action: undefined })}`}
               className="px-4 py-2 border border-border rounded hover:bg-muted text-sm font-medium flex items-center"
             >
               Cancel
@@ -265,7 +265,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
           </select>
           <div className="col-span-2 flex justify-end gap-2">
             <Link
-              href={`/patients${buildQuery({ action: undefined, patientId: undefined })}`}
+              href={`/dashboard/patients${buildQuery({ action: undefined, patientId: undefined })}`}
               className="px-4 py-2 border border-border rounded hover:bg-muted text-sm font-medium flex items-center"
             >
               Cancel
@@ -316,7 +316,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
                     <td className="p-4">{new Date(p.createdAt).toLocaleDateString()}</td>
                     <td className="p-4 space-x-3">
                       <Link
-                        href={`/patients${buildQuery({ action: "edit", patientId: p._id })}`}
+                        href={`/dashboard/patients${buildQuery({ action: "edit", patientId: p._id })}`}
                         className="text-primary hover:underline font-medium"
                       >
                         Edit
@@ -341,7 +341,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
         <div className="flex items-center justify-between p-4 bg-muted border-t border-border">
           {page > 1 ? (
             <Link
-              href={`/patients${buildQuery({ page: page - 1 })}`}
+              href={`/dashboard/patients${buildQuery({ page: page - 1 })}`}
               className="px-3 py-1 bg-card border border-border rounded text-sm hover:bg-card/80"
             >
               Previous
@@ -358,7 +358,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
 
           {page < totalPages ? (
             <Link
-              href={`/patients${buildQuery({ page: page + 1 })}`}
+              href={`/dashboard/patients${buildQuery({ page: page + 1 })}`}
               className="px-3 py-1 bg-card border border-border rounded text-sm hover:bg-card/80"
             >
               Next
