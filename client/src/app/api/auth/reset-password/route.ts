@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
+import { resetPasswordValidationSchema, validateData } from "@/validations";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { token, id, code, newPassword } = body;
+
+    // Frontend Zod request validation
+    const validation = validateData(resetPasswordValidationSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: validation.error },
+        { status: 400 }
+      );
+    }
+
+    const { token, id, code, newPassword } = validation.data;
     const backendUrl = process.env.BACKEND_API_URL || "http://localhost:5000/api/v1";
 
     if (!token) {

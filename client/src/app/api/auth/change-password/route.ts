@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { changePasswordValidationSchema, validateData } from "@/validations";
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +15,16 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+
+    // Frontend Zod request validation
+    const validation = validateData(changePasswordValidationSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: validation.error },
+        { status: 400 }
+      );
+    }
+
     const backendUrl = process.env.BACKEND_API_URL || "http://localhost:5000/api/v1";
 
     const response = await fetch(`${backendUrl}/auth/change-password`, {
@@ -22,7 +33,7 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(validation.data),
     });
 
     const data = await response.json();

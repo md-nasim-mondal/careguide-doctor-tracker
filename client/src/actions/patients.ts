@@ -2,12 +2,19 @@
 import { fetchServerApi } from "@/lib/serverApi";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  createPatientValidationSchema,
+  updatePatientValidationSchema,
+  validateFormData,
+} from "@/validations";
 
 export async function createPatientAction(formData: FormData) {
-  const name = formData.get("name") as string;
-  const age = parseInt(formData.get("age") as string, 10);
-  const condition = formData.get("condition") as string;
-  const doctor = formData.get("doctor") as string;
+  const validation = validateFormData(createPatientValidationSchema, formData);
+  if (!validation.success) {
+    redirect(`/dashboard/patients?action=add&error=${encodeURIComponent(validation.error)}`);
+  }
+
+  const { name, age, condition, doctor } = validation.data;
 
   let redirectUrl = "/dashboard/patients";
   try {
@@ -24,10 +31,12 @@ export async function createPatientAction(formData: FormData) {
 }
 
 export async function updatePatientAction(id: string, formData: FormData) {
-  const name = formData.get("name") as string;
-  const age = parseInt(formData.get("age") as string, 10);
-  const condition = formData.get("condition") as string;
-  const doctor = formData.get("doctor") as string;
+  const validation = validateFormData(updatePatientValidationSchema, formData);
+  if (!validation.success) {
+    redirect(`/dashboard/patients?action=edit&patientId=${id}&error=${encodeURIComponent(validation.error)}`);
+  }
+
+  const { name, age, condition, doctor } = validation.data;
 
   let redirectUrl = "/dashboard/patients";
   try {

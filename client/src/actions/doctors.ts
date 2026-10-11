@@ -2,13 +2,20 @@
 import { fetchServerApi } from "@/lib/serverApi";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  createDoctorValidationSchema,
+  updateDoctorValidationSchema,
+  addPatientToDoctorValidationSchema,
+  validateFormData,
+} from "@/validations";
 
 export async function createDoctorAction(formData: FormData) {
-  const name = formData.get("name") as string;
-  const specialization = formData.get("specialization") as string;
-  const hospital = formData.get("hospital") as string;
-  const phone = formData.get("phone") as string;
-  const email = formData.get("email") as string;
+  const validation = validateFormData(createDoctorValidationSchema, formData);
+  if (!validation.success) {
+    redirect(`/dashboard/doctors?action=add&error=${encodeURIComponent(validation.error)}`);
+  }
+
+  const { name, specialization, hospital, phone, email } = validation.data;
 
   let redirectUrl = "/dashboard/doctors";
   try {
@@ -25,11 +32,12 @@ export async function createDoctorAction(formData: FormData) {
 }
 
 export async function updateDoctorAction(id: string, formData: FormData) {
-  const name = formData.get("name") as string;
-  const specialization = formData.get("specialization") as string;
-  const hospital = formData.get("hospital") as string;
-  const phone = formData.get("phone") as string;
-  const email = formData.get("email") as string;
+  const validation = validateFormData(updateDoctorValidationSchema, formData);
+  if (!validation.success) {
+    redirect(`/dashboard/doctors?doctorId=${id}&action=edit&error=${encodeURIComponent(validation.error)}`);
+  }
+
+  const { name, specialization, hospital, phone, email } = validation.data;
 
   let redirectUrl = `/dashboard/doctors?doctorId=${id}`;
   try {
@@ -63,7 +71,7 @@ export async function removePatientFromDoctorAction(doctorId: string, patientId:
   let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}`;
   try {
     await fetchServerApi(`/doctors/${doctorId}/patients/${patientId}`, {
-      method: "DELETE"
+      method: "DELETE",
     });
     revalidatePath("/dashboard/doctors");
   } catch (err: unknown) {
@@ -74,9 +82,12 @@ export async function removePatientFromDoctorAction(doctorId: string, patientId:
 }
 
 export async function addPatientToDoctorAction(doctorId: string, formData: FormData) {
-  const name = formData.get("name") as string;
-  const age = Number(formData.get("age"));
-  const condition = formData.get("condition") as string;
+  const validation = validateFormData(addPatientToDoctorValidationSchema, formData);
+  if (!validation.success) {
+    redirect(`/dashboard/doctors?doctorId=${doctorId}&action=add-patient&error=${encodeURIComponent(validation.error)}`);
+  }
+
+  const { name, age, condition } = validation.data;
 
   let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}`;
   try {
