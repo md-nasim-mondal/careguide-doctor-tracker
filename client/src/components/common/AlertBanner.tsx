@@ -4,7 +4,7 @@ interface AlertBannerProps {
   className?: string;
 }
 
-export function AlertBanner({ message, variant = "error", className = "" }: AlertBannerProps) {
+export default function AlertBanner({ message, variant = "error", className = "" }: AlertBannerProps) {
   if (!message) return null;
 
   const styles = {
@@ -29,4 +29,5 @@ export function AlertBanner({ message, variant = "error", className = "" }: Aler
   );
 }
 
-export default AlertBanner;
+export { AlertBanner };
+

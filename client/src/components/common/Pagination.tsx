@@ -6,7 +6,7 @@ interface PaginationProps {
   buildPageUrl: (page: number) => string;
 }
 
-export function Pagination({ currentPage, totalPages, buildPageUrl }: PaginationProps) {
+export default function Pagination({ currentPage, totalPages, buildPageUrl }: PaginationProps) {
   if (totalPages <= 1) return null;
 
   return (
@@ -44,4 +44,5 @@ export function Pagination({ currentPage, totalPages, buildPageUrl }: Pagination
   );
 }
 
-export default Pagination;
+export { Pagination };
+
