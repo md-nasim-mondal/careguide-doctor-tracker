@@ -4,6 +4,7 @@ import { Doctor } from './doctor.model';
 import { Patient } from '../patient/patient.model';
 import AppError from '../../errorHelpers/AppError';
 import { sendResponse } from '../../utils/sendResponse';
+import { QueryBuilder } from '../../utils/QueryBuilder';
 
 export const createDoctor = catchAsync(async (req: Request, res: Response) => {
   const doctor = await Doctor.create(req.body);
@@ -11,25 +12,32 @@ export const createDoctor = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getDoctors = catchAsync(async (req: Request, res: Response) => {
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
-  const skip = (page - 1) * limit;
+  const doctorQuery = new QueryBuilder(
+    Doctor.find(),
+    req.query as Record<string, string>
+  )
+    .search(['name', 'specialization'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  const searchQuery = req.query.search ? {
-    $or: [
-      { name: { $regex: req.query.search, $options: 'i' } },
-      { specialization: { $regex: req.query.search, $options: 'i' } }
-    ]
-  } : {};
-
-  const total = await Doctor.countDocuments(searchQuery);
-  const doctors = await Doctor.find(searchQuery).skip(skip).limit(limit).sort({ createdAt: -1 });
+  const [doctors, meta] = await Promise.all([
+    doctorQuery.build(),
+    doctorQuery.getMeta(),
+  ]);
 
   sendResponse(res, { 
     statusCode: 200, 
     success: true, 
     message: 'Doctors fetched', 
-    data: { doctors, total, page, limit }
+    data: { 
+      doctors, 
+      total: meta.total, 
+      page: meta.page, 
+      limit: meta.limit,
+      totalPages: meta.totalPage 
+    }
   });
 });
 

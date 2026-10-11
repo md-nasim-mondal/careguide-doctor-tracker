@@ -4,6 +4,7 @@ import { Patient } from './patient.model';
 import { Doctor } from '../doctor/doctor.model';
 import AppError from '../../errorHelpers/AppError';
 import { sendResponse } from '../../utils/sendResponse';
+import { QueryBuilder } from '../../utils/QueryBuilder';
 
 export const createPatient = catchAsync(async (req: Request, res: Response) => {
   if (req.body.doctor) {
@@ -17,38 +18,51 @@ export const createPatient = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getPatients = catchAsync(async (req: Request, res: Response) => {
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
-  const skip = (page - 1) * limit;
+  const queryObj = { ...(req.query as Record<string, string>) };
 
-  let query: any = {};
-  
-  if (req.query.search) {
-    query.name = { $regex: req.query.search, $options: 'i' };
-  }
-
-  if (req.query.condition) {
-    query.condition = { $regex: req.query.condition, $options: 'i' };
-  }
-
-  if (req.query.date) {
-    const targetDate = new Date(req.query.date as string);
+  // Handle specific date filter if present
+  let baseQuery = Patient.find();
+  if (queryObj.date) {
+    const targetDate = new Date(queryObj.date);
     const nextDay = new Date(targetDate);
     nextDay.setDate(targetDate.getDate() + 1);
-    query.createdAt = {
-      $gte: targetDate,
-      $lt: nextDay
-    };
+    baseQuery = baseQuery.find({
+      createdAt: {
+        $gte: targetDate,
+        $lt: nextDay,
+      },
+    });
+    delete queryObj.date;
   }
 
-  const total = await Patient.countDocuments(query);
-  const patients = await Patient.find(query).populate('doctor').skip(skip).limit(limit).sort({ createdAt: -1 });
+  const patientQuery = new QueryBuilder(
+    baseQuery,
+    queryObj
+  )
+    .search(['name', 'condition'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  patientQuery.modelQuery = patientQuery.modelQuery.populate('doctor');
+
+  const [patients, meta] = await Promise.all([
+    patientQuery.build(),
+    patientQuery.getMeta(),
+  ]);
 
   sendResponse(res, { 
     statusCode: 200, 
     success: true, 
     message: 'Patients fetched', 
-    data: { patients, total, page, limit }
+    data: { 
+      patients, 
+      total: meta.total, 
+      page: meta.page, 
+      limit: meta.limit,
+      totalPages: meta.totalPage 
+    }
   });
 });
 

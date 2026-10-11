@@ -18,29 +18,46 @@ export class QueryBuilder<T> {
       delete filter[field];
     }
 
-    this.modelQuery = this.modelQuery.find(filter); // Tour.find().find(filter)
+    this.modelQuery = this.modelQuery.find(filter);
 
     return this;
   }
 
   search(searchableField: string[]): this {
-    const searchTerm = this.query.searchTerm || "";
-    const searchQuery = {
-      $or: searchableField.map((field) => ({
-        [field]: { $regex: searchTerm, $options: "i" },
-      })),
-    };
-    this.modelQuery = this.modelQuery.find(searchQuery);
+    const searchTerm = this.query.searchTerm || this.query.search || "";
+    if (searchTerm) {
+      const searchQuery = {
+        $or: searchableField.map((field) => ({
+          [field]: { $regex: searchTerm, $options: "i" },
+        })),
+      };
+      this.modelQuery = this.modelQuery.find(searchQuery);
+    }
     return this;
   }
 
   sort(): this {
-    const sort = this.query.sort || "-createdAt";
+    const sortBy = this.query.sortBy;
+    const sortOrder = (this.query.sortOrder || "desc").toLowerCase();
 
-    this.modelQuery = this.modelQuery.sort(sort);
+    let sortCriteria: string;
+
+    if (sortBy) {
+      // If sortOrder is 'asc' or 'ascending' or '1', sort ascending; otherwise descending '-'
+      const isAsc = sortOrder === "asc" || sortOrder === "ascending" || sortOrder === "1";
+      sortCriteria = isAsc ? sortBy : `-${sortBy}`;
+    } else if (this.query.sort) {
+      // Backward compatibility with legacy sort query
+      sortCriteria = this.query.sort;
+    } else {
+      sortCriteria = "-createdAt";
+    }
+
+    this.modelQuery = this.modelQuery.sort(sortCriteria);
 
     return this;
   }
+
   fields(): this {
     const fields = this.query.fields?.split(",").join(" ") || "";
 
@@ -48,6 +65,7 @@ export class QueryBuilder<T> {
 
     return this;
   }
+
   paginate(): this {
     const page = Number(this.query.page) || 1;
     const limit = Number(this.query.limit) || 10;
@@ -63,12 +81,14 @@ export class QueryBuilder<T> {
   }
 
   async getMeta() {
-    const totalDocuments = await this.modelQuery.model.countDocuments();
+    const totalDocuments = await this.modelQuery.model.countDocuments(
+      this.modelQuery.getFilter()
+    );
 
     const page = Number(this.query.page) || 1;
     const limit = Number(this.query.limit) || 10;
 
-    const totalPage = Math.ceil(totalDocuments / limit);
+    const totalPage = Math.ceil(totalDocuments / limit) || 1;
 
     return { page, limit, total: totalDocuments, totalPage };
   }
