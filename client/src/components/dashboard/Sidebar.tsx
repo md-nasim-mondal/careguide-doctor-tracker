@@ -46,35 +46,42 @@ export function Sidebar({ user }: SidebarProps) {
 
   const navLinks = getNavLinks();
 
-  const getRoleLabel = () => {
+  const getRoleConfig = () => {
     switch (role) {
       case "SUPER_ADMIN":
-        return "Super Admin";
+        return {
+          label: "Super Admin",
+          badgeClass: "bg-primary/10 text-primary border-primary/25",
+          dotClass: "bg-primary",
+        };
       case "ADMIN":
-        return "Administrator";
+        return {
+          label: "Administrator",
+          badgeClass: "bg-blue-50 text-blue-800 border-blue-200/80 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
+          dotClass: "bg-blue-600",
+        };
       case "SENDER":
-        return "Care Staff";
+        return {
+          label: "Care Staff",
+          badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800",
+          dotClass: "bg-emerald-600",
+        };
       case "RECEIVER":
-        return "Patient / User";
+        return {
+          label: "Patient / User",
+          badgeClass: "bg-slate-100 text-slate-800 border-slate-200/80 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
+          dotClass: "bg-slate-500",
+        };
       default:
-        return role;
+        return {
+          label: role,
+          badgeClass: "bg-muted text-muted-foreground border-border",
+          dotClass: "bg-muted-foreground",
+        };
     }
   };
 
-  const getRoleColor = () => {
-    switch (role) {
-      case "SUPER_ADMIN":
-        return "bg-purple-700 text-white font-bold border border-purple-800 shadow-xs";
-      case "ADMIN":
-        return "bg-blue-700 text-white font-bold border border-blue-800 shadow-xs";
-      case "SENDER":
-        return "bg-emerald-700 text-white font-bold border border-emerald-800 shadow-xs";
-      case "RECEIVER":
-        return "bg-amber-700 text-white font-bold border border-amber-800 shadow-xs";
-      default:
-        return "bg-slate-700 text-white font-bold border border-slate-800 shadow-xs";
-    }
-  };
+  const roleConfig = getRoleConfig();
 
   return (
     <>
@@ -117,18 +124,19 @@ export function Sidebar({ user }: SidebarProps) {
         </div>
 
         {/* User Card */}
-        <div className="p-3 sm:p-4 border-b border-border bg-muted/30">
+        <div className="p-3.5 sm:p-4 border-b border-border bg-muted/20">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-sm shrink-0 shadow-2xs">
               {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs sm:text-sm font-semibold text-foreground truncate">
+              <p className="text-xs sm:text-sm font-bold text-foreground truncate">
                 {user?.name || "Care User"}
               </p>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-md tracking-wide ${getRoleColor()}`}>
-                  {getRoleLabel()}
+              <div className="flex items-center gap-1.5 mt-1">
+                <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-0.5 rounded-full border shadow-2xs ${roleConfig.badgeClass}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${roleConfig.dotClass}`} />
+                  <span className="truncate">{roleConfig.label}</span>
                 </span>
               </div>
             </div>
