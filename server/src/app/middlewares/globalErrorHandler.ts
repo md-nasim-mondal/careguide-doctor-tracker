@@ -6,9 +6,9 @@ import { ZodError } from "zod";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import { handleCastError } from "../errorHelpers/handleCastError";
-import { handlerDuplicateError } from "../errorHelpers/handleDuplicateError";
-import { handlerValidationError } from "../errorHelpers/handlerValidationError";
-import { handlerZodError } from "../errorHelpers/handlerZodError";
+import { handleDuplicateError } from "../errorHelpers/handleDuplicateError";
+import { handleValidationError } from "../errorHelpers/handleValidationError";
+import { handleZodError } from "../errorHelpers/handleZodError";
 import { TErrorSources } from "../interfaces/error.types";
 
 interface TGlobalError extends Error {
@@ -35,7 +35,7 @@ export const globalErrorHandler: ErrorRequestHandler = async (
 
   //Duplicate error
   if (error.code === 11000) {
-    const simplifiedError = handlerDuplicateError(error);
+    const simplifiedError = handleDuplicateError(error);
     statusCode = simplifiedError.statusCode as number;
     message = simplifiedError.message;
   }
@@ -45,14 +45,14 @@ export const globalErrorHandler: ErrorRequestHandler = async (
     statusCode = simplifiedError.statusCode as number;
     message = simplifiedError.message;
   } else if (error.name === "ZodError") {
-    const simplifiedError = handlerZodError(error as unknown as ZodError);
+    const simplifiedError = handleZodError(error as unknown as ZodError);
     statusCode = simplifiedError.statusCode as number;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources as TErrorSources[];
   }
   //Mongoose Validation Error
   else if (error.name === "ValidationError") {
-    const simplifiedError = handlerValidationError(error as unknown as mongoose.Error.ValidationError);
+    const simplifiedError = handleValidationError(error as unknown as mongoose.Error.ValidationError);
     statusCode = simplifiedError.statusCode as number;
     errorSources = simplifiedError.errorSources as TErrorSources[];
     message = simplifiedError.message;

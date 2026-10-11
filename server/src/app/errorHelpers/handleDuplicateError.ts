@@ -4,7 +4,7 @@ interface IMongoDuplicateError {
   message: string;
 }
 
-export const handlerDuplicateError = (err: IMongoDuplicateError): TGenericErrorResponse => {
+export const handleDuplicateError = (err: IMongoDuplicateError): TGenericErrorResponse => {
   const matchedArray = err.message.match(/"([^"]*)"/);
   const matchedValue = matchedArray && matchedArray[1] ? matchedArray[1] : "Field";
 
@@ -13,3 +13,6 @@ export const handlerDuplicateError = (err: IMongoDuplicateError): TGenericErrorR
     message: `${matchedValue} already exists!!`,
   };
 };
+
+export const handlerDuplicateError = handleDuplicateError;
+
