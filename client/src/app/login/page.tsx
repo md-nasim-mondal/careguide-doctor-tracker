@@ -45,6 +45,7 @@ export default function Login() {
           value={email} 
           onChange={e => setEmail(e.target.value)} 
           required 
+          suppressHydrationWarning
         />
         <input 
           type="password" 
@@ -53,6 +54,7 @@ export default function Login() {
           value={password} 
           onChange={e => setPassword(e.target.value)} 
           required 
+          suppressHydrationWarning
         />
         <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">Login</button>
       </form>
