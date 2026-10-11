@@ -1,18 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ZodError, ZodIssue } from "zod";
 import {
   TErrorSources,
   TGenericErrorResponse,
 } from "../interfaces/error.types";
 
-export const handlerZodError = (err: any): TGenericErrorResponse => {
+export const handlerZodError = (err: ZodError): TGenericErrorResponse => {
   const errorSources: TErrorSources[] = [];
 
-  err.issues.forEach((issue: any) => {
+  err.issues.forEach((issue: ZodIssue) => {
     errorSources.push({
-      //path : "nickname inside last inside name"
-      // path: issue.path.length > 1 && issue.path.reverse().join(" inside "),
-
-      path: issue.path[issue.path.length - 1],
+      path: String(issue.path[issue.path.length - 1] ?? ""),
       message: issue.message,
     });
   });

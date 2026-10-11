@@ -1,13 +1,14 @@
 import express from 'express';
-import { createPatient, getPatients, updatePatient, deletePatient } from './patient.controller';
+import { PatientControllers } from './patient.controller';
 import { checkAuth } from '../../middlewares/checkAuth';
 import { Role } from '../user/user.interface';
 
 const router = express.Router();
 
-router.post('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), createPatient);
-router.get('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), getPatients);
-router.put('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), updatePatient);
-router.delete('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), deletePatient);
+router.post('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.createPatient);
+router.get('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getPatients);
+router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getPatient);
+router.put('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.updatePatient);
+router.delete('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.deletePatient);
 
 export const PatientRoutes = router;

@@ -1,11 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { TGenericErrorResponse } from "../interfaces/error.types";
+import { TGenericErrorResponse } from "../interfaces/error.types";
 
-export const handleDuplicateError = (err: any): TGenericErrorResponse => {
+interface IMongoDuplicateError {
+  message: string;
+}
+
+export const handleDuplicateError = (err: IMongoDuplicateError): TGenericErrorResponse => {
   const matchedArray = err.message.match(/"([^"]*)"/);
+  const matchedValue = matchedArray && matchedArray[1] ? matchedArray[1] : "Field";
 
   return {
     statusCode: 400,
-    message: `${matchedArray[1]} already exists!!`,
+    message: `${matchedValue} already exists!!`,
   };
 };

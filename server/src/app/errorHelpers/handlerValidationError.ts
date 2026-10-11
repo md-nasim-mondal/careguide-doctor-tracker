@@ -4,7 +4,6 @@ import {
   TGenericErrorResponse,
 } from "../interfaces/error.types";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export const handlerValidationError = (
   err: mongoose.Error.ValidationError
 ): TGenericErrorResponse => {
@@ -12,7 +11,7 @@ export const handlerValidationError = (
 
   const errors = Object.values(err.errors);
 
-  errors.forEach((errorObject: any) =>
+  errors.forEach((errorObject: mongoose.Error.ValidatorError | mongoose.Error.CastError) =>
     errorSources.push({
       path: errorObject.path,
       message: errorObject.message,

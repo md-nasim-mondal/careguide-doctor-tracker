@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
+import httpStatus from 'http-status-codes';
 import { catchAsync } from '../../utils/catchAsync';
-import { Contact } from './contact.model';
 import { sendResponse } from '../../utils/sendResponse';
-import { QueryBuilder } from '../../utils/QueryBuilder';
+import { ContactServices } from './contact.service';
 
 export const createContactInquiry = catchAsync(async (req: Request, res: Response) => {
-  const contact = await Contact.create(req.body);
+  const contact = await ContactServices.createContactInquiry(req.body);
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: 'Contact inquiry submitted successfully',
     data: contact,
@@ -15,31 +15,16 @@ export const createContactInquiry = catchAsync(async (req: Request, res: Respons
 });
 
 export const getContactInquiries = catchAsync(async (req: Request, res: Response) => {
-  const contactQuery = new QueryBuilder(
-    Contact.find(),
-    req.query as Record<string, string>
-  )
-    .search(['name', 'hospital', 'email', 'topic'])
-    .filter()
-    .sort()
-    .paginate()
-    .fields();
-
-  const [inquiries, meta] = await Promise.all([
-    contactQuery.build(),
-    contactQuery.getMeta(),
-  ]);
-
+  const result = await ContactServices.getContactInquiries(req.query as Record<string, string>);
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: 'Contact inquiries retrieved successfully',
-    data: {
-      inquiries,
-      total: meta.total,
-      page: meta.page,
-      limit: meta.limit,
-      totalPages: meta.totalPage,
-    },
+    data: result,
   });
 });
+
+export const ContactControllers = {
+  createContactInquiry,
+  getContactInquiries,
+};
