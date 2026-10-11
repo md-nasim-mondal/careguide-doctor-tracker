@@ -14,7 +14,7 @@ export default function PatientsTable({
   return (
     <div className="bg-card border border-border rounded overflow-hidden shadow-sm flex flex-col justify-between">
       <div className="overflow-x-auto w-full">
-        <table className="w-full min-w-[550px] text-left text-sm text-foreground">
+        <table className="w-full min-w-137.5 text-left text-sm text-foreground">
           <thead className="bg-muted text-muted-foreground">
             <tr>
               <th className="p-3 sm:p-4 border-b border-border">Name</th>
