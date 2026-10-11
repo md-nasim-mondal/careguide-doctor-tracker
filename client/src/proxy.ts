@@ -5,18 +5,26 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const { pathname } = request.nextUrl;
 
-  const isPublicPath = pathname === '/login' || pathname === '/register';
-  
   // Exclude static assets and api endpoints from redirect loops
   if (pathname.startsWith('/_next') || pathname.startsWith('/api/') || pathname === '/favicon.ico') {
     return NextResponse.next();
   }
 
+  // Paths that only unauthenticated users should see (redirect to dashboard if logged in)
+  const isAuthOnlyPath = pathname === '/login' || pathname === '/register';
+
+  // Public paths accessible without login
+  const isPublicPath =
+    pathname === '/' ||
+    pathname === '/about' ||
+    pathname === '/contact' ||
+    isAuthOnlyPath;
+
   if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (token && isPublicPath) {
+  if (token && isAuthOnlyPath) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
