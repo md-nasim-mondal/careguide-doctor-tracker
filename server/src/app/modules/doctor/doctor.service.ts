@@ -6,6 +6,7 @@ import { Patient } from '../patient/patient.model';
 import { IPatient } from '../patient/patient.interface';
 import { IDoctor } from './doctor.interface';
 import { Doctor } from './doctor.model';
+import { doctorAllowedUpdateFields, doctorSearchableFields } from './doctor.constant';
 
 const createDoctor = async (payload: IDoctor) => {
   const doctor = await Doctor.create(payload);
@@ -17,7 +18,7 @@ const getAllDoctors = async (query: Record<string, string>) => {
     Doctor.find(),
     query
   )
-    .search(['name', 'specialization'])
+    .search(doctorSearchableFields)
     .filter()
     .sort()
     .paginate()
@@ -101,10 +102,9 @@ const removePatientFromDoctor = async (doctorId: string, patientId: string) => {
 };
 
 const updateDoctor = async (id: string, payload: Partial<IDoctor>) => {
-  const allowedFields: (keyof IDoctor)[] = ['name', 'specialization', 'hospital', 'phone', 'email'];
   const updateData: Partial<IDoctor> = {};
 
-  for (const field of allowedFields) {
+  for (const field of doctorAllowedUpdateFields) {
     if (payload[field] !== undefined) {
       updateData[field] = payload[field];
     }

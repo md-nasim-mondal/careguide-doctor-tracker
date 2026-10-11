@@ -1,5 +1,6 @@
 import { Doctor } from '../doctor/doctor.model';
 import { Patient } from '../patient/patient.model';
+import { DASHBOARD_REGISTRATION_DATE_FORMAT } from './dashboard.constant';
 import { IDashboardAnalytics, IPatientPerDoctor, IRegistrationOverTime } from './dashboard.interface';
 
 const getDashboardAnalytics = async (): Promise<IDashboardAnalytics> => {
@@ -20,7 +21,7 @@ const getDashboardAnalytics = async (): Promise<IDashboardAnalytics> => {
   const registrationsOverTime = await Patient.aggregate<IRegistrationOverTime>([
     {
       $group: {
-        _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+        _id: { $dateToString: { format: DASHBOARD_REGISTRATION_DATE_FORMAT, date: '$createdAt' } },
         count: { $sum: 1 },
       },
     },

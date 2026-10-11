@@ -6,6 +6,7 @@ import AppError from "../../errorHelpers/AppError";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { setAuthCookie } from "../../utils/setCookie";
+import { AUTH_COOKIE_NAMES } from "./auth.constant";
 import { AuthServices } from "./auth.service";
 
 const credentialsLogin = catchAsync(async (req: Request, res: Response) => {
@@ -45,12 +46,12 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (_req: Request, res: Response) => {
-  res.clearCookie("accessToken", {
+  res.clearCookie(AUTH_COOKIE_NAMES.ACCESS_TOKEN, {
     httpOnly: true,
     secure: envVars.NODE_ENV === "production",
     sameSite: "lax",
   });
-  res.clearCookie("refreshToken", {
+  res.clearCookie(AUTH_COOKIE_NAMES.REFRESH_TOKEN, {
     httpOnly: true,
     secure: envVars.NODE_ENV === "production",
     sameSite: "lax",

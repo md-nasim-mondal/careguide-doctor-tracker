@@ -1,0 +1,1 @@
+export const DASHBOARD_REGISTRATION_DATE_FORMAT = '%Y-%m-%d';

@@ -1,4 +1,5 @@
 import { QueryBuilder } from '../../utils/QueryBuilder';
+import { contactSearchableFields } from './contact.constant';
 import { IContact } from './contact.interface';
 import { Contact } from './contact.model';
 
@@ -12,7 +13,7 @@ const getContactInquiries = async (query: Record<string, string>) => {
     Contact.find(),
     query
   )
-    .search(['name', 'hospital', 'email', 'topic'])
+    .search(contactSearchableFields)
     .filter()
     .sort()
     .paginate()

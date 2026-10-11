@@ -5,6 +5,7 @@ import { QueryBuilder } from '../../utils/QueryBuilder';
 import { Doctor } from '../doctor/doctor.model';
 import { IPatient } from './patient.interface';
 import { Patient } from './patient.model';
+import { patientSearchableFields } from './patient.constant';
 
 const createPatient = async (payload: IPatient) => {
   const session = await mongoose.startSession();
@@ -49,7 +50,7 @@ const getAllPatients = async (query: Record<string, string>) => {
   }
 
   const patientQuery = new QueryBuilder(baseQuery, queryObj)
-    .search(['name', 'condition'])
+    .search(patientSearchableFields)
     .filter()
     .sort()
     .paginate()
