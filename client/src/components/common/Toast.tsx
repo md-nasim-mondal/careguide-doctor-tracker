@@ -64,6 +64,8 @@ export const toast = {
 
 const ToastContext = createContext<ToastContextType | null>(null);
 
+const EMPTY_TOASTS: ToastItem[] = [];
+
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const toasts = useSyncExternalStore(
     (callback) => {
@@ -71,7 +73,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       return () => listeners.delete(callback);
     },
     () => memoryToasts,
-    () => []
+    () => EMPTY_TOASTS
   );
 
   const showToast = useCallback((t: Omit<ToastItem, "id">) => {

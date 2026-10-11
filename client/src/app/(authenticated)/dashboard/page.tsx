@@ -4,6 +4,8 @@ import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
 import Link from "next/link";
 import type { DashboardAnalytics } from "@/types";
 
+export const instant = false;
+
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   const role = user?.role || "ADMIN";
