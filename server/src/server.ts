@@ -9,7 +9,7 @@ let server: Server;
 const startServer = async () => {
   try {
     await mongoose.connect(envVars.DB_URL, {
-      dbName: "derival81-savings-app-db",
+      dbName: envVars.DB_NAME,
     });
 
     console.log("✅ Connected to Database successfully!");

@@ -1,13 +1,10 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Request, Response } from "express";
-import expressSession from "express-session";
 import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
-import passport from "passport";
 import { envVars } from "./app/config/env";
-import "./app/config/passport";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import { router } from "./app/routes";
@@ -31,34 +28,19 @@ if (envVars.NODE_ENV === "development") {
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 200, // limit each IP to 200 requests per windowMs
   message: "Too many requests from this IP, please try again after 15 minutes",
 });
 
 app.use("/api", limiter);
 
-// Session and Passport initialization based on Auth System
-if (envVars.AUTH_SYSTEM === "passport") {
-  app.use(
-    expressSession({
-      secret: envVars.EXPRESS_SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        secure: envVars.NODE_ENV === "production",
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      },
-    })
-  );
-  app.use(passport.initialize());
-  app.use(passport.session());
-}
-
+// Standard Body Parsers & Cookies
 app.use(cookieParser());
 app.use(express.json());
 app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
+
+// Mount Application Routes
 app.use("/api/v1", router);
 
 if (envVars.NODE_ENV !== "production") {
@@ -67,23 +49,26 @@ if (envVars.NODE_ENV !== "production") {
   });
 }
 
+// Health Check Endpoint
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
-    message: "Server is healthy",
+    message: "CareGuide Doctor Tracker API is healthy",
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
 });
 
+// Root Information Endpoint
 app.get("/", (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
-    message: "Welcome to the Production Ready Backend Starter Template!",
+    message: "Welcome to CareGuide Doctor Tracker API",
     version: "1.0.0",
   });
 });
 
+// Error Handlers
 app.use(globalErrorHandler);
 app.use(notFound);
 

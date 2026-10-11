@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { fetchApi } from "@/lib/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");

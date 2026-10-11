@@ -14,4 +14,9 @@ const doctorSchema = new Schema<IDoctor>(
   },
 );
 
+doctorSchema.index({ name: 1 });
+doctorSchema.index({ specialization: 1 });
+doctorSchema.index({ createdAt: -1 });
+
 export const Doctor = model<IDoctor>('Doctor', doctorSchema);
+

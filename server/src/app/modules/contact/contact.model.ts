@@ -15,4 +15,7 @@ const contactSchema = new Schema<IContact>(
   },
 );
 
+contactSchema.index({ createdAt: -1 });
+
 export const Contact = model<IContact>('Contact', contactSchema);
+

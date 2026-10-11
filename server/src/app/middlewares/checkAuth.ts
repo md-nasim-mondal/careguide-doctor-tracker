@@ -3,7 +3,7 @@ import httpStatus from "http-status-codes";
 import { JsonWebTokenError, JwtPayload, NotBeforeError, TokenExpiredError } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
-import { IsActive, IUser, Role } from "../modules/user/user.interface";
+import { IsActive, Role } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
 import { verifyToken } from "../utils/jwt";
 
@@ -11,52 +11,41 @@ export const checkAuth =
   (...authRoles: Role[]) =>
   async (req: Request, _res: Response, next: NextFunction) => {
     try {
-      let user: JwtPayload | undefined;
+      let accessToken = req.headers.authorization;
 
-      if (envVars.AUTH_SYSTEM === "passport") {
-        // In Passport, req.user is populated after successful session authentication
-        if (!req.isAuthenticated() || !req.user) {
-          throw new AppError(httpStatus.UNAUTHORIZED, "You are not authenticated");
-        }
-        
-        const passportUser = req.user as IUser;
-        user = {
-          userId: passportUser._id?.toString() as string,
-          email: passportUser.email,
-          role: passportUser.role,
-        };
-      } else {
-        // Custom JWT Authentication
-        let accessToken = req.headers.authorization;
-
-        if (!accessToken) {
-          throw new AppError(httpStatus.UNAUTHORIZED, "No token provided");
-        }
-
-        if (accessToken.startsWith("Bearer ")) {
-          accessToken = accessToken.slice(7).trim();
-        }
-
-        try {
-          user = verifyToken(
-            accessToken,
-            envVars.JWT_ACCESS_SECRET
-          ) as JwtPayload;
-        } catch (err: unknown) {
-          if (err instanceof TokenExpiredError || (err instanceof Error && err.name === "TokenExpiredError")) {
-            throw new AppError(httpStatus.UNAUTHORIZED, "Token has expired");
-          }
-          if (err instanceof JsonWebTokenError || (err instanceof Error && err.name === "JsonWebTokenError")) {
-            throw new AppError(httpStatus.UNAUTHORIZED, "Invalid or malformed token");
-          }
-          if (err instanceof NotBeforeError || (err instanceof Error && err.name === "NotBeforeError")) {
-            throw new AppError(httpStatus.UNAUTHORIZED, "Token not active yet");
-          }
-          throw err;
-        }
+      if (!accessToken && req.cookies?.accessToken) {
+        accessToken = req.cookies.accessToken;
       }
 
-      if (!user) {
+      if (!accessToken) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "No token provided");
+      }
+
+      if (accessToken.startsWith("Bearer ")) {
+        accessToken = accessToken.slice(7).trim();
+      }
+
+      let user: JwtPayload;
+
+      try {
+        user = verifyToken(
+          accessToken,
+          envVars.JWT_ACCESS_SECRET
+        ) as JwtPayload;
+      } catch (err: unknown) {
+        if (err instanceof TokenExpiredError || (err instanceof Error && err.name === "TokenExpiredError")) {
+          throw new AppError(httpStatus.UNAUTHORIZED, "Token has expired");
+        }
+        if (err instanceof JsonWebTokenError || (err instanceof Error && err.name === "JsonWebTokenError")) {
+          throw new AppError(httpStatus.UNAUTHORIZED, "Invalid or malformed token");
+        }
+        if (err instanceof NotBeforeError || (err instanceof Error && err.name === "NotBeforeError")) {
+          throw new AppError(httpStatus.UNAUTHORIZED, "Token not active yet");
+        }
+        throw err;
+      }
+
+      if (!user || !user.userId) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Invalid authentication");
       }
 

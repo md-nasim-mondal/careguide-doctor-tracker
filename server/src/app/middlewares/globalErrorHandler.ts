@@ -10,7 +10,6 @@ import { handlerDuplicateError } from "../errorHelpers/handleDuplicateError";
 import { handlerValidationError } from "../errorHelpers/handlerValidationError";
 import { handlerZodError } from "../errorHelpers/handlerZodError";
 import { TErrorSources } from "../interfaces/error.types";
-import { deleteImageFromCloudinary } from "../config/cloudinary.config";
 
 interface TGlobalError extends Error {
   statusCode?: number;
@@ -28,18 +27,6 @@ export const globalErrorHandler: ErrorRequestHandler = async (
 
   if (envVars.NODE_ENV === "development") {
     console.log(error);
-  }
-
-  if (req.file) {
-    await deleteImageFromCloudinary(req.file.path);
-  }
-
-  if (req.files && Array.isArray(req.files) && req.files.length > 0) {
-    const imageUrls = (req.files as Express.Multer.File[]).map(
-      (file) => file.path
-    );
-
-    await Promise.all(imageUrls.map((url) => deleteImageFromCloudinary(url)));
   }
 
   let errorSources: TErrorSources[] = [];
