@@ -32,6 +32,12 @@ To set up the project locally:
    ```
    *The frontend runs on `http://localhost:3000`.*
 
+## Default Credentials
+For instant local access and testing:
+- **Role**: Super Admin
+- **Email**: `admin@example.com`
+- **Password**: `admin_password_123`
+
 ## System Architecture
 The application runs a clean separation of concerns:
 - **Database:** MongoDB (Mongoose Schema modeling)
