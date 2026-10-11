@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPatientAction, updatePatientAction, deletePatientAction } from "@/app/patients/actions";
+import { createPatientAction, updatePatientAction, deletePatientAction } from "@/actions/patients";
 
 type Doctor = { _id: string; name: string };
 type Patient = { _id: string; name: string; age: number; condition: string; doctor: Doctor | string; createdAt: string };

@@ -1,10 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createDoctorAction, removePatientFromDoctorAction, updateDoctorAction, deleteDoctorAction } from "@/app/doctors/actions";
+import { createDoctorAction, updateDoctorAction, deleteDoctorAction } from "@/actions/doctors";
 
 type Doctor = { _id: string; name: string; specialization: string; hospital: string; phone: string; email: string };
-type Patient = { _id: string; name: string; age: number; condition: string };
 
 export function DoctorClientShell({ 
   initialDoctors, 
@@ -24,10 +23,6 @@ export function DoctorClientShell({
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  
-  // Data for selected doctor (Ideally fetched separately via API route/Server action, we will simulate or use a client fetch for just the patients list to keep details fresh)
-  const [doctorPatients, setDoctorPatients] = useState<Patient[]>([]);
-  const [loadingPatients, setLoadingPatients] = useState(false);
 
   const handleSearch = (term: string) => {
     router.push(`/doctors?search=${encodeURIComponent(term)}&page=1`);
@@ -87,17 +82,9 @@ export function DoctorClientShell({
     }
   };
 
-  const viewDoctorDetails = async (doc: Doctor) => {
+  const viewDoctorDetails = (doc: Doctor) => {
     setSelectedDoctor(doc);
-    setLoadingPatients(true);
-    try {
-      // In a real app we might use an API route or another server action to get the patients
-      // For now we assume fetch Api from browser proxy or we can just fetch via a server action. 
-      // To strictly follow the rules, let's just show the details for now, patient fetching should be migrated to Server Action.
-      setLoadingPatients(false);
-    } catch (err) {
-      setLoadingPatients(false);
-    }
+    setIsEditing(false);
   };
 
   return (
