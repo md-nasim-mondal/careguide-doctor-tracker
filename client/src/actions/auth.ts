@@ -23,19 +23,57 @@ export async function getMeAction(): Promise<IUserProfile | null> {
   if (!token) return null;
 
   try {
-    const res = await fetch(`${BACKEND_API_URL}/user/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    });
-
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data?.data || json.data || null;
+    const res = await fetchServerApi("/user/me", { cache: "no-store" });
+    return res.data?.data || res.data || null;
   } catch {
     return null;
   }
+}
+
+/**
+ * Server Action for user login with Zod validation and HttpOnly cookie
+ */
+export async function loginAction(formData: FormData) {
+  const validation = validateFormData(loginValidationSchema, formData);
+  if (!validation.success) {
+    redirect(`/login?error=${encodeURIComponent(validation.error)}`);
+  }
+
+  const { email, password } = validation.data;
+
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Invalid email or password");
+    }
+
+    const token = data.data?.accessToken;
+    if (!token) {
+      throw new Error("Authentication token not received");
+    }
+
+    const cookieStore = await cookies();
+    cookieStore.set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24, // 1 day
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Authentication failed";
+    redirect(`/login?error=${encodeURIComponent(message)}`);
+  }
+
+  redirect(`/dashboard?success=${encodeURIComponent("Welcome back! Login successful.")}`);
 }
 
 /**
@@ -130,19 +168,10 @@ export async function changePasswordAction(formData: FormData) {
   const { oldPassword, newPassword } = validation.data;
 
   try {
-    const response = await fetch(`${BACKEND_API_URL}/auth/change-password`, {
+    await fetchServerApi("/auth/change-password", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify({ oldPassword, newPassword }),
     });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to change password");
-    }
 
     revalidatePath("/dashboard/change-password");
   } catch (err: unknown) {

@@ -1,46 +1,16 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "@/components/common/Toast";
+import { loginAction } from "@/actions/auth";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+export const instant = false;
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
+type PageProps = {
+  searchParams: Promise<{ error?: string; success?: string }>;
+};
 
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed. Please check credentials.");
-      }
-
-      toast.success("Welcome back! Redirecting to dashboard...", "Login Successful");
-      router.push("/dashboard");
-      router.refresh();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
-      setError(msg);
-      toast.error(msg, "Login Error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export default async function LoginPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams;
+  const error = resolvedParams.error ? decodeURIComponent(resolvedParams.error) : "";
+  const success = resolvedParams.success ? decodeURIComponent(resolvedParams.success) : "";
 
   return (
     <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-8 px-3 sm:px-6 lg:px-8">
@@ -60,24 +30,32 @@ export default function LoginPage() {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-5 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
             <span>⚠️</span>
             <span className="flex-1 wrap-break-word">{error}</span>
           </div>
         )}
 
-        {/* Login Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
+        {/* Success Alert */}
+        {success && (
+          <div className="mb-4 p-3 rounded-xl bg-success/10 border border-success/20 text-success text-xs sm:text-sm flex items-start gap-2">
+            <span>✅</span>
+            <span className="flex-1 wrap-break-word">{success}</span>
+          </div>
+        )}
+
+        {/* Login Form with SSR Server Action */}
+        <form action={loginAction} className="space-y-4">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-              Email Address
+              Email Address <span className="text-destructive">*</span>
             </label>
             <input
               type="email"
+              name="email"
+              defaultValue="admin@example.com"
               placeholder="doctor@careguide.com"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -85,7 +63,7 @@ export default function LoginPage() {
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-xs sm:text-sm font-medium text-foreground">
-                Password
+                Password <span className="text-destructive">*</span>
               </label>
               <Link
                 href="/forgot-password"
@@ -96,20 +74,19 @@ export default function LoginPage() {
             </div>
             <input
               type="password"
+              name="password"
+              defaultValue="admin_password_123"
               placeholder="••••••••"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-50 transition"
+            className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 transition"
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            Sign In
           </button>
         </form>
 

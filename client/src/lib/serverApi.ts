@@ -12,7 +12,7 @@ export async function fetchServerApi(endpoint: string, options: RequestInit = {}
   };
 
   if (token) {
-    headers['Authorization'] = token;
+    headers['Authorization'] = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
   }
 
   const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
