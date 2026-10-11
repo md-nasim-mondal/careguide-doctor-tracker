@@ -41,21 +41,21 @@ const FEATURES: FeatureItem[] = [
 
 export default function FeaturesSection() {
   return (
-    <section id="features" className="py-20 bg-card border-y border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+    <section id="features" className="py-12 sm:py-20 bg-card border-y border-border">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16 space-y-2 sm:space-y-3">
           <h2 className="text-xs font-semibold text-primary uppercase tracking-wider">Features &amp; Capabilities</h2>
-          <h3 className="text-3xl font-bold text-foreground">Everything Healthcare Teams Need</h3>
-          <p className="text-muted-foreground">
+          <h3 className="text-xl sm:text-3xl font-bold text-foreground">Everything Healthcare Teams Need</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Built specifically to streamline clinical administrative workflows without complicated setups.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
           {FEATURES.map((feature) => (
             <div
               key={feature.title}
-              className="p-6 bg-background border border-border rounded-xl space-y-3 hover:shadow-md transition"
+              className="p-4 sm:p-6 bg-background border border-border rounded-xl space-y-3 hover:shadow-md transition"
             >
               <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl ${feature.badgeBg}`}>
                 {feature.icon}

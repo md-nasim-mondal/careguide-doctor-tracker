@@ -16,9 +16,9 @@ export default function DoctorDetailsPanel({
   }
 
   return (
-    <div className="bg-card border border-border rounded p-6 sticky top-20 text-foreground shadow-sm">
-      <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-bold">{selectedDoctor.name}</h3>
+    <div className="bg-card border border-border rounded p-4 sm:p-6 sticky top-20 text-foreground shadow-sm">
+      <div className="flex justify-between items-start mb-4 gap-2">
+        <h3 className="text-lg sm:text-xl font-bold truncate">{selectedDoctor.name}</h3>
         <div className="flex gap-2 items-center">
           {isEditing ? (
             <Link

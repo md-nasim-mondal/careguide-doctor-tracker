@@ -89,8 +89,8 @@ export default async function PatientsPage({ searchParams }: PageProps) {
   };
 
   return (
-    <div className="p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-foreground">Patient Management</h1>
+    <div className="p-2.5 sm:p-6 md:p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
+      <h1 className="text-xl sm:text-3xl font-bold mb-4 sm:mb-6 text-foreground">Patient Management</h1>
 
       {errorMessage && (
         <div className="mb-4">

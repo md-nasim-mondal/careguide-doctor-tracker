@@ -53,7 +53,8 @@ echo "✅ Login successful, token obtained."
 
 # 2. Create Doctor
 echo "[2/8] Create Doctor..."
-CREATE_RESP=$(call_api "POST" "/doctors" "$TOKEN" '{"name":"Dr. Assertion Test","specialization":"Neurology","hospital":"Central Clinic","phone":"1122334455","email":"assert_doc@example.com"}' 201)
+TIMESTAMP=$(date +%s)
+CREATE_RESP=$(call_api "POST" "/doctors" "$TOKEN" "{\"name\":\"Dr. Assertion Test\",\"specialization\":\"Neurology\",\"hospital\":\"Central Clinic\",\"phone\":\"1122334455\",\"email\":\"assert_${TIMESTAMP}@example.com\"}" 201)
 DOC_ID=$(echo "$CREATE_RESP" | jq -r '.data._id')
 DOC_NAME=$(echo "$CREATE_RESP" | jq -r '.data.name')
 if [ -z "$DOC_ID" ] || [ "$DOC_NAME" != "Dr. Assertion Test" ]; then
@@ -95,18 +96,18 @@ echo "✅ Nonexistent doctor update returned HTTP 404 and correct error message"
 # 5. Delete doctor without patients
 echo "[5/8] Delete Doctor Without Patients..."
 DELETE_RESP=$(call_api "DELETE" "/doctors/$DOC_ID" "$TOKEN" "" 200)
-# Verify doctor no longer exists
-GET_AFTER_DELETE=$(call_api "GET" "/doctors/$DOC_ID" "$TOKEN" "" 200)
-DOC_AFTER_DELETE=$(echo "$GET_AFTER_DELETE" | jq -r '.data')
-if [ "$DOC_AFTER_DELETE" != "null" ]; then
+# Verify doctor no longer exists (returns 404)
+GET_AFTER_DELETE=$(call_api "GET" "/doctors/$DOC_ID" "$TOKEN" "" 404)
+ERR_AFTER_DELETE=$(echo "$GET_AFTER_DELETE" | jq -r '.message')
+if [ "$ERR_AFTER_DELETE" != "Doctor not found" ]; then
   echo "❌ Doctor still exists after deletion"
   exit 1
 fi
-echo "✅ Doctor deleted successfully and confirmed deleted in DB (HTTP 200)"
+echo "✅ Doctor deleted successfully and confirmed deleted in DB (HTTP 200 delete, HTTP 404 on subsequent get)"
 
 # 6. Guard: Block delete doctor when associated patients exist
 echo "[6/8] Block Delete Doctor With Patients (Assert 400)..."
-CREATE_DOC2=$(call_api "POST" "/doctors" "$TOKEN" '{"name":"Dr. Guard Test","specialization":"Cardiology","hospital":"Heart Center","phone":"9988776655","email":"guard_doc@example.com"}' 201)
+CREATE_DOC2=$(call_api "POST" "/doctors" "$TOKEN" "{\"name\":\"Dr. Guard Test\",\"specialization\":\"Cardiology\",\"hospital\":\"Heart Center\",\"phone\":\"9988776655\",\"email\":\"guard_${TIMESTAMP}@example.com\"}" 201)
 DOC2_ID=$(echo "$CREATE_DOC2" | jq -r '.data._id')
 
 CREATE_PAT=$(call_api "POST" "/patients" "$TOKEN" "{\"name\":\"Protected Patient\",\"age\":30,\"condition\":\"Arrhythmia\",\"doctor\":\"$DOC2_ID\"}" 201)

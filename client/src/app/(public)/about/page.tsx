@@ -8,32 +8,32 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="py-16 md:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 text-foreground">
+    <div className="py-10 sm:py-16 md:py-24 max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 space-y-10 sm:space-y-16 text-foreground">
       {/* Intro Header */}
-      <div className="text-center space-y-4 max-w-3xl mx-auto">
+      <div className="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto">
         <span className="text-xs font-semibold px-3 py-1 bg-primary/10 text-primary rounded-full uppercase tracking-wider">
           Our Mission
         </span>
-        <h1 className="text-4xl font-extrabold tracking-tight">Empowering Clinical Teams Through Intelligent Software</h1>
-        <p className="text-lg text-muted-foreground leading-relaxed">
+        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">Empowering Clinical Teams Through Intelligent Software</h1>
+        <p className="text-sm sm:text-lg text-muted-foreground leading-relaxed">
           CareGuide Doctor Tracker was designed to remove administrative friction in outpatient clinics, multi-specialty hospitals, and care networks.
         </p>
       </div>
 
       {/* Mission & Vision Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="p-8 bg-card border border-border rounded-2xl space-y-4 shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
+        <div className="p-4 sm:p-8 bg-card border border-border rounded-2xl space-y-3 sm:space-y-4 shadow-sm">
           <div className="text-3xl">🎯</div>
-          <h2 className="text-2xl font-bold">The Problem We Solve</h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <h2 className="text-xl sm:text-2xl font-bold">The Problem We Solve</h2>
+          <p className="text-xs sm:text-base text-muted-foreground leading-relaxed">
             Hospitals often struggle with unbalanced physician caseloads, fragmented doctor directories, and orphaned patient records when clinical staff change departments or resign. CareGuide enforces relational integrity so that every patient is actively paired with a licensed attending doctor.
           </p>
         </div>
 
-        <div className="p-8 bg-card border border-border rounded-2xl space-y-4 shadow-sm">
+        <div className="p-4 sm:p-8 bg-card border border-border rounded-2xl space-y-3 sm:space-y-4 shadow-sm">
           <div className="text-3xl">💡</div>
-          <h2 className="text-2xl font-bold">Our Engineering Standard</h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <h2 className="text-xl sm:text-2xl font-bold">Our Engineering Standard</h2>
+          <p className="text-xs sm:text-base text-muted-foreground leading-relaxed">
             Built using modern server-side rendering, strict TypeScript types, and server-driven URL navigation. We prioritize deterministic performance, zero hydration glitches, and immediate feedback for medical administrative teams.
           </p>
         </div>

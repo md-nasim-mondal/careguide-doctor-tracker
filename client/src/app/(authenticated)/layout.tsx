@@ -1,59 +1,32 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getCurrentUser } from "@/lib/auth";
+import { Sidebar } from "@/components/dashboard/Sidebar";
 
 export const metadata: Metadata = {
   title: "CareGuide Doctor Tracker - Dashboard",
   description: "Doctor and patient management tracking platform",
 };
 
-export default function AuthenticatedLayout({
+export const instant = false;
+
+export default async function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getCurrentUser();
+
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="border-b border-border bg-card shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link href="/dashboard" className="text-xl font-bold text-primary flex items-center gap-2">
-              <span>🩺</span>
-              <span>Doctor Tracker</span>
-            </Link>
-            <nav className="flex items-center gap-6 text-sm font-medium">
-              <Link
-                href="/dashboard"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="/dashboard/doctors"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Doctors
-              </Link>
-              <Link
-                href="/dashboard/patients"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Patients
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <form action="/api/auth/logout" method="POST" className="inline">
-              <button
-                type="submit"
-                className="text-sm font-medium text-destructive hover:opacity-80 transition-opacity px-3 py-1.5 rounded border border-destructive/20 hover:bg-destructive/10"
-              >
-                Logout
-              </button>
-            </form>
-          </div>
-        </div>
-      </header>
-      <main className="flex-1 w-full">{children}</main>
+    <div className="min-h-screen flex flex-col md:flex-row bg-background text-foreground">
+      {/* Reusable Sidebar Component */}
+      <Sidebar user={user} />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+        <main className="flex-1 w-full max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-4 sm:py-6">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

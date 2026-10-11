@@ -4,9 +4,9 @@ import type { ContactFormProps } from "@/types";
 
 export default function ContactForm({ errorMessage, isSent }: ContactFormProps) {
   return (
-    <div className="lg:col-span-2 p-8 bg-card border border-border rounded-2xl shadow-sm space-y-6">
-      <h2 className="text-2xl font-bold">Send Support Inquiry</h2>
-      <p className="text-sm text-muted-foreground">
+    <div className="lg:col-span-2 p-4 sm:p-6 md:p-8 bg-card border border-border rounded-2xl shadow-sm space-y-5 sm:space-y-6">
+      <h2 className="text-xl sm:text-2xl font-bold">Send Support Inquiry</h2>
+      <p className="text-xs sm:text-sm text-muted-foreground">
         Submit a request to our administrative integration engineers. We typically respond within 2 hours.
       </p>
 

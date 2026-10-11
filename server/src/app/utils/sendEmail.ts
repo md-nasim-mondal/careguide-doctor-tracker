@@ -77,10 +77,18 @@ export const sendEmail = async ({
         contentType: attachment.contentType,
       })),
     });
-    console.log(`\u2709\uFE0F Email sent to ${to}: ${info.messageId}`);
+    console.log(`✉️ Email sent to ${to}: ${info.messageId}`);
   } catch (error: unknown) {
     const err = error as Error;
-    console.log("email sending error: ", err.message);
-    throw new AppError(401, "Email Error!");
+    console.warn("⚠️ SMTP email sending failed/mocked:", err.message);
+    if (templateData?.code) {
+      console.log(`🔑 Verification / OTP Code for [${to}]: ${String(templateData.code)}`);
+    }
+    if (templateData?.resetUILink) {
+      console.log(`🔗 Password Reset Link for [${to}]: ${String(templateData.resetUILink)}`);
+    }
+    if (envVars.NODE_ENV === "production") {
+      throw new AppError(500, "Failed to send email. Please check SMTP configuration.");
+    }
   }
 };

@@ -11,7 +11,11 @@ export function proxy(request: NextRequest) {
   }
 
   // Paths that only unauthenticated users should see (redirect to dashboard if logged in)
-  const isAuthOnlyPath = pathname === '/login' || pathname === '/register';
+  const isAuthOnlyPath =
+    pathname === '/login' ||
+    pathname === '/register' ||
+    pathname === '/forgot-password' ||
+    pathname === '/reset-password';
 
   // Public paths accessible without login
   const isPublicPath =

@@ -11,14 +11,16 @@ import { userSearchableFields } from "./user.constant";
 import { sendEmail } from "../../utils/sendEmail";
 import { ms } from "../../utils/ms";
 
+import { withTransaction } from "../../utils/withTransaction";
+
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
 
-  const session = await mongoose.startSession();
-  try {
-    session.startTransaction();
+  const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
+  const verificationCodeExpires = new Date(Date.now() + ms(envVars.OTP_EXPIRES));
 
-    const isUserExist = await User.findOne({ email }).session(session);
+  const user = await withTransaction(async (session) => {
+    const isUserExist = await User.findOne({ email }).session(session || null);
 
     if (isUserExist) {
       throw new AppError(httpStatus.BAD_REQUEST, "User Already Exist");
@@ -34,10 +36,7 @@ const createUser = async (payload: Partial<IUser>) => {
       providerId: email as string,
     };
 
-    const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
-    const verificationCodeExpires = new Date(Date.now() + ms(envVars.OTP_EXPIRES));
-
-    const [user] = await User.create(
+    const [newUser] = await User.create(
       [
         {
           email,
@@ -48,28 +47,23 @@ const createUser = async (payload: Partial<IUser>) => {
           ...rest,
         },
       ],
-      { session }
+      session ? { session } : {}
     );
 
-    await session.commitTransaction();
+    return newUser;
+  });
 
-    await sendEmail({
-      to: user.email,
-      subject: "Verify Your Email",
-      templateName: "verifyEmail",
-      templateData: {
-        name: user.name,
-        code: verificationCode,
-      },
-    });
+  await sendEmail({
+    to: user.email,
+    subject: "Verify Your Email",
+    templateName: "verifyEmail",
+    templateData: {
+      name: user.name,
+      code: verificationCode,
+    },
+  });
 
-    return user;
-  } catch (error) {
-    await session.abortTransaction();
-    throw error;
-  } finally {
-    await session.endSession();
-  }
+  return user;
 };
 
 const updateUser = async (
