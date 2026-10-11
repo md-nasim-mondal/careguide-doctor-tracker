@@ -1,8 +1,12 @@
+import dns from "node:dns";
 import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
+
+// Manually set Google DNS servers
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 let server: Server;
 
