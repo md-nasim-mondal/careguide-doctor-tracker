@@ -1,98 +1,16 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "@/components/common/Toast";
+import { registerAction } from "@/actions/auth";
 
-export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    phone: "",
-    address: "",
-  });
+export const instant = false;
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+type PageProps = {
+  searchParams: Promise<{ error?: string; success?: string }>;
+};
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    if (formData.password !== formData.confirmPassword) {
-      const msg = "Passwords do not match.";
-      setError(msg);
-      toast.error(msg, "Validation Error");
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      const msg = "Password must be at least 8 characters long.";
-      setError(msg);
-      toast.error(msg, "Validation Error");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const payload: {
-        name: string;
-        email: string;
-        password: string;
-        phone?: string;
-        address?: string;
-      } = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      };
-
-      if (formData.phone.trim()) {
-        payload.phone = formData.phone.trim();
-      }
-      if (formData.address.trim()) {
-        payload.address = formData.address.trim();
-      }
-
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed.");
-      }
-
-      setSuccess("Account registered successfully! Redirecting to login...");
-      toast.success("Account registered successfully! Please sign in.", "Welcome!");
-      setTimeout(() => {
-        router.push("/login");
-      }, 1500);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
-      setError(msg);
-      toast.error(msg, "Registration Error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export default async function RegisterPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams;
+  const error = resolvedParams.error ? decodeURIComponent(resolvedParams.error) : "";
+  const success = resolvedParams.success ? decodeURIComponent(resolvedParams.success) : "";
 
   return (
     <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-8 px-3 sm:px-6 lg:px-8">
@@ -126,8 +44,8 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {/* Register Form */}
-        <form onSubmit={handleRegister} className="space-y-3.5">
+        {/* Register Form using SSR Server Action */}
+        <form action={registerAction} className="space-y-3.5">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
               Full Name *
@@ -137,8 +55,6 @@ export default function RegisterPage() {
               name="name"
               placeholder="Dr. John Doe / Sarah Smith"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={formData.name}
-              onChange={handleChange}
               required
             />
           </div>
@@ -152,42 +68,21 @@ export default function RegisterPage() {
               name="email"
               placeholder="john@example.com"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={formData.email}
-              onChange={handleChange}
               required
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-                Password *
-              </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Pass@1234"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-                Confirm Password *
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Pass@1234"
-                className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
+              Password *
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Pass@1234"
+              className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
+              required
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -200,8 +95,6 @@ export default function RegisterPage() {
                 name="phone"
                 placeholder="+8801700000000"
                 className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-                value={formData.phone}
-                onChange={handleChange}
               />
             </div>
 
@@ -214,8 +107,6 @@ export default function RegisterPage() {
                 name="address"
                 placeholder="Dhaka, Bangladesh"
                 className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-                value={formData.address}
-                onChange={handleChange}
               />
             </div>
           </div>
@@ -226,10 +117,9 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-50 transition"
+            className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 transition cursor-pointer"
           >
-            {isLoading ? "Creating Account..." : "Create Account"}
+            Create Account
           </button>
         </form>
 

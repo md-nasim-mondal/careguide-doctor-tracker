@@ -1,51 +1,20 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { toast } from "@/components/common/Toast";
+import { forgotPasswordAction } from "@/actions/auth";
 
-export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+export const instant = false;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setMessage("");
-    setIsLoading(true);
+type PageProps = {
+  searchParams: Promise<{ error?: string; success?: string }>;
+};
 
-    try {
-      const res = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to submit request.");
-      }
-
-      const successMsg =
-        data.message ||
-        "Password reset link generated! Check your email or check the server terminal in local development mode.";
-      setMessage(successMsg);
-      toast.success(successMsg, "Instructions Sent");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
-      setError(msg);
-      toast.error(msg, "Error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export default async function ForgotPasswordPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams;
+  const error = resolvedParams.error ? decodeURIComponent(resolvedParams.error) : "";
+  const success = resolvedParams.success ? decodeURIComponent(resolvedParams.success) : "";
 
   return (
     <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-8 px-3 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-4 sm:p-8 transition-all">
+      <div className="w-full max-w-md bg-card rounded-2xl border border-border p-4 sm:p-8 transition-all">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 text-primary text-2xl mb-3">
@@ -68,35 +37,33 @@ export default function ForgotPasswordPage() {
         )}
 
         {/* Success Alert */}
-        {message && (
+        {success && (
           <div className="mb-4 p-3 rounded-xl bg-success/10 border border-success/20 text-success text-xs sm:text-sm flex items-start gap-2">
             <span>✉️</span>
-            <span className="flex-1 wrap-break-word">{message}</span>
+            <span className="flex-1 wrap-break-word">{success}</span>
           </div>
         )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form with SSR Server Action */}
+        <form action={forgotPasswordAction} className="space-y-4">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-              Registered Email
+              Registered Email <span className="text-destructive">*</span>
             </label>
             <input
               type="email"
+              name="email"
               placeholder="user@example.com"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-50 transition"
+            className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 transition"
           >
-            {isLoading ? "Sending Instructions..." : "Send Reset Instructions"}
+            Send Reset Instructions
           </button>
         </form>
 

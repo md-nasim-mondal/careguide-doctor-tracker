@@ -1,64 +1,15 @@
-"use client";
+import { changePasswordAction } from "@/actions/auth";
 
-import { useState } from "react";
-import { toast } from "@/components/common/Toast";
+export const instant = false;
 
-export default function ChangePasswordPage() {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+type PageProps = {
+  searchParams: Promise<{ error?: string; success?: string }>;
+};
 
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    if (newPassword !== confirmPassword) {
-      const msg = "New password and confirmation do not match.";
-      setError(msg);
-      toast.error(msg, "Validation Error");
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      const msg = "New password must be at least 6 characters long.";
-      setError(msg);
-      toast.error(msg, "Validation Error");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/auth/change-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ oldPassword, newPassword }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to change password.");
-      }
-
-      const msg = "Your password has been changed successfully!";
-      setSuccess(msg);
-      toast.success(msg, "Password Changed");
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "An unexpected error occurred. Please try again.";
-      setError(msg);
-      toast.error(msg, "Error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+export default async function ChangePasswordPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams;
+  const error = resolvedParams.error ? decodeURIComponent(resolvedParams.error) : "";
+  const success = resolvedParams.success ? decodeURIComponent(resolvedParams.success) : "";
 
   return (
     <div className="max-w-2xl mx-auto py-4 sm:py-8 px-2 sm:px-6">
@@ -86,17 +37,16 @@ export default function ChangePasswordPage() {
           </div>
         )}
 
-        <form onSubmit={handleChangePassword} className="space-y-4">
+        <form action={changePasswordAction} className="space-y-4">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
               Current Password *
             </label>
             <input
               type="password"
+              name="oldPassword"
               placeholder="••••••••"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
               required
             />
           </div>
@@ -107,34 +57,19 @@ export default function ChangePasswordPage() {
             </label>
             <input
               type="password"
+              name="newPassword"
               placeholder="••••••••"
+              minLength={6}
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-              Confirm New Password *
-            </label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full sm:w-auto px-6 py-2.5 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 disabled:opacity-50 transition"
+            className="w-full sm:w-auto px-6 py-2.5 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 transition cursor-pointer"
           >
-            {isLoading ? "Saving changes..." : "Update Password"}
+            Update Password
           </button>
         </form>
       </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IUserProfile } from "@/types";
+import { logoutAction } from "@/actions/auth";
 
 interface SidebarProps {
   user: IUserProfile | null;
@@ -170,7 +171,7 @@ export function Sidebar({ user }: SidebarProps) {
 
         {/* Bottom Actions & Logout */}
         <div className="p-3 sm:p-4 border-t border-border mt-auto">
-          <form action="/api/auth/logout" method="POST" className="w-full">
+          <form action={logoutAction} className="w-full">
             <button
               type="submit"
               className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-destructive border border-destructive/20 hover:bg-destructive/10 transition"
