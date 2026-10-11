@@ -72,3 +72,23 @@ export async function removePatientFromDoctorAction(doctorId: string, patientId:
   }
   redirect(redirectUrl);
 }
+
+export async function addPatientToDoctorAction(doctorId: string, formData: FormData) {
+  const name = formData.get("name") as string;
+  const age = Number(formData.get("age"));
+  const condition = formData.get("condition") as string;
+
+  let redirectUrl = `/dashboard/doctors?doctorId=${doctorId}`;
+  try {
+    await fetchServerApi(`/doctors/${doctorId}/patients`, {
+      method: "POST",
+      body: JSON.stringify({ name, age, condition }),
+    });
+    revalidatePath("/dashboard/doctors");
+    revalidatePath("/dashboard/patients");
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "An unknown error occurred";
+    redirectUrl = `/dashboard/doctors?doctorId=${doctorId}&action=add-patient&error=${encodeURIComponent(message)}`;
+  }
+  redirect(redirectUrl);
+}

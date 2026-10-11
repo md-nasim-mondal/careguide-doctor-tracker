@@ -1,3 +1,5 @@
+import type { PatientItem } from "./patient";
+
 export interface DoctorItem {
   _id: string;
   name: string;
@@ -11,6 +13,8 @@ export type DoctorOption = Pick<DoctorItem, "_id" | "name">;
 
 export interface DoctorSearchBarProps {
   search: string;
+  specialization: string;
+  date: string;
   showAddForm: boolean;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }
@@ -28,13 +32,17 @@ export interface DoctorsTableProps {
 
 export interface DoctorDetailsPanelProps {
   selectedDoctor: DoctorItem | null;
+  assignedPatients: PatientItem[];
   isEditing: boolean;
+  isAddingPatient?: boolean;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }
 
 export type DoctorPageSearchParams = {
   page?: string;
   search?: string;
+  specialization?: string;
+  date?: string;
   doctorId?: string;
   action?: string;
   error?: string;

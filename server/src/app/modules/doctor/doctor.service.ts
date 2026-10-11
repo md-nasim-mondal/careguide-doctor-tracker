@@ -1,5 +1,5 @@
 import httpStatus from 'http-status-codes';
-import mongoose from 'mongoose';
+import  { ClientSession } from 'mongoose';
 import AppError from '../../errorHelpers/AppError';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { Patient } from '../patient/patient.model';
@@ -15,9 +15,25 @@ const createDoctor = async (payload: IDoctor) => {
 };
 
 const getAllDoctors = async (query: Record<string, string>) => {
+  const queryObj = { ...query };
+
+  let baseQuery = Doctor.find();
+  if (queryObj.date) {
+    const targetDate = new Date(queryObj.date);
+    const nextDay = new Date(targetDate);
+    nextDay.setDate(targetDate.getDate() + 1);
+    baseQuery = baseQuery.find({
+      createdAt: {
+        $gte: targetDate,
+        $lt: nextDay,
+      },
+    });
+    delete queryObj.date;
+  }
+
   const doctorQuery = new QueryBuilder(
-    Doctor.find(),
-    query
+    baseQuery,
+    queryObj
   )
     .search(doctorSearchableFields)
     .filter()
@@ -53,22 +69,22 @@ const getDoctorPatients = async (doctorId: string) => {
 };
 
 const addPatientToDoctor = async (doctorId: string, payload: Partial<IPatient>) => {
-  return await withTransaction(async (session) => {
+  return await withTransaction(async (session: ClientSession | undefined) => {
     const doctor = await Doctor.findById(doctorId).session(session || null);
     if (!doctor) {
       throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
     }
 
-    const [patient] = await Patient.create([{ ...payload, doctor: doctorId }], {
-      ...(session ? { session } : {}),
-    });
-
+    const [patient] = await Patient.create(
+      [{ ...payload, doctor: doctorId }],
+      session ? { session } : {}
+    );
     return patient;
   });
 };
 
 const removePatientFromDoctor = async (doctorId: string, patientId: string) => {
-  return await withTransaction(async (session) => {
+  return await withTransaction(async (session: ClientSession | undefined) => {
     const doctor = await Doctor.findById(doctorId).session(session || null);
     if (!doctor) {
       throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
@@ -108,7 +124,7 @@ const updateDoctor = async (id: string, payload: Partial<IDoctor>) => {
 };
 
 const deleteDoctor = async (id: string) => {
-  return await withTransaction(async (session) => {
+  return await withTransaction(async (session: ClientSession | undefined) => {
     const doctor = await Doctor.findById(id).session(session || null);
     if (!doctor) {
       throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');

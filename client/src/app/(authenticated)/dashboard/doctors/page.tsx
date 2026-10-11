@@ -4,7 +4,7 @@ import DoctorSearchBar from "@/components/doctors/DoctorSearchBar";
 import DoctorForm from "@/components/doctors/DoctorForm";
 import DoctorsTable from "@/components/doctors/DoctorsTable";
 import DoctorDetailsPanel from "@/components/doctors/DoctorDetailsPanel";
-import type { DoctorItem, DoctorPageSearchParams } from "@/types";
+import type { DoctorItem, DoctorPageSearchParams, PatientItem } from "@/types";
 
 export const instant = false;
 
@@ -16,6 +16,8 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
   const page = parseInt(resolvedSearchParams.page || "1", 10);
   const search = resolvedSearchParams.search || "";
+  const specialization = resolvedSearchParams.specialization || "";
+  const date = resolvedSearchParams.date || "";
   const doctorId = resolvedSearchParams.doctorId || "";
   const action = resolvedSearchParams.action || "";
   const errorQuery = resolvedSearchParams.error || "";
@@ -26,7 +28,15 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
   let fetchError = "";
 
   try {
-    const res = await fetchServerApi(`/doctors?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`);
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+    if (search) queryParams.set("search", search);
+    if (specialization) queryParams.set("specialization", specialization);
+    if (date) queryParams.set("date", date);
+
+    const res = await fetchServerApi(`/doctors?${queryParams.toString()}`);
     initialDoctors = res.data?.doctors || [];
     totalPages = Math.ceil((res.data?.total || 0) / limit) || 1;
   } catch (err: unknown) {
@@ -40,6 +50,7 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
   const errorMessage = errorQuery || fetchError;
   const showAddForm = action === "add";
   const isEditing = action === "edit";
+  const isAddingPatient = action === "add-patient";
 
   // Find selected doctor from current page or fetch if selected from another view
   let selectedDoctor = initialDoctors.find((d) => d._id === doctorId) || null;
@@ -52,9 +63,22 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
     }
   }
 
+  // Fetch corresponding patients for the selected doctor
+  let assignedPatients: PatientItem[] = [];
+  if (selectedDoctor) {
+    try {
+      const patientsRes = await fetchServerApi(`/doctors/${selectedDoctor._id}/patients`);
+      assignedPatients = patientsRes.data || [];
+    } catch {
+      assignedPatients = [];
+    }
+  }
+
   const buildQuery = (params: Record<string, string | number | undefined>) => {
     const sp = new URLSearchParams();
     if (search) sp.set("search", search);
+    if (specialization) sp.set("specialization", specialization);
+    if (date) sp.set("date", date);
     if (page > 1) sp.set("page", page.toString());
     Object.entries(params).forEach(([key, val]) => {
       if (val !== undefined && val !== "") {
@@ -80,6 +104,8 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
       {/* Search and Action Bar */}
       <DoctorSearchBar
         search={search}
+        specialization={specialization}
+        date={date}
         showAddForm={showAddForm}
         buildQuery={buildQuery}
       />
@@ -98,11 +124,12 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
 
         <DoctorDetailsPanel
           selectedDoctor={selectedDoctor}
+          assignedPatients={assignedPatients}
           isEditing={isEditing}
+          isAddingPatient={isAddingPatient}
           buildQuery={buildQuery}
         />
       </div>
     </div>
   );
 }
-

@@ -3,40 +3,57 @@ import type { DoctorSearchBarProps } from "@/types";
 
 export default function DoctorSearchBar({
   search,
+  specialization,
+  date,
   showAddForm,
   buildQuery,
 }: DoctorSearchBarProps) {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-3">
-      <form method="GET" action="/dashboard/doctors" className="w-full sm:w-auto sm:flex-1 max-w-md flex gap-2">
+    <div className="mb-6 space-y-4">
+      {/* Search & Filter Form */}
+      <form method="GET" action="/dashboard/doctors" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         <input
           type="text"
           name="search"
           placeholder="Search doctors..."
           defaultValue={search}
-          className="flex-1 min-w-0 p-2.5 sm:p-3 bg-card border border-border rounded text-xs sm:text-sm text-foreground focus:ring-2 focus:ring-ring"
+          className="p-2.5 border border-input rounded bg-card text-foreground text-xs sm:text-sm focus:ring-2 focus:ring-ring"
         />
-        <button
-          type="submit"
-          className="px-3.5 sm:px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 font-semibold text-xs sm:text-sm shrink-0 cursor-pointer"
-        >
-          Search
-        </button>
-        {search && (
+        <input
+          type="text"
+          name="specialization"
+          placeholder="Filter specialization..."
+          defaultValue={specialization}
+          className="p-2.5 border border-input rounded bg-card text-foreground text-xs sm:text-sm focus:ring-2 focus:ring-ring"
+        />
+        <input
+          type="date"
+          name="date"
+          defaultValue={date}
+          className="p-2.5 border border-input rounded bg-card text-foreground text-xs sm:text-sm focus:ring-2 focus:ring-ring"
+        />
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 font-semibold text-xs sm:text-sm cursor-pointer shadow-xs"
+          >
+            Filter
+          </button>
           <Link
             href="/dashboard/doctors"
-            className="px-3 py-2 bg-muted text-foreground border border-border rounded hover:bg-muted/80 flex items-center text-xs sm:text-sm shrink-0"
+            className="px-4 py-2 bg-muted text-foreground border border-border rounded hover:bg-muted/80 flex items-center justify-center text-xs sm:text-sm font-medium"
           >
-            Clear
+            Reset
           </Link>
-        )}
+        </div>
       </form>
 
-      <div className="flex">
+      {/* Action Bar */}
+      <div className="flex justify-end">
         {showAddForm ? (
           <Link
             href={`/dashboard/doctors${buildQuery({ action: undefined })}`}
-            className="w-full sm:w-auto text-center px-4 py-2 bg-muted text-foreground border border-border rounded hover:bg-muted/80 text-xs sm:text-sm font-medium"
+            className="w-full sm:w-auto text-center px-4 py-2 bg-muted text-foreground border border-border rounded text-xs sm:text-sm font-medium"
           >
             Cancel
           </Link>
