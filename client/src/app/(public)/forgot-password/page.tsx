@@ -63,7 +63,7 @@ export default function ForgotPasswordPage() {
         {error && (
           <div className="mb-4 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
             <span>⚠️</span>
-            <span className="flex-1 break-words">{error}</span>
+            <span className="flex-1 wrap-break-word">{error}</span>
           </div>
         )}
 
@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
         {message && (
           <div className="mb-4 p-3 rounded-xl bg-success/10 border border-success/20 text-success text-xs sm:text-sm flex items-start gap-2">
             <span>✉️</span>
-            <span className="flex-1 break-words">{message}</span>
+            <span className="flex-1 wrap-break-word">{message}</span>
           </div>
         )}
 

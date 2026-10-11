@@ -62,7 +62,7 @@ export default function LoginPage() {
         {error && (
           <div className="mb-5 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
             <span>⚠️</span>
-            <span className="flex-1 break-words">{error}</span>
+            <span className="flex-1 wrap-break-word">{error}</span>
           </div>
         )}
 
