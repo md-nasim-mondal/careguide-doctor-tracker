@@ -1,23 +1,9 @@
 import Link from "next/link";
 import { deletePatientAction } from "@/actions/patients";
 import Pagination from "@/components/common/Pagination";
-import type { DoctorOption } from "./PatientForm";
+import type { PatientItem, PatientsTableProps } from "@/types";
 
-export interface PatientItem {
-  _id: string;
-  name: string;
-  age: number;
-  condition: string;
-  doctor: DoctorOption | string;
-  createdAt: string;
-}
-
-interface PatientsTableProps {
-  patients: PatientItem[];
-  currentPage: number;
-  totalPages: number;
-  buildQuery: (params: Record<string, string | number | undefined>) => string;
-}
+export type { PatientItem };
 
 export default function PatientsTable({
   patients,

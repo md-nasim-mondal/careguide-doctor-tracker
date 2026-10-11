@@ -1,8 +1,4 @@
-interface AlertBannerProps {
-  message?: string;
-  variant?: "error" | "success" | "info";
-  className?: string;
-}
+import type { AlertBannerProps } from "@/types";
 
 export default function AlertBanner({ message, variant = "error", className = "" }: AlertBannerProps) {
   if (!message) return null;

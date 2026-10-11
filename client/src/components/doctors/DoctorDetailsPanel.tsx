@@ -1,12 +1,6 @@
 import Link from "next/link";
 import { updateDoctorAction, deleteDoctorAction } from "@/actions/doctors";
-import type { DoctorItem } from "./DoctorsTable";
-
-interface DoctorDetailsPanelProps {
-  selectedDoctor: DoctorItem | null;
-  isEditing: boolean;
-  buildQuery: (params: Record<string, string | number | undefined>) => string;
-}
+import type { DoctorDetailsPanelProps } from "@/types";
 
 export default function DoctorDetailsPanel({
   selectedDoctor,

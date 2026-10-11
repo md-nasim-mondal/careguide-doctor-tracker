@@ -1,10 +1,5 @@
 import Link from "next/link";
-
-interface DoctorSearchBarProps {
-  search: string;
-  showAddForm: boolean;
-  buildQuery: (params: Record<string, string | number | undefined>) => string;
-}
+import type { DoctorSearchBarProps } from "@/types";
 
 export default function DoctorSearchBar({
   search,

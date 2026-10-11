@@ -2,19 +2,14 @@ import { fetchServerApi } from "@/lib/serverApi";
 import AlertBanner from "@/components/common/AlertBanner";
 import DoctorSearchBar from "@/components/doctors/DoctorSearchBar";
 import DoctorForm from "@/components/doctors/DoctorForm";
-import DoctorsTable, { type DoctorItem } from "@/components/doctors/DoctorsTable";
+import DoctorsTable from "@/components/doctors/DoctorsTable";
 import DoctorDetailsPanel from "@/components/doctors/DoctorDetailsPanel";
+import type { DoctorItem, DoctorPageSearchParams } from "@/types";
 
 export const instant = false;
 
 type PageProps = {
-  searchParams: Promise<{
-    page?: string;
-    search?: string;
-    doctorId?: string;
-    action?: string;
-    error?: string;
-  }>;
+  searchParams: Promise<DoctorPageSearchParams>;
 };
 
 export default async function DoctorsPage({ searchParams }: PageProps) {

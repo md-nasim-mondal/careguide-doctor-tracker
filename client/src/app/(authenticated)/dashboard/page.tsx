@@ -1,11 +1,12 @@
 import { fetchServerApi } from "@/lib/serverApi";
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
 import Link from "next/link";
+import type { DashboardAnalytics } from "@/types";
 
 export const instant = false;
 
 export default async function DashboardPage() {
-  let analytics = {
+  let analytics: DashboardAnalytics = {
     totalDoctors: 0,
     totalPatients: 0,
     patientsPerDoctor: [],

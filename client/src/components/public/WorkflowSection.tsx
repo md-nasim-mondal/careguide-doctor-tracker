@@ -1,8 +1,4 @@
-interface StepItem {
-  step: number;
-  title: string;
-  description: string;
-}
+import type { StepItem } from "@/types";
 
 const STEPS: StepItem[] = [
   {

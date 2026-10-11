@@ -1,9 +1,4 @@
-interface FeatureItem {
-  icon: string;
-  badgeBg: string;
-  title: string;
-  description: string;
-}
+import type { FeatureItem } from "@/types";
 
 const FEATURES: FeatureItem[] = [
   {

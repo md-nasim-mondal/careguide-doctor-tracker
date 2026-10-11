@@ -1,10 +1,6 @@
 import { submitContactInquiryAction } from "@/actions/contact";
 import AlertBanner from "@/components/common/AlertBanner";
-
-interface ContactFormProps {
-  errorMessage?: string;
-  isSent?: boolean;
-}
+import type { ContactFormProps } from "@/types";
 
 export default function ContactForm({ errorMessage, isSent }: ContactFormProps) {
   return (

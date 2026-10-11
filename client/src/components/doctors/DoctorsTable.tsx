@@ -1,21 +1,8 @@
 import Link from "next/link";
 import Pagination from "@/components/common/Pagination";
+import type { DoctorItem, DoctorsTableProps } from "@/types";
 
-export interface DoctorItem {
-  _id: string;
-  name: string;
-  specialization: string;
-  hospital: string;
-  phone: string;
-  email: string;
-}
-
-interface DoctorsTableProps {
-  doctors: DoctorItem[];
-  currentPage: number;
-  totalPages: number;
-  buildQuery: (params: Record<string, string | number | undefined>) => string;
-}
+export type { DoctorItem };
 
 export default function DoctorsTable({
   doctors,

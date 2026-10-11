@@ -1,9 +1,6 @@
 import Link from "next/link";
 import { createDoctorAction } from "@/actions/doctors";
-
-interface DoctorFormProps {
-  buildQuery: (params: Record<string, string | number | undefined>) => string;
-}
+import type { DoctorFormProps } from "@/types";
 
 export default function DoctorForm({ buildQuery }: DoctorFormProps) {
   return (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import ContactInfoCards from "@/components/public/ContactInfoCards";
 import ContactForm from "@/components/public/ContactForm";
+import type { ContactPageSearchParams } from "@/types";
 
 export const metadata: Metadata = {
   title: "Contact Support - CareGuide Doctor Tracker",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 export const instant = false;
 
 type PageProps = {
-  searchParams: Promise<{ sent?: string; error?: string }>;
+  searchParams: Promise<ContactPageSearchParams>;
 };
 
 export default async function ContactPage({ searchParams }: PageProps) {

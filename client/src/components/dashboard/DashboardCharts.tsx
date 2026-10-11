@@ -12,24 +12,18 @@ import {
   Line,
 } from "recharts";
 
-type PatientPerDoctor = {
-  _id: string;
-  count: number;
-  doctorName: string;
-};
+import type {
+  DashboardChartsProps,
+  PatientPerDoctor,
+  RegistrationData,
+} from "@/types";
 
-type RegistrationData = {
-  _id: string; // date string
-  count: number;
-};
+export type { PatientPerDoctor, RegistrationData };
 
 export function DashboardCharts({
   patientsPerDoctor,
   registrationsOverTime,
-}: {
-  patientsPerDoctor: PatientPerDoctor[];
-  registrationsOverTime: RegistrationData[];
-}) {
+}: DashboardChartsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
       {/* Patients Per Doctor Chart */}

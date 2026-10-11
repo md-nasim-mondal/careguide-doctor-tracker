@@ -1,21 +1,19 @@
 import { fetchServerApi } from "@/lib/serverApi";
 import AlertBanner from "@/components/common/AlertBanner";
 import PatientFilterBar from "@/components/patients/PatientFilterBar";
-import PatientForm, { type DoctorOption, type PatientFormModel } from "@/components/patients/PatientForm";
-import PatientsTable, { type PatientItem } from "@/components/patients/PatientsTable";
+import PatientForm from "@/components/patients/PatientForm";
+import PatientsTable from "@/components/patients/PatientsTable";
+import type {
+  DoctorOption,
+  PatientFormModel,
+  PatientItem,
+  PatientPageSearchParams,
+} from "@/types";
 
 export const instant = false;
 
 type PageProps = {
-  searchParams: Promise<{
-    page?: string;
-    search?: string;
-    condition?: string;
-    date?: string;
-    action?: string;
-    patientId?: string;
-    error?: string;
-  }>;
+  searchParams: Promise<PatientPageSearchParams>;
 };
 
 export default async function PatientsPage({ searchParams }: PageProps) {

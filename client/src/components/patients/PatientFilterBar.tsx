@@ -1,12 +1,5 @@
 import Link from "next/link";
-
-interface PatientFilterBarProps {
-  search: string;
-  condition: string;
-  date: string;
-  showAddForm: boolean;
-  buildQuery: (params: Record<string, string | number | undefined>) => string;
-}
+import type { PatientFilterBarProps } from "@/types";
 
 export default function PatientFilterBar({
   search,

@@ -1,25 +1,8 @@
 import Link from "next/link";
 import { createPatientAction, updatePatientAction } from "@/actions/patients";
+import type { DoctorOption, PatientFormModel, PatientFormProps } from "@/types";
 
-export interface DoctorOption {
-  _id: string;
-  name: string;
-}
-
-export interface PatientFormModel {
-  _id?: string;
-  name?: string;
-  age?: number;
-  condition?: string;
-  doctor?: DoctorOption | string;
-}
-
-interface PatientFormProps {
-  patient?: PatientFormModel | null;
-  doctorsList: DoctorOption[];
-  isEditing?: boolean;
-  buildQuery: (params: Record<string, string | number | undefined>) => string;
-}
+export type { DoctorOption, PatientFormModel };
 
 export default function PatientForm({
   patient,
