@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { Doctor } from './doctor.model';
 import { Patient } from '../patient/patient.model';
+import AppError from '../../errorHelpers/AppError';
 import { sendResponse } from '../../utils/sendResponse';
 
 export const createDoctor = catchAsync(async (req: Request, res: Response) => {
@@ -64,7 +65,7 @@ export const updateDoctor = catchAsync(async (req: Request, res: Response) => {
 
   const doctor = await Doctor.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
   if (!doctor) {
-    throw new Error('Doctor not found');
+    throw new AppError(404, 'Doctor not found');
   }
 
   sendResponse(res, { statusCode: 200, success: true, message: 'Doctor updated', data: doctor });
@@ -73,12 +74,12 @@ export const updateDoctor = catchAsync(async (req: Request, res: Response) => {
 export const deleteDoctor = catchAsync(async (req: Request, res: Response) => {
   const doctor = await Doctor.findById(req.params.id);
   if (!doctor) {
-    throw new Error('Doctor not found');
+    throw new AppError(404, 'Doctor not found');
   }
 
   const patientCount = await Patient.countDocuments({ doctor: req.params.id });
   if (patientCount > 0) {
-    throw new Error(`Cannot delete doctor with ${patientCount} associated patient(s). Please reassign or delete these patients first.`);
+    throw new AppError(400, `Cannot delete doctor with ${patientCount} associated patient(s). Please reassign or delete these patients first.`);
   }
 
   await doctor.deleteOne();

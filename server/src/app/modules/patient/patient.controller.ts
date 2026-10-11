@@ -1,9 +1,17 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { Patient } from './patient.model';
+import { Doctor } from '../doctor/doctor.model';
+import AppError from '../../errorHelpers/AppError';
 import { sendResponse } from '../../utils/sendResponse';
 
 export const createPatient = catchAsync(async (req: Request, res: Response) => {
+  if (req.body.doctor) {
+    const doctorExists = await Doctor.findById(req.body.doctor);
+    if (!doctorExists) {
+      throw new AppError(404, 'Doctor not found');
+    }
+  }
   const patient = await Patient.create(req.body);
   sendResponse(res, { statusCode: 201, success: true, message: 'Patient created', data: patient });
 });
@@ -45,11 +53,23 @@ export const getPatients = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const updatePatient = catchAsync(async (req: Request, res: Response) => {
-  const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (req.body.doctor) {
+    const doctorExists = await Doctor.findById(req.body.doctor);
+    if (!doctorExists) {
+      throw new AppError(404, 'Doctor not found');
+    }
+  }
+  const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+  if (!patient) {
+    throw new AppError(404, 'Patient not found');
+  }
   sendResponse(res, { statusCode: 200, success: true, message: 'Patient updated', data: patient });
 });
 
 export const deletePatient = catchAsync(async (req: Request, res: Response) => {
-  await Patient.findByIdAndDelete(req.params.id);
+  const patient = await Patient.findByIdAndDelete(req.params.id);
+  if (!patient) {
+    throw new AppError(404, 'Patient not found');
+  }
   sendResponse(res, { statusCode: 200, success: true, message: 'Patient deleted', data: null });
 });

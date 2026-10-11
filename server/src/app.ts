@@ -61,6 +61,12 @@ app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1", router);
 
+if (envVars.NODE_ENV !== "production") {
+  app.get("/api/v1/test-server-error", () => {
+    throw new Error("Simulated unhandled internal server error");
+  });
+}
+
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,

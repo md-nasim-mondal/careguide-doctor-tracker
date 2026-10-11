@@ -1,4 +1,6 @@
 import { ErrorRequestHandler } from "express";
+import httpStatus from "http-status-codes";
+import { JsonWebTokenError, NotBeforeError, TokenExpiredError } from "jsonwebtoken";
 import mongoose from "mongoose";
 import { ZodError } from "zod";
 import { envVars } from "../config/env";
@@ -67,12 +69,21 @@ export const globalErrorHandler: ErrorRequestHandler = async (
     statusCode = simplifiedError.statusCode as number;
     errorSources = simplifiedError.errorSources as TErrorSources[];
     message = simplifiedError.message;
+  } else if (error instanceof TokenExpiredError || error.name === "TokenExpiredError") {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = "Token has expired";
+  } else if (error instanceof JsonWebTokenError || error.name === "JsonWebTokenError") {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = "Invalid or malformed token";
+  } else if (error instanceof NotBeforeError || error.name === "NotBeforeError") {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = "Token not active yet";
   } else if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;
   } else if (error instanceof Error) {
     statusCode = 500;
-    message = error.message;
+    message = envVars.NODE_ENV === "production" ? "Internal server error" : error.message;
   }
 
   res.status(statusCode).json({
