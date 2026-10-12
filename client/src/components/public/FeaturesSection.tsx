@@ -1,4 +1,5 @@
 import type { FeatureItem } from "@/types";
+import { FeatureCard } from "./FeatureCard";
 
 const FEATURES: FeatureItem[] = [
   {
@@ -53,18 +54,7 @@ export default function FeaturesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
           {FEATURES.map((feature) => (
-            <div
-              key={feature.title}
-              className="p-4 sm:p-6 bg-background border border-border rounded-xl space-y-3 hover:shadow-md transition"
-            >
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl ${feature.badgeBg}`}>
-                {feature.icon}
-              </div>
-              <h4 className="text-lg font-bold">{feature.title}</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
+            <FeatureCard key={feature.title} feature={feature} />
           ))}
         </div>
       </div>

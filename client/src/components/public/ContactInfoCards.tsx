@@ -1,38 +1,22 @@
+import { InfoCard } from "./InfoCard";
+
 export default function ContactInfoCards() {
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="p-4 sm:p-6 bg-card border border-border rounded-xl space-y-2.5 sm:space-y-3 shadow-sm">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl">
-          📍
-        </div>
-        <h3 className="font-bold text-base sm:text-lg">Hospital Operations HQ</h3>
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          CareGuide Health Informatics Group<br />
-          Plot 12, Medical Square, Health City
-        </p>
-      </div>
+      <InfoCard icon="📍" title="Hospital Operations HQ">
+        CareGuide Health Informatics Group<br />
+        Plot 12, Medical Square, Health City
+      </InfoCard>
 
-      <div className="p-4 sm:p-6 bg-card border border-border rounded-xl space-y-2.5 sm:space-y-3 shadow-sm">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl">
-          ✉️
-        </div>
-        <h3 className="font-bold text-base sm:text-lg">Direct Communications</h3>
-        <p className="text-xs sm:text-sm text-muted-foreground break-all">
-          Clinical Support: <span className="font-mono text-foreground">support@careguide.local</span><br />
-          Administration: <span className="font-mono text-foreground">admin@careguide.local</span>
-        </p>
-      </div>
+      <InfoCard icon="✉️" title="Direct Communications">
+        Clinical Support: <span className="font-mono text-foreground">support@careguide.local</span><br />
+        Administration: <span className="font-mono text-foreground">admin@careguide.local</span>
+      </InfoCard>
 
-      <div className="p-4 sm:p-6 bg-card border border-border rounded-xl space-y-2.5 sm:space-y-3 shadow-sm">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl">
-          ⏰
-        </div>
-        <h3 className="font-bold text-base sm:text-lg">Support Coverage</h3>
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          Clinical Emergency: <strong>24/7/365</strong><br />
-          Standard IT Desk: <strong>Mon - Fri (8:00 AM - 6:00 PM)</strong>
-        </p>
-      </div>
+      <InfoCard icon="⏰" title="Support Coverage">
+        Clinical Emergency: <strong>24/7/365</strong><br />
+        Standard IT Desk: <strong>Mon - Fri (8:00 AM - 6:00 PM)</strong>
+      </InfoCard>
     </div>
   );
 }

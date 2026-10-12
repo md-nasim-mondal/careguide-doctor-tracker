@@ -1,4 +1,12 @@
 import Link from "next/link";
+import { HeroStatItem } from "./HeroStatItem";
+
+const HERO_STATS = [
+  { value: "100%", label: "Assignment Integrity" },
+  { value: "Real-Time", label: "Workload Analytics" },
+  { value: "Zero", label: "Orphaned Patients" },
+  { value: "JWT & RBAC", label: "Enterprise Security" },
+];
 
 export default function HeroSection() {
   return (
@@ -35,22 +43,9 @@ export default function HeroSection() {
 
           {/* Quick Stat Highlights */}
           <div className="pt-8 sm:pt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 border-t border-border/60">
-            <div className="p-3 sm:p-4 bg-card/60 border border-border/40 rounded-xl">
-              <p className="text-xl sm:text-2xl font-bold text-primary">100%</p>
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">Assignment Integrity</p>
-            </div>
-            <div className="p-3 sm:p-4 bg-card/60 border border-border/40 rounded-xl">
-              <p className="text-xl sm:text-2xl font-bold text-primary">Real-Time</p>
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">Workload Analytics</p>
-            </div>
-            <div className="p-3 sm:p-4 bg-card/60 border border-border/40 rounded-xl">
-              <p className="text-xl sm:text-2xl font-bold text-primary">Zero</p>
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">Orphaned Patients</p>
-            </div>
-            <div className="p-3 sm:p-4 bg-card/60 border border-border/40 rounded-xl">
-              <p className="text-xl sm:text-2xl font-bold text-primary">JWT &amp; RBAC</p>
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">Enterprise Security</p>
-            </div>
+            {HERO_STATS.map((stat) => (
+              <HeroStatItem key={stat.label} value={stat.value} label={stat.label} />
+            ))}
           </div>
         </div>
       </div>

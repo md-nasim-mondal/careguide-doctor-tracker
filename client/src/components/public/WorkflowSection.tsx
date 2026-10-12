@@ -1,4 +1,5 @@
 import type { StepItem } from "@/types";
+import { WorkflowStepCard } from "./WorkflowStepCard";
 
 const STEPS: StepItem[] = [
   {
@@ -29,15 +30,7 @@ export default function WorkflowSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 text-center">
           {STEPS.map((step) => (
-            <div key={step.step} className="space-y-3 p-4 sm:p-6 bg-card border border-border rounded-xl">
-              <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground font-bold flex items-center justify-center mx-auto text-base sm:text-lg">
-                {step.step}
-              </div>
-              <h4 className="text-base sm:text-lg font-bold">{step.title}</h4>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                {step.description}
-              </p>
-            </div>
+            <WorkflowStepCard key={step.step} step={step} />
           ))}
         </div>
       </div>
