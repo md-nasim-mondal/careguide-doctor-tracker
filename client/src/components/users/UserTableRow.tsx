@@ -25,24 +25,38 @@ export default function UserTableRow({
 }: UserTableRowProps) {
   const isPendingDoctor = user.role === "DOCTOR" && user.isActive === "INACTIVE";
 
-  let roleBadgeStyle = "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-300";
+  // Crisp, high-contrast role badges
+  let roleBadgeClasses = "bg-sky-100 text-sky-900 border-sky-300";
+  let roleIcon = "👤";
   let roleDisplay = "Patient";
+
   if (user.role === "SUPER_ADMIN") {
-    roleBadgeStyle = "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-950/40 dark:text-purple-300";
+    roleBadgeClasses = "bg-purple-100 text-purple-900 border-purple-300";
+    roleIcon = "👑";
     roleDisplay = "Super Admin";
   } else if (user.role === "ADMIN") {
-    roleBadgeStyle = "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300";
+    roleBadgeClasses = "bg-blue-100 text-blue-900 border-blue-300";
+    roleIcon = "🛡️";
     roleDisplay = "Admin";
   } else if (user.role === "DOCTOR") {
-    roleBadgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300";
-    roleDisplay = "Doctor / Specialist";
+    roleBadgeClasses = "bg-emerald-100 text-emerald-900 border-emerald-300";
+    roleIcon = "👨‍⚕️";
+    roleDisplay = "Doctor";
   }
 
-  let statusBadgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300";
+  // Crisp, high-contrast status badges
+  let statusBadgeClasses = "bg-emerald-100 text-emerald-900 border-emerald-300";
+  let statusDotClass = "bg-emerald-600";
+  let statusDisplay = user.isActive;
+
   if (user.isActive === "INACTIVE") {
-    statusBadgeStyle = "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300";
+    statusBadgeClasses = "bg-amber-100 text-amber-900 border-amber-300";
+    statusDotClass = "bg-amber-600";
+    statusDisplay = "Inactive";
   } else if (user.isActive === "BLOCKED") {
-    statusBadgeStyle = "bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300";
+    statusBadgeClasses = "bg-rose-100 text-rose-900 border-rose-300";
+    statusDotClass = "bg-rose-600";
+    statusDisplay = "Blocked";
   }
 
   return (
@@ -53,22 +67,26 @@ export default function UserTableRow({
         {user.phone && <div className="text-[11px] text-muted-foreground">{user.phone}</div>}
       </td>
       <td className="py-3 px-4">
-        <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${roleBadgeStyle}`}>
-          {roleDisplay}
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-2xs ${roleBadgeClasses}`}>
+          <span className="text-[11px]">{roleIcon}</span>
+          <span>{roleDisplay}</span>
         </span>
       </td>
       <td className="py-3 px-4">
-        <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${statusBadgeStyle}`}>
-          {user.isActive}
+        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border shadow-2xs ${statusBadgeClasses}`}>
+          <span className={`w-2 h-2 rounded-full ${statusDotClass}`}></span>
+          <span>{statusDisplay}</span>
         </span>
       </td>
       <td className="py-3 px-4">
         {user.isVerified ? (
-          <span className="text-emerald-600 font-semibold text-xs flex items-center gap-1">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
             <span>✓</span> Verified
           </span>
         ) : (
-          <span className="text-amber-600 font-medium text-xs">Unverified</span>
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
+            Unverified
+          </span>
         )}
       </td>
       <td className="py-3 px-4 text-xs text-muted-foreground">
