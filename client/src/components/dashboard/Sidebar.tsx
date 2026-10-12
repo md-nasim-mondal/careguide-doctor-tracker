@@ -92,14 +92,6 @@ export function Sidebar({ user }: SidebarProps) {
       <div className="md:hidden flex items-center justify-between px-2.5 sm:px-4 h-14 bg-card border-b border-border sticky top-0 z-40">
         <div className="flex items-center gap-2 min-w-0">
           <BrandLogo size="sm" href="/dashboard" />
-          <Link
-            href="/"
-            title="Return to Public Home Website"
-            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted border border-border transition"
-          >
-            <span>🌐</span>
-            <span>Home</span>
-          </Link>
         </div>
         <div className="flex items-center gap-1.5">
           <ThemeToggle align="right" />
@@ -130,23 +122,13 @@ export function Sidebar({ user }: SidebarProps) {
         {/* Brand Header */}
         <div className="h-16 flex items-center justify-between px-3 sm:px-4 border-b border-border">
           <BrandLogo size="md" href="/dashboard" />
-          <div className="flex items-center gap-1">
-            <Link
-              href="/"
-              title="Return to Public Home Website"
-              className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg border border-border/80 transition"
-            >
-              <span>🌐</span>
-              <span className="text-[11px]">Home</span>
-            </Link>
-            <button
-              onClick={() => setIsOpen(false)}
-              aria-label="Close Sidebar"
-              className="md:hidden text-muted-foreground hover:text-foreground text-lg p-1"
-            >
-              ✕
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            aria-label="Close Sidebar"
+            className="md:hidden text-muted-foreground hover:text-foreground text-lg p-1"
+          >
+            ✕
+          </button>
         </div>
 
         {/* User Card */}
