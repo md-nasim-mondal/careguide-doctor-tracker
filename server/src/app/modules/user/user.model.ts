@@ -20,7 +20,7 @@ const userSchema = new Schema<IUser>(
     role: {
       type: String,
       enum: Object.values(Role),
-      default: Role.SENDER,
+      default: Role.PATIENT,
     },
     phone: { type: String },
     picture: { type: String },

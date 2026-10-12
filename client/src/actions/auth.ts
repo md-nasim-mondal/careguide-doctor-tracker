@@ -111,7 +111,7 @@ export async function registerAction(formData: FormData) {
     redirect(`/register?error=${encodeURIComponent(message)}`);
   }
 
-  const successMsg = role === "SENDER"
+  const successMsg = (role === "DOCTOR" || role === "SENDER")
     ? "Doctor account registered successfully! Your account is pending Admin approval before you can sign in."
     : "Account registered successfully! Please sign in.";
 

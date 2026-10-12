@@ -5,7 +5,7 @@ import { registerAction } from "@/actions/auth";
 import PhoneInputWithCountry from "@/components/common/PhoneInputWithCountry";
 
 export default function RegisterForm() {
-  const [selectedRole, setSelectedRole] = useState<"RECEIVER" | "SENDER">("RECEIVER");
+  const [selectedRole, setSelectedRole] = useState<"PATIENT" | "DOCTOR">("PATIENT");
 
   return (
     <form action={registerAction} className="space-y-4">
@@ -17,9 +17,9 @@ export default function RegisterForm() {
         <div className="grid grid-cols-2 gap-2 p-1 bg-muted/60 rounded-xl border border-border">
           <button
             type="button"
-            onClick={() => setSelectedRole("RECEIVER")}
+            onClick={() => setSelectedRole("PATIENT")}
             className={`py-2 px-3 rounded-lg text-xs sm:text-sm font-medium transition-all text-center cursor-pointer ${
-              selectedRole === "RECEIVER"
+              selectedRole === "PATIENT"
                 ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
@@ -28,9 +28,9 @@ export default function RegisterForm() {
           </button>
           <button
             type="button"
-            onClick={() => setSelectedRole("SENDER")}
+            onClick={() => setSelectedRole("DOCTOR")}
             className={`py-2 px-3 rounded-lg text-xs sm:text-sm font-medium transition-all text-center cursor-pointer ${
-              selectedRole === "SENDER"
+              selectedRole === "DOCTOR"
                 ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
@@ -40,7 +40,7 @@ export default function RegisterForm() {
         </div>
         <input type="hidden" name="role" value={selectedRole} />
         
-        {selectedRole === "SENDER" && (
+        {selectedRole === "DOCTOR" && (
           <div className="mt-2 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-300 text-[11px] leading-relaxed">
             ℹ️ <strong>Doctor Approval:</strong> Registered Doctor accounts require Administrator review & approval before you can sign in to the portal.
           </div>
@@ -54,7 +54,7 @@ export default function RegisterForm() {
         <input
           type="text"
           name="name"
-          placeholder={selectedRole === "SENDER" ? "Dr. John Doe" : "Sarah Smith"}
+          placeholder={selectedRole === "DOCTOR" ? "Dr. John Doe" : "Sarah Smith"}
           className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
           required
         />
@@ -111,7 +111,7 @@ export default function RegisterForm() {
       </div>
 
       {/* Doctor-specific fields */}
-      {selectedRole === "SENDER" && (
+      {selectedRole === "DOCTOR" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-border/60">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
@@ -123,7 +123,7 @@ export default function RegisterForm() {
               placeholder="Cardiology / Neurology"
               defaultValue="General Medicine"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              required={selectedRole === "SENDER"}
+              required={selectedRole === "DOCTOR"}
             />
           </div>
 
@@ -137,7 +137,7 @@ export default function RegisterForm() {
               placeholder="City General Hospital"
               defaultValue="DocPulse Medical Center"
               className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-              required={selectedRole === "SENDER"}
+              required={selectedRole === "DOCTOR"}
             />
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function RegisterForm() {
         type="submit"
         className="w-full mt-2 py-2.5 px-4 bg-primary text-primary-foreground font-medium text-sm rounded-xl shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/40 transition cursor-pointer"
       >
-        {selectedRole === "SENDER" ? "Register as Doctor" : "Create Account"}
+        {selectedRole === "DOCTOR" ? "Register as Doctor" : "Create Account"}
       </button>
     </form>
   );

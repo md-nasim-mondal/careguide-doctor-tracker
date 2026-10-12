@@ -6,7 +6,7 @@ import AppError from "../../errorHelpers/AppError";
 import { sendEmail } from "../../utils/sendEmail";
 import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
 import { ms } from "../../utils/ms";
-import { IsActive, IUser } from "../user/user.interface";
+import { IsActive, IUser, Role } from "../user/user.interface";
 import { User } from "../user/user.model";
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
@@ -23,7 +23,7 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
   }
 
   if (isUserExist.isActive !== IsActive.ACTIVE) {
-    if (isUserExist.role === "SENDER" && isUserExist.isActive === IsActive.INACTIVE) {
+    if ((isUserExist.role === Role.DOCTOR || (isUserExist.role as string) === "SENDER") && isUserExist.isActive === IsActive.INACTIVE) {
       throw new AppError(httpStatus.FORBIDDEN, "Your doctor account is pending admin approval. You will be able to log in once approved by an administrator.");
     }
     throw new AppError(httpStatus.FORBIDDEN, `This user account is ${isUserExist.isActive.toLowerCase()}`);

@@ -3,8 +3,10 @@ import { Types } from "mongoose";
 export enum Role {
   SUPER_ADMIN = "SUPER_ADMIN",
   ADMIN = "ADMIN",
-  SENDER = "SENDER",
-  RECEIVER = "RECEIVER",
+  DOCTOR = "DOCTOR",
+  PATIENT = "PATIENT",
+  SENDER = "DOCTOR",
+  RECEIVER = "PATIENT",
 }
 
 //auth providers

@@ -24,7 +24,7 @@ export const registerValidationSchema = z.object({
       (val) => !val || /^\+?[0-9\s\-()]{7,20}$/.test(val),
       "Phone number must be a valid phone number with optional country code"
     ),
-  role: z.enum(["RECEIVER", "SENDER"]).optional(),
+  role: z.enum(["PATIENT", "DOCTOR", "RECEIVER", "SENDER"]).optional(),
   specialization: z.string().optional(),
   hospital: z.string().optional(),
 });

@@ -17,8 +17,13 @@ import { withTransaction } from "../../utils/withTransaction";
 const createUser = async (payload: Partial<IUser> & { specialization?: string; hospital?: string }) => {
   const { email, password, specialization, hospital, role: reqRole, ...rest } = payload;
 
-  const role = reqRole || Role.RECEIVER; // Default new registrations to RECEIVER (Patient)
-  const isDoctorRegistration = role === Role.SENDER;
+  const roleStr = String(reqRole || "");
+  const role = roleStr === "SENDER" || roleStr === Role.DOCTOR
+    ? Role.DOCTOR
+    : roleStr === "RECEIVER" || roleStr === Role.PATIENT
+    ? Role.PATIENT
+    : (reqRole as Role) || Role.PATIENT;
+  const isDoctorRegistration = role === Role.DOCTOR;
 
   const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
   const verificationCodeExpires = new Date(Date.now() + ms(envVars.OTP_EXPIRES));
@@ -101,10 +106,13 @@ const updateUser = async (
   payload: Partial<IUser>,
   decodedToken: JwtPayload
 ) => {
-  if (
+  const isNonAdmin =
+    decodedToken.role === Role.DOCTOR ||
+    decodedToken.role === Role.PATIENT ||
     decodedToken.role === Role.SENDER ||
-    decodedToken.role === Role.RECEIVER
-  ) {
+    decodedToken.role === Role.RECEIVER;
+
+  if (isNonAdmin) {
     if (userId !== decodedToken.userId) {
       throw new AppError(401, "You are not authorized!");
     }
@@ -132,26 +140,12 @@ const updateUser = async (
    * promoting to superadmin - superadmin
    */
 
-  if (payload.role) {
-    if (
-      decodedToken.role === Role.SENDER ||
-      decodedToken.role === Role.RECEIVER
-    ) {
-      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
-    }
-
-    // if (payload.role === Role.SUPER_ADMIN && decodedToken.role === Role.ADMIN) {
-    //     throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
-    // }
+  if (payload.role && isNonAdmin) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
   }
 
-  if (payload.isActive || payload.isDeleted || payload.isVerified) {
-    if (
-      decodedToken.role === Role.SENDER ||
-      decodedToken.role === Role.RECEIVER
-    ) {
-      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
-    }
+  if ((payload.isActive || payload.isDeleted || payload.isVerified) && isNonAdmin) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
   }
 
   const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, {
@@ -262,8 +256,8 @@ const approveDoctorUser = async (userId: string, decodedToken: JwtPayload) => {
   user.isVerified = true;
   await user.save();
 
-  // If user is a Doctor (Role.SENDER), ensure a corresponding Doctor profile exists
-  if (user.role === Role.SENDER) {
+  // If user is a Doctor (Role.DOCTOR / Role.SENDER), ensure a corresponding Doctor profile exists
+  if (user.role === Role.DOCTOR || (user.role as string) === "SENDER") {
     const existingDoctor = await Doctor.findOne({ email: user.email });
     if (!existingDoctor) {
       await Doctor.create({

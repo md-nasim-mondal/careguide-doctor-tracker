@@ -108,8 +108,8 @@ export default async function UserManagementPage({ searchParams }: PageProps) {
             <option value="">All Roles</option>
             <option value="SUPER_ADMIN">Super Admin</option>
             <option value="ADMIN">Admin</option>
-            <option value="SENDER">Doctor / Care Staff (SENDER)</option>
-            <option value="RECEIVER">Patient (RECEIVER)</option>
+            <option value="DOCTOR">Doctor (DOCTOR)</option>
+            <option value="PATIENT">Patient (PATIENT)</option>
           </select>
           <select
             name="isActive"
@@ -166,11 +166,11 @@ export default async function UserManagementPage({ searchParams }: PageProps) {
               <label className="block text-xs font-semibold text-muted-foreground mb-1">Role</label>
               <select
                 name="role"
-                defaultValue={editingUser.role}
+                defaultValue={editingUser.role === "SENDER" ? "DOCTOR" : editingUser.role === "RECEIVER" ? "PATIENT" : editingUser.role}
                 className="w-full p-2.5 border border-input rounded-lg bg-background text-foreground text-xs sm:text-sm focus:ring-2 focus:ring-ring"
               >
-                <option value="RECEIVER">Patient (RECEIVER)</option>
-                <option value="SENDER">Doctor / Care Staff (SENDER)</option>
+                <option value="PATIENT">Patient (PATIENT)</option>
+                <option value="DOCTOR">Doctor / Specialist (DOCTOR)</option>
                 <option value="ADMIN">Administrator</option>
                 {user.role === "SUPER_ADMIN" && <option value="SUPER_ADMIN">Super Administrator</option>}
               </select>
@@ -237,7 +237,8 @@ export default async function UserManagementPage({ searchParams }: PageProps) {
                   isVerified: boolean;
                   createdAt?: string;
                 }) => {
-                  const isPendingDoctor = u.role === "SENDER" && u.isActive === "INACTIVE";
+                  const isPendingDoctor =
+                    (u.role === "DOCTOR" || u.role === "SENDER") && u.isActive === "INACTIVE";
 
                   let roleBadgeStyle = "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-300";
                   let roleDisplay = "Patient";
@@ -247,9 +248,9 @@ export default async function UserManagementPage({ searchParams }: PageProps) {
                   } else if (u.role === "ADMIN") {
                     roleBadgeStyle = "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300";
                     roleDisplay = "Admin";
-                  } else if (u.role === "SENDER") {
+                  } else if (u.role === "DOCTOR" || u.role === "SENDER") {
                     roleBadgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300";
-                    roleDisplay = "Doctor / Staff";
+                    roleDisplay = "Doctor / Specialist";
                   }
 
                   let statusBadgeStyle = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300";
