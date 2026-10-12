@@ -23,9 +23,15 @@ export interface StepItem {
   description: string;
 }
 
-export interface ApiResponse<T = unknown> {
+export interface ApiResponse<T = any> {
   success: boolean;
   statusCode: number;
   message: string;
   data: T;
+  meta?: {
+    page?: number;
+    limit?: number;
+    total?: number;
+    totalPage?: number;
+  };
 }

@@ -30,7 +30,10 @@ export function formatErrorMessage(err: unknown, fallbackMessage = "An unexpecte
   return rawMessage || fallbackMessage;
 }
 
-export async function fetchServerApi(endpoint: string, options: RequestInit = {}) {
+export async function fetchServerApi<T = any>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<ApiResponse<T>> {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   
@@ -53,7 +56,7 @@ export async function fetchServerApi(endpoint: string, options: RequestInit = {}
     throw new Error(formatErrorMessage(err));
   }
 
-  let data: Record<string, any> | null = null;
+  let data: (ApiResponse<T> & { errorMessages?: Array<{ path?: string; message?: string }>; error?: string }) | null = null;
   try {
     data = await response.json();
   } catch {
