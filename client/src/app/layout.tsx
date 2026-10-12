@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/common/Toast";
 import ToastUrlListener from "@/components/common/ToastUrlListener";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
 
 // Manually set Google DNS
 if (typeof window === "undefined" && typeof dns?.setServers === "function") {
@@ -42,13 +43,22 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <ToastProvider>
-          <Suspense fallback={null}>
-            <ToastUrlListener />
-          </Suspense>
-          {children}
-        </ToastProvider>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('docpulse-theme')||'system';var d=document.documentElement;if(t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches)){d.classList.add('dark');}else{d.classList.remove('dark');}}catch(e){}})()`,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-foreground" suppressHydrationWarning>
+        <ThemeProvider>
+          <ToastProvider>
+            <Suspense fallback={null}>
+              <ToastUrlListener />
+            </Suspense>
+            {children}
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { IUserProfile } from "@/types";
 import { logoutAction } from "@/actions/auth";
 import BrandLogo from "@/components/common/BrandLogo";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import { SidebarUserCard } from "./SidebarUserCard";
 
 interface SidebarProps {
@@ -100,13 +101,16 @@ export function Sidebar({ user }: SidebarProps) {
             <span>Home</span>
           </Link>
         </div>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle Navigation Menu"
-          className="p-1.5 rounded-lg border border-border text-foreground hover:bg-muted transition text-sm shrink-0"
-        >
-          {isOpen ? "✕" : "☰"}
-        </button>
+        <div className="flex items-center gap-1.5">
+          <ThemeToggle align="right" />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Navigation Menu"
+            className="p-1.5 rounded-lg border border-border text-foreground hover:bg-muted transition text-sm shrink-0"
+          >
+            {isOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </div>
 
       {/* Backdrop for Mobile */}
@@ -179,8 +183,16 @@ export function Sidebar({ user }: SidebarProps) {
           })}
         </nav>
 
-        {/* Bottom Actions, Home Website Link & Logout */}
+        {/* Bottom Actions, Theme Switcher, Home Website Link & Logout */}
         <div className="p-3 sm:p-4 border-t border-border mt-auto space-y-2 bg-card">
+          <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-muted/40 border border-border/80">
+            <span className="text-xs font-medium text-foreground flex items-center gap-1.5">
+              <span>🎨</span>
+              <span>Theme</span>
+            </span>
+            <ThemeToggle align="right" showLabel={true} />
+          </div>
+
           <Link
             href="/"
             onClick={() => setIsOpen(false)}

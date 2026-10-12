@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import NavLinks, { NavLinkItem } from "./NavLinks";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import { IUserProfile } from "@/types";
 import { logoutAction } from "@/actions/auth";
 
@@ -51,6 +52,15 @@ export default function MobileMenu({ links, user }: MobileMenuProps) {
           )}
 
           <NavLinks links={links} isMobile={true} onItemClick={() => setIsOpen(false)} />
+
+          {/* Theme Switcher Row in Mobile Menu */}
+          <div className="flex items-center justify-between py-2 px-3 bg-muted/30 rounded-xl border border-border/70">
+            <span className="text-xs font-medium text-foreground flex items-center gap-1.5">
+              <span>🎨</span>
+              <span>Theme</span>
+            </span>
+            <ThemeToggle align="right" showLabel={true} />
+          </div>
 
           <div className="pt-3 border-t border-border flex flex-col gap-2">
             {user ? (

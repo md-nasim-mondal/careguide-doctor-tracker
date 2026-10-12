@@ -3,6 +3,7 @@ import BrandLogo from "@/components/common/BrandLogo";
 import NavLinks, { NavLinkItem } from "./NavLinks";
 import MobileMenu from "./MobileMenu";
 import UserNavDropdown from "./UserNavDropdown";
+import ThemeToggle from "@/components/common/ThemeToggle";
 import { getCurrentUser } from "@/lib/auth";
 
 const NAV_LINKS: NavLinkItem[] = [
@@ -25,8 +26,9 @@ export default async function PublicNavbar() {
           <NavLinks links={NAV_LINKS} />
         </div>
 
-        {/* Desktop Auth Section: User Avatar & Dropdown if logged in, else Sign In button */}
+        {/* Desktop Auth Section & Theme Toggle */}
         <div className="hidden md:flex items-center gap-2.5">
+          <ThemeToggle />
           {user ? (
             <UserNavDropdown user={user} />
           ) : (
@@ -40,8 +42,9 @@ export default async function PublicNavbar() {
           )}
         </div>
 
-        {/* Mobile Actions: User Avatar or Sign In + Hamburger Toggle */}
+        {/* Mobile Actions: Theme Toggle + User Avatar or Sign In + Hamburger Toggle */}
         <div className="flex md:hidden items-center gap-1.5">
+          <ThemeToggle />
           {user ? (
             <UserNavDropdown user={user} />
           ) : (
