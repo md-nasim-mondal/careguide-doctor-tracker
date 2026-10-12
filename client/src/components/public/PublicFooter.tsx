@@ -22,17 +22,6 @@ export default function PublicFooter() {
             <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
               <li><Link href="/" className="hover:text-foreground transition-colors">Home</Link></li>
               <li><Link href="/features" className="hover:text-foreground transition-colors">Key Features</Link></li>
-              <li>
-                <a
-                  href={`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"}/api/docs`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-emerald-500 transition-colors flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium"
-                >
-                  <span>Swagger API Docs</span>
-                  <span className="text-[10px]">↗</span>
-                </a>
-              </li>
               <li><Link href="/about" className="hover:text-foreground transition-colors">About Mission</Link></li>
               <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact Support</Link></li>
             </ul>
