@@ -6,8 +6,12 @@ import { envVars } from "./app/config/env";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 import { syncDoctorsAndPatientsToUsers } from "./app/utils/syncUsers";
 
-// Manually set Google DNS servers
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
+// Set Google DNS servers if supported in runtime
+try {
+  dns.setServers(["8.8.8.8", "8.8.4.4"]);
+} catch {
+  // Ignored if runtime restricts custom dns settings (e.g. serverless environments)
+}
 
 let server: Server;
 
