@@ -11,6 +11,7 @@ export default function PatientsTable({
   patients,
   currentPage,
   totalPages,
+  canManage = true,
   buildQuery,
 }: PatientsTableProps) {
   const columns: ColumnDef<PatientItem>[] = [
@@ -55,14 +56,16 @@ export default function PatientsTable({
           >
             Edit
           </Link>
-          <form action={deletePatientAction.bind(null, p._id)} className="inline">
-            <button
-              type="submit"
-              className="text-destructive hover:underline font-semibold cursor-pointer"
-            >
-              Delete
-            </button>
-          </form>
+          {canManage && (
+            <form action={deletePatientAction.bind(null, p._id)} className="inline">
+              <button
+                type="submit"
+                className="text-destructive hover:underline font-semibold cursor-pointer"
+              >
+                Delete
+              </button>
+            </form>
+          )}
         </>
       ),
     },

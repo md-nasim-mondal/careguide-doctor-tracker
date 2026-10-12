@@ -41,6 +41,8 @@ export interface PatientsTableProps {
   patients: PatientItem[];
   currentPage: number;
   totalPages: number;
+  canManage?: boolean;
+  canDelete?: boolean;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }
 

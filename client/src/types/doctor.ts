@@ -16,6 +16,7 @@ export interface DoctorSearchBarProps {
   specialization: string;
   date: string;
   showAddForm: boolean;
+  canManage?: boolean;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }
 
@@ -35,6 +36,8 @@ export interface DoctorDetailsPanelProps {
   assignedPatients: PatientItem[];
   isEditing: boolean;
   isAddingPatient?: boolean;
+  canManage?: boolean;
+  isPatient?: boolean;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }
 

@@ -1,4 +1,5 @@
 import { fetchServerApi } from "@/lib/serverApi";
+import { getCurrentUser } from "@/lib/auth";
 import AlertBanner from "@/components/common/AlertBanner";
 import DoctorSearchBar from "@/components/doctors/DoctorSearchBar";
 import DoctorForm from "@/components/doctors/DoctorForm";
@@ -13,6 +14,10 @@ type PageProps = {
 };
 
 export default async function DoctorsPage({ searchParams }: PageProps) {
+  const currentUser = await getCurrentUser();
+  const canManage = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
+  const isPatient = currentUser?.role === "PATIENT";
+
   const resolvedSearchParams = await searchParams;
   const page = parseInt(resolvedSearchParams.page || "1", 10);
   const search = resolvedSearchParams.search || "";
@@ -48,9 +53,9 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
   }
 
   const errorMessage = errorQuery || fetchError;
-  const showAddForm = action === "add";
-  const isEditing = action === "edit";
-  const isAddingPatient = action === "add-patient";
+  const showAddForm = canManage && action === "add";
+  const isEditing = canManage && action === "edit";
+  const isAddingPatient = canManage && action === "add-patient";
 
   // Find selected doctor from current page or fetch if selected from another view
   let selectedDoctor = initialDoctors.find((d) => d._id === doctorId) || null;
@@ -63,9 +68,9 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
     }
   }
 
-  // Fetch corresponding patients for the selected doctor
+  // Fetch corresponding patients for the selected doctor (only for staff, not patients)
   let assignedPatients: PatientItem[] = [];
-  if (selectedDoctor) {
+  if (selectedDoctor && !isPatient) {
     try {
       const patientsRes = await fetchServerApi(`/doctors/${selectedDoctor._id}/patients`);
       assignedPatients = patientsRes.data || [];
@@ -93,7 +98,16 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
 
   return (
     <div className="p-2.5 sm:p-6 md:p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
-      <h1 className="text-xl sm:text-3xl font-bold mb-4 sm:mb-6 text-foreground">Doctor Management</h1>
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-foreground">
+          {canManage ? "Doctor Management" : "Doctors & Specialists Directory"}
+        </h1>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+          {canManage
+            ? "Add, edit, and manage clinic doctors, chamber schedules, and patient assignments."
+            : "Browse verified healthcare specialists, clinic chambers, and consultation contacts."}
+        </p>
+      </div>
 
       {errorMessage && (
         <div className="mb-4">
@@ -107,10 +121,11 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
         specialization={specialization}
         date={date}
         showAddForm={showAddForm}
+        canManage={canManage}
         buildQuery={buildQuery}
       />
 
-      {/* Add Doctor Form */}
+      {/* Add Doctor Form (Admins Only) */}
       {showAddForm && <DoctorForm buildQuery={buildQuery} />}
 
       {/* Main Grid: Doctors Table + Details Panel */}
@@ -127,6 +142,8 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
           assignedPatients={assignedPatients}
           isEditing={isEditing}
           isAddingPatient={isAddingPatient}
+          canManage={canManage}
+          isPatient={isPatient}
           buildQuery={buildQuery}
         />
       </div>

@@ -141,6 +141,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
         patients={initialPatients}
         currentPage={page}
         totalPages={totalPages}
+        canManage={currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN"}
         buildQuery={buildQuery}
       />
     </div>

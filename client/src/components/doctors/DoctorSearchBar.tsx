@@ -6,6 +6,7 @@ export default function DoctorSearchBar({
   specialization,
   date,
   showAddForm,
+  canManage = false,
   buildQuery,
 }: DoctorSearchBarProps) {
   return (
@@ -48,24 +49,26 @@ export default function DoctorSearchBar({
         </div>
       </form>
 
-      {/* Action Bar */}
-      <div className="flex justify-end">
-        {showAddForm ? (
-          <Link
-            href={`/dashboard/doctors${buildQuery({ action: undefined })}`}
-            className="w-full sm:w-auto text-center px-4 py-2 bg-muted text-foreground border border-border rounded text-xs sm:text-sm font-medium"
-          >
-            Cancel
-          </Link>
-        ) : (
-          <Link
-            href={`/dashboard/doctors${buildQuery({ action: "add", doctorId: undefined })}`}
-            className="w-full sm:w-auto text-center px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 text-xs sm:text-sm font-semibold shadow-xs"
-          >
-            + Add Doctor
-          </Link>
-        )}
-      </div>
+      {/* Action Bar (Only for Admins) */}
+      {canManage && (
+        <div className="flex justify-end">
+          {showAddForm ? (
+            <Link
+              href={`/dashboard/doctors${buildQuery({ action: undefined })}`}
+              className="w-full sm:w-auto text-center px-4 py-2 bg-muted text-foreground border border-border rounded text-xs sm:text-sm font-medium"
+            >
+              Cancel
+            </Link>
+          ) : (
+            <Link
+              href={`/dashboard/doctors${buildQuery({ action: "add", doctorId: undefined })}`}
+              className="w-full sm:w-auto text-center px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90 text-xs sm:text-sm font-semibold shadow-xs"
+            >
+              + Add Doctor
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   );
 }
