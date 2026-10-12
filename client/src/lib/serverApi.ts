@@ -30,7 +30,7 @@ export function formatErrorMessage(err: unknown, fallbackMessage = "An unexpecte
   return rawMessage || fallbackMessage;
 }
 
-export async function fetchServerApi<T = any>(
+export async function fetchServerApi<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {

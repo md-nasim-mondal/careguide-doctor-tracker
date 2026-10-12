@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
 import AlertBanner from "@/components/common/AlertBanner";
 import Link from "next/link";
-import type { DashboardAnalytics } from "@/types";
+import type { DashboardAnalytics, DoctorListResponse, PatientListResponse } from "@/types";
 
 export const instant = false;
 
@@ -48,7 +48,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   // Admins & Super Admins fetch full backend analytics
   if (role === "ADMIN" || role === "SUPER_ADMIN") {
     try {
-      const res = await fetchServerApi("/dashboard/analytics");
+      const res = await fetchServerApi<DashboardAnalytics>("/dashboard/analytics");
       analytics = res.data || analytics;
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -67,8 +67,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
     try {
       const [patientRes, doctorsRes] = await Promise.all([
-        fetchServerApi(`/patients?search=${encodeURIComponent(user?.name || "")}&limit=5`),
-        fetchServerApi(`/doctors?limit=10`),
+        fetchServerApi<PatientListResponse>(`/patients?search=${encodeURIComponent(user?.name || "")}&limit=5`),
+        fetchServerApi<DoctorListResponse>(`/doctors?limit=10`),
       ]);
       patientRecord = patientRes.data?.patients?.find((p: { name: string }) => 
         p.name.toLowerCase().trim() === (user?.name || "").toLowerCase().trim()
@@ -242,8 +242,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
     try {
       const [doctorsRes, patientsRes] = await Promise.all([
-        fetchServerApi(`/doctors?search=${encodeURIComponent(user?.email || user?.name || "")}&limit=10`),
-        fetchServerApi(`/patients?limit=100`),
+        fetchServerApi<DoctorListResponse>(`/doctors?search=${encodeURIComponent(user?.email || user?.name || "")}&limit=10`),
+        fetchServerApi<PatientListResponse>(`/patients?limit=100`),
       ]);
 
       const doctorsList = doctorsRes.data?.doctors || [];

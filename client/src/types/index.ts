@@ -4,3 +4,4 @@ export * from "./dashboard";
 export * from "./contact";
 export * from "./common";
 export * from "./auth";
+export * from "./user";

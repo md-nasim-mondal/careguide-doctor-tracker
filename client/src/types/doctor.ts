@@ -12,7 +12,14 @@ export interface DoctorItem {
 export type DoctorOption = Pick<DoctorItem, "_id" | "name"> & {
   email?: string;
   specialization?: string;
+  hospital?: string;
+  phone?: string;
 };
+
+export interface DoctorListResponse {
+  doctors: DoctorItem[];
+  total: number;
+}
 
 export interface DoctorSearchBarProps {
   search: string;

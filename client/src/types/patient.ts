@@ -11,6 +11,11 @@ export interface PatientItem {
   createdAt: string;
 }
 
+export interface PatientListResponse {
+  patients: PatientItem[];
+  total: number;
+}
+
 export interface PatientFormModel {
   _id?: string;
   name?: string;

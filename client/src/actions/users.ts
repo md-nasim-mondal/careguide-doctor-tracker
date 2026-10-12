@@ -4,6 +4,7 @@ import { fetchServerApi } from "@/lib/serverApi";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { IUserItem } from "@/types";
 
 export interface IGetUsersParams {
   searchTerm?: string;
@@ -32,7 +33,7 @@ export async function getAllUsersAction(params: IGetUsersParams = {}) {
   if (params.limit) query.append("limit", params.limit.toString());
 
   try {
-    const res = await fetchServerApi(`/user/all-users?${query.toString()}`, {
+    const res = await fetchServerApi<IUserItem[]>(`/user/all-users?${query.toString()}`, {
       cache: "no-store",
     });
     return {

@@ -7,8 +7,10 @@ import PatientForm from "@/components/patients/PatientForm";
 import PatientsTable from "@/components/patients/PatientsTable";
 import type {
   DoctorOption,
+  DoctorListResponse,
   PatientFormModel,
   PatientItem,
+  PatientListResponse,
   PatientPageSearchParams,
 } from "@/types";
 
@@ -50,9 +52,9 @@ export default async function PatientsPage({ searchParams }: PageProps) {
     });
 
     const [patientsRes, doctorsRes, conditionsRes] = await Promise.all([
-      fetchServerApi(`/patients?${params.toString()}`),
-      fetchServerApi("/doctors?limit=100"),
-      fetchServerApi("/patients/conditions").catch(() => ({ data: [] })),
+      fetchServerApi<PatientListResponse>(`/patients?${params.toString()}`),
+      fetchServerApi<DoctorListResponse>("/doctors?limit=100"),
+      fetchServerApi<string[]>("/patients/conditions").catch(() => ({ data: [] as string[] })),
     ]);
 
     initialPatients = patientsRes.data?.patients || [];
@@ -74,7 +76,7 @@ export default async function PatientsPage({ searchParams }: PageProps) {
   let editingPatient: PatientFormModel | null = initialPatients.find((p) => p._id === patientId) || null;
   if (!editingPatient && patientId && isEditing) {
     try {
-      const singlePatientRes = await fetchServerApi(`/patients/${patientId}`);
+      const singlePatientRes = await fetchServerApi<PatientFormModel>(`/patients/${patientId}`);
       editingPatient = singlePatientRes.data || null;
     } catch {
       editingPatient = null;

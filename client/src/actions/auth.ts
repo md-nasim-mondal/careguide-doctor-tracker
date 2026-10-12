@@ -23,8 +23,12 @@ export async function getMeAction(): Promise<IUserProfile | null> {
   if (!token) return null;
 
   try {
-    const res = await fetchServerApi("/user/me", { cache: "no-store" });
-    return res.data?.data || res.data || null;
+    const res = await fetchServerApi<IUserProfile | { data?: IUserProfile }>("/user/me", { cache: "no-store" });
+    if (!res.data) return null;
+    if ("data" in res.data && res.data.data) {
+      return res.data.data;
+    }
+    return res.data as IUserProfile;
   } catch {
     return null;
   }

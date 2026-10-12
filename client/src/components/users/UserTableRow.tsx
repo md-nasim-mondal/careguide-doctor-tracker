@@ -1,16 +1,8 @@
 import Link from "next/link";
 import { approveDoctorAction, deleteUserAction } from "@/actions/users";
 
-export interface IUserItem {
-  _id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  role: string;
-  isActive: string;
-  isVerified: boolean;
-  createdAt?: string;
-}
+import { type IUserItem } from "@/types";
+export type { IUserItem };
 
 interface UserTableRowProps {
   user: IUserItem;
