@@ -25,37 +25,37 @@ export default function UserTableRow({
 }: UserTableRowProps) {
   const isPendingDoctor = user.role === "DOCTOR" && user.isActive === "INACTIVE";
 
-  // Crisp, high-contrast role badges
-  let roleBadgeClasses = "bg-sky-100 text-sky-900 border-sky-300 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50";
+  // Clean, eye-pleasing role badges
+  let roleBadgeClasses = "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50";
   let roleIcon = "👤";
   let roleDisplay = "Patient";
 
   if (user.role === "SUPER_ADMIN") {
-    roleBadgeClasses = "bg-purple-100 text-purple-900 border-purple-300 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800/50";
+    roleBadgeClasses = "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800/50";
     roleIcon = "👑";
     roleDisplay = "Super Admin";
   } else if (user.role === "ADMIN") {
-    roleBadgeClasses = "bg-blue-100 text-blue-900 border-blue-300 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800/50";
+    roleBadgeClasses = "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800/50";
     roleIcon = "🛡️";
     roleDisplay = "Admin";
   } else if (user.role === "DOCTOR") {
-    roleBadgeClasses = "bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50";
+    roleBadgeClasses = "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50";
     roleIcon = "👨‍⚕️";
     roleDisplay = "Doctor";
   }
 
-  // Crisp, high-contrast status badges
-  let statusBadgeClasses = "bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50";
-  let statusDotClass = "bg-emerald-600 dark:bg-emerald-400";
+  // Clean, eye-pleasing status badges
+  let statusBadgeClasses = "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50";
+  let statusDotClass = "bg-emerald-500 dark:bg-emerald-400";
   let statusDisplay = user.isActive;
 
   if (user.isActive === "INACTIVE") {
-    statusBadgeClasses = "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800/50";
-    statusDotClass = "bg-amber-600 dark:bg-amber-400";
+    statusBadgeClasses = "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800/50";
+    statusDotClass = "bg-amber-500 dark:bg-amber-400";
     statusDisplay = "Inactive";
   } else if (user.isActive === "BLOCKED") {
-    statusBadgeClasses = "bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800/50";
-    statusDotClass = "bg-rose-600 dark:bg-rose-400";
+    statusBadgeClasses = "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800/50";
+    statusDotClass = "bg-rose-500 dark:bg-rose-400";
     statusDisplay = "Blocked";
   }
 
@@ -80,11 +80,11 @@ export default function UserTableRow({
       </td>
       <td className="py-3 px-4">
         {user.isVerified ? (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50">
             <span>✓</span> Verified
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800/50">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800/50">
             Unverified
           </span>
         )}

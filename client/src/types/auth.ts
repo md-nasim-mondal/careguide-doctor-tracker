@@ -17,3 +17,22 @@ export interface ILoginResponse {
   message: string;
   user?: IUserProfile;
 }
+
+export interface AuthErrorMessage {
+  path?: string;
+  message?: string;
+}
+
+export interface AuthApiResponse<T = unknown> {
+  success?: boolean;
+  statusCode?: number;
+  message?: string;
+  errorMessages?: AuthErrorMessage[];
+  error?: string;
+  data?: T;
+}
+
+export interface LoginApiData {
+  accessToken?: string;
+  needsPasswordChange?: boolean;
+}

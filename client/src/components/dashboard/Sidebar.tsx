@@ -54,26 +54,26 @@ export function Sidebar({ user }: SidebarProps) {
       case "SUPER_ADMIN":
         return {
           label: "Super Admin",
-          badgeClass: "bg-purple-100 text-purple-900 border-purple-300 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800/50 font-bold",
-          dotClass: "bg-purple-600 dark:bg-purple-400",
+          badgeClass: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800/50 font-bold",
+          dotClass: "bg-purple-500 dark:bg-purple-400",
         };
       case "ADMIN":
         return {
           label: "Administrator",
-          badgeClass: "bg-blue-100 text-blue-900 border-blue-300 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50 font-bold",
-          dotClass: "bg-blue-600 dark:bg-sky-400",
+          badgeClass: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50 font-bold",
+          dotClass: "bg-blue-500 dark:bg-sky-400",
         };
       case "DOCTOR":
         return {
           label: "Doctor / Specialist",
-          badgeClass: "bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50 font-bold",
-          dotClass: "bg-emerald-600 dark:bg-emerald-400",
+          badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50 font-bold",
+          dotClass: "bg-emerald-500 dark:bg-emerald-400",
         };
       case "PATIENT":
         return {
           label: "Patient",
-          badgeClass: "bg-sky-100 text-sky-900 border-sky-300 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50 font-bold",
-          dotClass: "bg-sky-600 dark:bg-sky-400",
+          badgeClass: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50 font-bold",
+          dotClass: "bg-sky-500 dark:bg-sky-400",
         };
       default:
         return {

@@ -12,7 +12,7 @@ import {
   changePasswordValidationSchema,
   validateFormData,
 } from "@/validations";
-import type { IUserProfile } from "@/types";
+import type { IUserProfile, AuthApiResponse, LoginApiData } from "@/types";
 
 /**
  * SSR Server Action to retrieve currently authenticated user profile
@@ -53,7 +53,7 @@ export async function loginAction(formData: FormData) {
       throw new Error(formatErrorMessage(netErr));
     }
 
-    let data: any = null;
+    let data: AuthApiResponse<LoginApiData> | null = null;
     try {
       data = await response.json();
     } catch {
@@ -64,7 +64,7 @@ export async function loginAction(formData: FormData) {
       throw new Error(data?.message || data?.errorMessages?.[0]?.message || "Invalid email or password");
     }
 
-    const token = data.data?.accessToken;
+    const token = data?.data?.accessToken;
     if (!token) {
       throw new Error("Authentication token not received");
     }
@@ -118,7 +118,7 @@ export async function registerAction(formData: FormData) {
       throw new Error(formatErrorMessage(netErr));
     }
 
-    let data: any = null;
+    let data: AuthApiResponse | null = null;
     try {
       data = await response.json();
     } catch {
@@ -171,7 +171,7 @@ export async function resetPasswordAction(formData: FormData) {
       throw new Error(formatErrorMessage(netErr));
     }
 
-    let data: any = null;
+    let data: AuthApiResponse | null = null;
     try {
       data = await response.json();
     } catch {
@@ -245,7 +245,7 @@ export async function forgotPasswordAction(formData: FormData) {
       throw new Error(formatErrorMessage(netErr));
     }
 
-    let data: any = null;
+    let data: AuthApiResponse | null = null;
     try {
       data = await response.json();
     } catch {

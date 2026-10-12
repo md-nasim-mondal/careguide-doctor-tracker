@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { ApiResponse } from "@/types";
 
 export const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:5000/api/v1';
 
@@ -52,7 +53,7 @@ export async function fetchServerApi(endpoint: string, options: RequestInit = {}
     throw new Error(formatErrorMessage(err));
   }
 
-  let data: any = null;
+  let data: Record<string, any> | null = null;
   try {
     data = await response.json();
   } catch {
@@ -62,7 +63,7 @@ export async function fetchServerApi(endpoint: string, options: RequestInit = {}
     );
   }
 
-  if (!response.ok) {
+  if (!response.ok || !data) {
     const errorDetail =
       data?.message ||
       data?.errorMessages?.[0]?.message ||
