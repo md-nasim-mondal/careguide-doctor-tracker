@@ -5,6 +5,7 @@ import app from "./app";
 import { envVars } from "./app/config/env";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 import { syncDoctorsAndPatientsToUsers } from "./app/utils/syncUsers";
+import { seedMockData } from "./app/utils/seedMockData";
 
 // Set Google DNS servers if supported in runtime
 try {
@@ -32,6 +33,7 @@ const startServer = async () => {
 
     // 3. Run background seed and synchronization asynchronously without blocking port readiness
     seedSuperAdmin()
+      .then(() => seedMockData())
       .then(() => syncDoctorsAndPatientsToUsers())
       .catch((err) => {
         console.error("⚠️ Background seed/sync warning:", err);
