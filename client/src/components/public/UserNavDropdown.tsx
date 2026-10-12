@@ -29,13 +29,13 @@ export default function UserNavDropdown({ user }: UserNavDropdownProps) {
   const getRoleBadge = () => {
     switch (role) {
       case "SUPER_ADMIN":
-        return { label: "Super Admin", badge: "bg-purple-100 text-purple-800 border-purple-200" };
+        return { label: "Super Admin", badge: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800/50" };
       case "ADMIN":
-        return { label: "Admin", badge: "bg-blue-100 text-blue-800 border-blue-200" };
+        return { label: "Admin", badge: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50" };
       case "DOCTOR":
-        return { label: "Doctor", badge: "bg-emerald-100 text-emerald-800 border-emerald-200" };
+        return { label: "Doctor", badge: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50" };
       case "PATIENT":
-        return { label: "Patient", badge: "bg-sky-100 text-sky-800 border-sky-200" };
+        return { label: "Patient", badge: "bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50" };
       default:
         return { label: role, badge: "bg-muted text-muted-foreground border-border" };
     }

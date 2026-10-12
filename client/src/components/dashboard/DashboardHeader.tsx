@@ -25,13 +25,13 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
   const getRoleBadge = () => {
     switch (user?.role) {
       case "SUPER_ADMIN":
-        return { label: "Super Admin", color: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20" };
+        return { label: "Super Admin", color: "text-purple-600 dark:text-purple-300 bg-purple-500/10 dark:bg-purple-950/50 border-purple-500/20 dark:border-purple-800/40" };
       case "ADMIN":
-        return { label: "Admin", color: "text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20" };
+        return { label: "Admin", color: "text-sky-600 dark:text-sky-300 bg-sky-500/10 dark:bg-sky-950/50 border-sky-500/20 dark:border-sky-800/40" };
       case "DOCTOR":
-        return { label: "Doctor", color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20" };
+        return { label: "Doctor", color: "text-emerald-600 dark:text-emerald-300 bg-emerald-500/10 dark:bg-emerald-950/50 border-emerald-500/20 dark:border-emerald-800/40" };
       case "PATIENT":
-        return { label: "Patient", color: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20" };
+        return { label: "Patient", color: "text-amber-600 dark:text-amber-300 bg-amber-500/10 dark:bg-amber-950/50 border-amber-500/20 dark:border-amber-800/40" };
       default:
         return { label: "Portal", color: "text-muted-foreground bg-muted border-border" };
     }
