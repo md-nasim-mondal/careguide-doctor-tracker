@@ -58,6 +58,24 @@ For automated verification and examiner testing, use the pre-configured accounts
 
 ---
 
+## API Documentation & Postman Collection
+
+📖 **Full REST API Documentation:** [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)  
+🚀 **Interactive Backend Server Portal:** `http://localhost:5000/`  
+📦 **Postman v2.1 Collection File:** [`server/careguide-doctor-tracker.postman_collection.json`](server/careguide-doctor-tracker.postman_collection.json) *(or download via `http://localhost:5000/postman.json?download=true`)*
+
+### Quick API Overview:
+| Module | Base Path | Methods & Features | Access |
+| :--- | :--- | :--- | :--- |
+| **Authentication** | `/api/v1/auth` | `login`, `logout`, `refresh-token`, `change-password`, `forgot-password`, `reset-password` | Public / Authenticated |
+| **User Directory** | `/api/v1/user` | `register`, `me`, `all-users`, `approve-doctor`, update, delete | Public / Admin / Specialist |
+| **Doctors** | `/api/v1/doctors` | List & filter doctors, add/update doctor, safe delete, view assigned caseload | RBAC Scoped |
+| **Patients** | `/api/v1/patients` | Patient directory, filter by conditions, assign specialists, clinical notes | RBAC Scoped (Doctor/Patient Isolation) |
+| **Dashboard** | `/api/v1/dashboard` | Real-time MongoDB `$facet` aggregation analytics & capacity metrics | Admin / Super Admin |
+| **Inquiries** | `/api/v1/contact` | Submit contact form, review inquiries | Public / Admin |
+
+---
+
 ## Core Features & Role-Based Access Control (RBAC)
 
 ### 1. Authentication & Route Protection
