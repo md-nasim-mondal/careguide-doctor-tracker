@@ -67,8 +67,7 @@ export default function MobileMenu({ links, user }: MobileMenuProps) {
               <form action={logoutAction} className="w-full">
                 <button
                   type="submit"
-                  onClick={() => setIsOpen(false)}
-                  className="w-full text-center py-2 text-destructive border border-destructive/20 hover:bg-destructive/10 text-xs sm:text-sm font-semibold rounded-lg transition shadow-2xs"
+                  className="w-full text-center py-2 text-destructive border border-destructive/20 hover:bg-destructive/10 text-xs sm:text-sm font-semibold rounded-lg transition shadow-2xs cursor-pointer"
                 >
                   Sign Out
                 </button>

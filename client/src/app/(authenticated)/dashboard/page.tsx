@@ -123,7 +123,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-primary">Your Attending Doctor</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-semibold border border-emerald-300">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-semibold border border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/50">
                   {assignedDoctor ? "Assigned" : "Available"}
                 </span>
               </div>
@@ -171,7 +171,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Medical Status &amp; Notes</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 font-semibold border border-blue-300">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 font-semibold border border-blue-300 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/50">
                   Active Patient
                 </span>
               </div>
@@ -194,7 +194,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                 </div>
                 <div className="flex items-center justify-between text-xs sm:text-sm">
                   <span className="text-muted-foreground">Registration Status:</span>
-                  <span className="font-semibold text-emerald-700">Verified &amp; Active</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">Verified &amp; Active</span>
                 </div>
               </div>
             </div>
@@ -338,7 +338,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               <span className="text-xs font-medium text-muted-foreground">Practice Status</span>
               <span className="text-base">🟢</span>
             </div>
-            <p className="text-base sm:text-lg font-bold text-emerald-700 mt-2">
+            <p className="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-2">
               Active Specialist
             </p>
             <p className="text-[11px] text-muted-foreground mt-0.5">Licensed & verified</p>
@@ -469,38 +469,38 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-        <div className="bg-linear-to-br from-primary to-primary/90 text-primary-foreground p-4 sm:p-6 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+        <div className="bg-card border border-border text-foreground p-4 sm:p-6 rounded-2xl shadow-xs flex items-center justify-between gap-3 relative overflow-hidden group hover:border-primary/40 transition">
           <div className="min-w-0">
-            <p className="text-xs sm:text-sm font-medium opacity-90">Total Registered Doctors</p>
-            <p className="text-2xl sm:text-4xl font-extrabold mt-1 tracking-tight">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground">Total Registered Doctors</p>
+            <p className="text-2xl sm:text-4xl font-extrabold mt-1 tracking-tight text-foreground">
               {analytics.totalDoctors}
             </p>
             <Link
               href="/dashboard/doctors"
-              className="text-[11px] underline opacity-90 hover:opacity-100 mt-2 inline-block truncate max-w-full"
+              className="text-xs font-semibold text-primary hover:underline mt-2 inline-flex items-center gap-1 truncate max-w-full"
             >
               View all doctors directory →
             </Link>
           </div>
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/15 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-sky-500/10 dark:bg-sky-500/15 border border-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
             🩺
           </div>
         </div>
 
-        <div className="bg-linear-to-br from-emerald-600 to-emerald-700 text-white p-4 sm:p-6 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+        <div className="bg-card border border-border text-foreground p-4 sm:p-6 rounded-2xl shadow-xs flex items-center justify-between gap-3 relative overflow-hidden group hover:border-emerald-500/40 transition">
           <div className="min-w-0">
-            <p className="text-xs sm:text-sm font-medium opacity-90">Total Registered Patients</p>
-            <p className="text-2xl sm:text-4xl font-extrabold mt-1 tracking-tight">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground">Total Registered Patients</p>
+            <p className="text-2xl sm:text-4xl font-extrabold mt-1 tracking-tight text-foreground">
               {analytics.totalPatients}
             </p>
             <Link
               href="/dashboard/patients"
-              className="text-[11px] underline opacity-90 hover:opacity-100 mt-2 inline-block truncate max-w-full"
+              className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline mt-2 inline-flex items-center gap-1 truncate max-w-full"
             >
               View patient registry →
             </Link>
           </div>
-          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/15 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
             👥
           </div>
         </div>

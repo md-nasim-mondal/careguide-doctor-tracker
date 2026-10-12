@@ -134,7 +134,6 @@ export default function UserNavDropdown({ user }: UserNavDropdownProps) {
             <form action={logoutAction} className="w-full">
               <button
                 type="submit"
-                onClick={() => setIsOpen(false)}
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-destructive border border-destructive/20 hover:bg-destructive/10 transition cursor-pointer"
               >
                 <span>🚪</span>

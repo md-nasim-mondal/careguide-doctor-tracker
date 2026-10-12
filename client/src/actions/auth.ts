@@ -268,6 +268,14 @@ export async function forgotPasswordAction(formData: FormData) {
  */
 export async function logoutAction() {
   const cookieStore = await cookies();
+  cookieStore.set({
+    name: "token",
+    value: "",
+    path: "/",
+    maxAge: 0,
+    expires: new Date(0),
+    httpOnly: true,
+  });
   cookieStore.delete("token");
   redirect("/login?success=" + encodeURIComponent("You have been logged out."));
 }
