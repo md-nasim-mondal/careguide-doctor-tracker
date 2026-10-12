@@ -1,4 +1,6 @@
 import { fetchServerApi } from "@/lib/serverApi";
+import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import AlertBanner from "@/components/common/AlertBanner";
 import PatientFilterBar from "@/components/patients/PatientFilterBar";
 import PatientForm from "@/components/patients/PatientForm";
@@ -17,6 +19,11 @@ type PageProps = {
 };
 
 export default async function PatientsPage({ searchParams }: PageProps) {
+  const currentUser = await getCurrentUser();
+  if (currentUser?.role === "PATIENT") {
+    redirect("/dashboard");
+  }
+
   const resolvedSearchParams = await searchParams;
   const page = parseInt(resolvedSearchParams.page || "1", 10);
   const search = resolvedSearchParams.search || "";

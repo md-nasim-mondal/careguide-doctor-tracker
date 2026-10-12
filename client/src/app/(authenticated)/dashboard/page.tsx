@@ -82,7 +82,7 @@ export default async function DashboardPage() {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-primary">Your Attending Doctor</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 font-semibold border border-emerald-200">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-semibold border border-emerald-300">
                   {assignedDoctor ? "Assigned" : "Available"}
                 </span>
               </div>
@@ -129,8 +129,8 @@ export default async function DashboardPage() {
           <div className="bg-card border border-border rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Medical Status & Notes</span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300 font-semibold border border-blue-200">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Medical Status &amp; Notes</span>
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-900 font-semibold border border-blue-300">
                   Active Patient
                 </span>
               </div>
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
                 </div>
                 <div className="flex items-center justify-between text-xs sm:text-sm">
                   <span className="text-muted-foreground">Registration Status:</span>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">Verified & Active</span>
+                  <span className="font-semibold text-emerald-700">Verified &amp; Active</span>
                 </div>
               </div>
             </div>
@@ -283,7 +283,7 @@ export default async function DashboardPage() {
               <span className="text-xs font-medium text-muted-foreground">Practice Status</span>
               <span className="text-base">🟢</span>
             </div>
-            <p className="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+            <p className="text-base sm:text-lg font-bold text-emerald-700 mt-2">
               Active Specialist
             </p>
             <p className="text-[11px] text-muted-foreground mt-0.5">Licensed & verified</p>
