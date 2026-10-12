@@ -53,8 +53,26 @@ process.on("uncaughtException", unexpectedErrorHandler);
 process.on("unhandledRejection", unexpectedErrorHandler);
 
 process.on("SIGTERM", () => {
-  console.log("SIGTERM received");
+  console.log("SIGTERM received. Shutting down...");
   if (server) {
-    server.close();
+    server.close(() => {
+      mongoose.disconnect().finally(() => {
+        process.exit(0);
+      });
+    });
+  } else {
+    process.exit(0);
+  }
+});
+
+process.on("SIGINT", () => {
+  if (server) {
+    server.close(() => {
+      mongoose.disconnect().finally(() => {
+        process.exit(0);
+      });
+    });
+  } else {
+    process.exit(0);
   }
 });
