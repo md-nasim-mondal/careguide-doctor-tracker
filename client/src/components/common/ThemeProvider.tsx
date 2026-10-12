@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -14,56 +14,69 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const STORAGE_KEY = "docpulse-theme";
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("system");
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
-
-  useEffect(() => {
-    // Read from localStorage on mount
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-      if (stored === "light" || stored === "dark" || stored === "system") {
-        setThemeState(stored);
-      }
-    } catch {
-      // Fallback to system
+function getStoredTheme(): Theme {
+  if (typeof window === "undefined") return "system";
+  try {
+    const item = localStorage.getItem(STORAGE_KEY);
+    if (item === "light" || item === "dark" || item === "system") {
+      return item;
     }
-  }, []);
+  } catch {
+    // fallback
+  }
+  return "system";
+}
 
+function subscribeToTheme(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener("docpulse-theme-change", callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("docpulse-theme-change", callback);
+  };
+}
+
+function getSystemThemeSnapshot(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+function subscribeToSystem(callback: () => void) {
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  mediaQuery.addEventListener("change", callback);
+  return () => mediaQuery.removeEventListener("change", callback);
+}
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const theme = useSyncExternalStore<Theme>(
+    subscribeToTheme,
+    getStoredTheme,
+    () => "system"
+  );
+
+  const isSystemDark = useSyncExternalStore<boolean>(
+    subscribeToSystem,
+    getSystemThemeSnapshot,
+    () => false
+  );
+
+  const resolvedTheme: "light" | "dark" =
+    theme === "system" ? (isSystemDark ? "dark" : "light") : theme;
+
+  // Synchronize DOM with resolved theme (pure side-effect with no setState)
   useEffect(() => {
     const root = document.documentElement;
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const applyTheme = () => {
-      const isSystemDark = mediaQuery.matches;
-      const effectiveTheme: "light" | "dark" =
-        theme === "system" ? (isSystemDark ? "dark" : "light") : theme;
-
-      setResolvedTheme(effectiveTheme);
-
-      if (effectiveTheme === "dark") {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-    };
-
-    applyTheme();
-
-    const listener = () => {
-      if (theme === "system") {
-        applyTheme();
-      }
-    };
-
-    mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
-  }, [theme]);
+    if (resolvedTheme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [resolvedTheme]);
 
   const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
     try {
       localStorage.setItem(STORAGE_KEY, newTheme);
+      window.dispatchEvent(new Event("docpulse-theme-change"));
     } catch {
       // ignore storage quota errors
     }
