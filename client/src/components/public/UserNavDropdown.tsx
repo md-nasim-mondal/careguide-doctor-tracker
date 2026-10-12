@@ -88,7 +88,7 @@ export default function UserNavDropdown({ user }: UserNavDropdownProps) {
             <Link
               href="/dashboard"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-foreground bg-primary/10 hover:bg-primary/20 text-primary transition group"
+              className="flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-primary/10 hover:bg-primary/20 text-primary transition group"
             >
               <span className="flex items-center gap-2">
                 <span>📊</span>
