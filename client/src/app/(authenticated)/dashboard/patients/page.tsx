@@ -98,13 +98,50 @@ export default async function PatientsPage({ searchParams }: PageProps) {
     return qs ? `?${qs}` : "";
   };
 
+  const isDoctor = currentUser?.role === "DOCTOR";
+  const canManage = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
+  const currentDoctorId = isDoctor
+    ? doctorsList.find(
+        (d) =>
+          d.email?.toLowerCase() === currentUser?.email?.toLowerCase() ||
+          d.name.toLowerCase() === currentUser?.name?.toLowerCase()
+      )?._id || ""
+    : "";
+
+  let editingDoctorId = "";
+  if (editingPatient?.doctor) {
+    editingDoctorId =
+      typeof editingPatient.doctor === "object"
+        ? editingPatient.doctor._id
+        : (editingPatient.doctor as string);
+  }
+  const isAllowedToEdit = canManage || (isDoctor && currentDoctorId && editingDoctorId === currentDoctorId);
+
   return (
     <div className="p-2.5 sm:p-6 md:p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
-      <h1 className="text-xl sm:text-3xl font-bold mb-4 sm:mb-6 text-foreground">Patient Management</h1>
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-foreground">
+          {isDoctor ? "Patient Care & Clinical Records" : "Patient Management"}
+        </h1>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+          {isDoctor
+            ? "Review patient records, update clinical notes for your assigned patients, or register new patients under your care."
+            : "Register, modify doctor assignments, and manage patient profiles across the clinic."}
+        </p>
+      </div>
 
       {errorMessage && (
         <div className="mb-4">
           <AlertBanner variant="error" message={errorMessage} />
+        </div>
+      )}
+
+      {isEditing && editingPatient && !isAllowedToEdit && (
+        <div className="mb-4">
+          <AlertBanner
+            variant="error"
+            message="Access Denied: Doctors are only permitted to update clinical notes for their own assigned patients."
+          />
         </div>
       )}
 
@@ -122,16 +159,20 @@ export default async function PatientsPage({ searchParams }: PageProps) {
       {showAddForm && (
         <PatientForm
           doctorsList={doctorsList}
+          isDoctor={isDoctor}
+          currentDoctorId={currentDoctorId}
           buildQuery={buildQuery}
         />
       )}
 
-      {/* Edit Patient Form */}
-      {isEditing && editingPatient && (
+      {/* Edit Patient Form (Allowed if Admin or Doctor's Own Patient) */}
+      {isEditing && editingPatient && isAllowedToEdit && (
         <PatientForm
           patient={editingPatient}
           doctorsList={doctorsList}
           isEditing={true}
+          isDoctor={isDoctor}
+          currentDoctorId={currentDoctorId}
           buildQuery={buildQuery}
         />
       )}
@@ -141,7 +182,9 @@ export default async function PatientsPage({ searchParams }: PageProps) {
         patients={initialPatients}
         currentPage={page}
         totalPages={totalPages}
-        canManage={currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN"}
+        canManage={canManage}
+        isDoctor={isDoctor}
+        currentDoctorId={currentDoctorId}
         buildQuery={buildQuery}
       />
     </div>

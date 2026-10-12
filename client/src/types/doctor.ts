@@ -9,7 +9,10 @@ export interface DoctorItem {
   email: string;
 }
 
-export type DoctorOption = Pick<DoctorItem, "_id" | "name">;
+export type DoctorOption = Pick<DoctorItem, "_id" | "name"> & {
+  email?: string;
+  specialization?: string;
+};
 
 export interface DoctorSearchBarProps {
   search: string;

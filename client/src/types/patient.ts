@@ -34,6 +34,8 @@ export interface PatientFormProps {
   patient?: PatientFormModel | null;
   doctorsList: DoctorOption[];
   isEditing?: boolean;
+  isDoctor?: boolean;
+  currentDoctorId?: string;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }
 
@@ -43,6 +45,8 @@ export interface PatientsTableProps {
   totalPages: number;
   canManage?: boolean;
   canDelete?: boolean;
+  isDoctor?: boolean;
+  currentDoctorId?: string;
   buildQuery: (params: Record<string, string | number | undefined>) => string;
 }
 

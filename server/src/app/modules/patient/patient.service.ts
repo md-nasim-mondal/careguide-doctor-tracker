@@ -23,18 +23,22 @@ const createPatient = async (payload: IPatient, authUser?: IAuthUser) => {
 
   return await withTransaction(async (session) => {
     let doctorName = "Assigned Specialist";
-    if (payload.doctor) {
-      const doctorExists = await Doctor.findById(payload.doctor).session(session || null);
-      if (!doctorExists) {
-        throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
-      }
-      doctorName = doctorExists.name;
-    } else if (authUser?.role === Role.DOCTOR) {
-      // Auto-assign to the creating doctor if not explicitly provided
+    if (authUser?.role === Role.DOCTOR) {
+      // Doctor can strictly add patients only under themselves
       const doctor = await Doctor.findOne({ email: authUser.email }).session(session || null);
-      if (doctor) {
-        payload.doctor = doctor._id;
-        doctorName = doctor.name;
+      if (!doctor) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Doctor profile not found for this account');
+      }
+      payload.doctor = doctor._id;
+      doctorName = doctor.name;
+    } else {
+      // Admin / Super Admin can assign any doctor
+      if (payload.doctor) {
+        const doctorExists = await Doctor.findById(payload.doctor).session(session || null);
+        if (!doctorExists) {
+          throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
+        }
+        doctorName = doctorExists.name;
       }
     }
 
@@ -180,10 +184,21 @@ const updatePatient = async (id: string, payload: Partial<IPatient>, authUser?: 
       throw new AppError(httpStatus.NOT_FOUND, 'Patient not found');
     }
 
-    if (payload.doctor) {
-      const doctorExists = await Doctor.findById(payload.doctor).session(session || null);
-      if (!doctorExists) {
-        throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
+    if (authUser?.role === Role.DOCTOR) {
+      const doctor = await Doctor.findOne({ email: authUser.email }).session(session || null);
+      if (!doctor || !existingPatient.doctor || existingPatient.doctor.toString() !== doctor._id.toString()) {
+        throw new AppError(httpStatus.FORBIDDEN, 'Doctors can only update clinical records of their own assigned patients');
+      }
+      // Doctors cannot reassign patients to a different doctor
+      if (payload.doctor && payload.doctor.toString() !== doctor._id.toString()) {
+        throw new AppError(httpStatus.FORBIDDEN, 'Doctors cannot reassign patients to a different doctor');
+      }
+    } else {
+      if (payload.doctor) {
+        const doctorExists = await Doctor.findById(payload.doctor).session(session || null);
+        if (!doctorExists) {
+          throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
+        }
       }
     }
 

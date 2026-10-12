@@ -8,25 +8,46 @@ export default function PatientForm({
   patient,
   doctorsList,
   isEditing = false,
+  isDoctor = false,
+  currentDoctorId = "",
   buildQuery,
 }: PatientFormProps) {
   const selectedDoctorId =
     typeof patient?.doctor === "object" && patient.doctor
       ? patient.doctor._id
-      : (patient?.doctor as string) || "";
+      : (patient?.doctor as string) || currentDoctorId || "";
 
   const formAction = isEditing && patient?._id
     ? updatePatientAction.bind(null, patient._id)
     : createPatientAction;
+
+  const currentDoctorName =
+    doctorsList.find((d) => d._id === (currentDoctorId || selectedDoctorId))?.name ||
+    "Assigned to You";
 
   return (
     <form
       action={formAction}
       className="bg-card p-4 sm:p-6 border border-border rounded mb-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-foreground shadow-sm"
     >
-      {isEditing && (
-        <h2 className="sm:col-span-2 text-lg sm:text-xl font-bold">Edit Patient</h2>
-      )}
+      <div className="sm:col-span-2 flex items-center justify-between border-b border-border pb-3">
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold">
+            {isEditing
+              ? isDoctor
+                ? "Update Patient Clinical Record"
+                : "Edit Patient Details"
+              : isDoctor
+              ? "Register Patient Under Your Medical Care"
+              : "Add New Patient Record"}
+          </h2>
+          {isDoctor && (
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Patients registered by specialists are automatically assigned directly to your roster.
+            </p>
+          )}
+        </div>
+      </div>
 
       <input
         name="name"
@@ -47,7 +68,7 @@ export default function PatientForm({
         name="condition"
         defaultValue={patient?.condition || ""}
         className="p-2.5 border border-input rounded bg-background text-xs sm:text-sm"
-        placeholder="Condition"
+        placeholder="Medical Condition / Symptoms"
         required
       />
       <input
@@ -64,19 +85,33 @@ export default function PatientForm({
         className="p-2.5 border border-input rounded bg-background text-xs sm:text-sm"
         placeholder="Phone Number (optional)"
       />
-      <select
-        name="doctor"
-        defaultValue={selectedDoctorId}
-        className="p-2.5 border border-input rounded bg-background text-xs sm:text-sm"
-        required
-      >
-        <option value="">Select Doctor</option>
-        {doctorsList.map((doc) => (
-          <option key={doc._id} value={doc._id}>
-            {doc.name}
-          </option>
-        ))}
-      </select>
+
+      {/* Doctor Assignment Selection or Locked Doctor Display */}
+      {isDoctor ? (
+        <div className="p-2.5 border border-primary/20 rounded-lg bg-primary/5 flex flex-col justify-center">
+          <span className="text-[11px] text-muted-foreground uppercase font-bold tracking-wide">
+            Attending Specialist (Locked)
+          </span>
+          <span className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-1.5 mt-0.5">
+            👨‍⚕️ {currentDoctorName}
+          </span>
+          <input type="hidden" name="doctor" value={currentDoctorId || selectedDoctorId} />
+        </div>
+      ) : (
+        <select
+          name="doctor"
+          defaultValue={selectedDoctorId}
+          className="p-2.5 border border-input rounded bg-background text-xs sm:text-sm"
+          required
+        >
+          <option value="">Select Doctor</option>
+          {doctorsList.map((doc) => (
+            <option key={doc._id} value={doc._id}>
+              {doc.name}
+            </option>
+          ))}
+        </select>
+      )}
 
       <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
         <Link
@@ -87,9 +122,13 @@ export default function PatientForm({
         </Link>
         <button
           type="submit"
-          className="px-6 py-2 bg-success text-success-foreground rounded hover:opacity-90 font-medium text-xs sm:text-sm cursor-pointer"
+          className="px-6 py-2 bg-success text-success-foreground rounded hover:opacity-90 font-medium text-xs sm:text-sm cursor-pointer shadow-xs"
         >
-          {isEditing ? "Update Patient" : "Save Patient"}
+          {isEditing
+            ? isDoctor
+              ? "Update Clinical Notes"
+              : "Update Patient"
+            : "Save Patient"}
         </button>
       </div>
     </form>
