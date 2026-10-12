@@ -36,24 +36,33 @@ export default async function DashboardPage() {
   if (role === "PATIENT") {
     let patientRecord = null;
     let availableDoctors: Array<{ _id: string; name: string; specialization: string; hospital: string; phone: string; email: string }> = [];
+    let patientFetchError = "";
 
     try {
       const [patientRes, doctorsRes] = await Promise.all([
-        fetchServerApi(`/patients?search=${encodeURIComponent(user?.name || "")}&limit=5`).catch(() => ({ data: { patients: [] } })),
-        fetchServerApi(`/doctors?limit=10`).catch(() => ({ data: { doctors: [] } })),
+        fetchServerApi(`/patients?search=${encodeURIComponent(user?.name || "")}&limit=5`),
+        fetchServerApi(`/doctors?limit=10`),
       ]);
       patientRecord = patientRes.data?.patients?.find((p: { name: string }) => 
         p.name.toLowerCase().trim() === (user?.name || "").toLowerCase().trim()
       ) || patientRes.data?.patients?.[0] || null;
       availableDoctors = doctorsRes.data?.doctors || [];
-    } catch {
-      // Graceful fallback
+    } catch (err: unknown) {
+      patientFetchError = err instanceof Error ? err.message : "Unable to reach healthcare server.";
     }
 
     const assignedDoctor = typeof patientRecord?.doctor === "object" ? patientRecord.doctor : null;
 
     return (
       <div className="w-full max-w-6xl mx-auto space-y-6">
+        {/* Server Connection Error Alert */}
+        {patientFetchError && (
+          <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
+            <span>⚠️</span>
+            <span className="flex-1 wrap-break-word">{patientFetchError}</span>
+          </div>
+        )}
+
         {/* Welcome Header */}
         <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -197,11 +206,12 @@ export default async function DashboardPage() {
   if (role === "DOCTOR") {
     let doctorProfile: { _id: string; name: string; email: string; phone: string; specialization: string; hospital: string } | null = null;
     let assignedPatients: Array<{ _id: string; name: string; age?: number; condition?: string; createdAt?: string }> = [];
+    let doctorFetchError = "";
 
     try {
       const [doctorsRes, patientsRes] = await Promise.all([
-        fetchServerApi(`/doctors?search=${encodeURIComponent(user?.email || user?.name || "")}&limit=10`).catch(() => ({ data: { doctors: [] } })),
-        fetchServerApi(`/patients?limit=100`).catch(() => ({ data: { patients: [] } })),
+        fetchServerApi(`/doctors?search=${encodeURIComponent(user?.email || user?.name || "")}&limit=10`),
+        fetchServerApi(`/patients?limit=100`),
       ]);
 
       const doctorsList = doctorsRes.data?.doctors || [];
@@ -219,12 +229,20 @@ export default async function DashboardPage() {
       } else {
         assignedPatients = allPatients.slice(0, 5);
       }
-    } catch {
-      // Graceful fallback
+    } catch (err: unknown) {
+      doctorFetchError = err instanceof Error ? err.message : "Unable to reach healthcare server.";
     }
 
     return (
       <div className="w-full max-w-6xl mx-auto space-y-6">
+        {/* Server Connection Error Alert */}
+        {doctorFetchError && (
+          <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
+            <span>⚠️</span>
+            <span className="flex-1 wrap-break-word">{doctorFetchError}</span>
+          </div>
+        )}
+
         {/* Doctor Header */}
         <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>

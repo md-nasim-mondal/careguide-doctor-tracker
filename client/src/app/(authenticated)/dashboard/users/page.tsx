@@ -35,9 +35,6 @@ export default async function UserManagementPage({ searchParams }: PageProps) {
   const statusFilter = resolvedParams.isActive || "";
   const action = resolvedParams.action || "";
   const selectedUserId = resolvedParams.userId || "";
-  const errorMsg = resolvedParams.error || "";
-  const successMsg = resolvedParams.success || "";
-
   const usersResponse = await getAllUsersAction({
     searchTerm,
     role: roleFilter,
@@ -45,6 +42,9 @@ export default async function UserManagementPage({ searchParams }: PageProps) {
     page,
     limit: 10,
   });
+
+  const errorMsg = resolvedParams.error || usersResponse?.error || "";
+  const successMsg = resolvedParams.success || "";
 
   const users: IUserItem[] = usersResponse?.data || [];
   const meta = usersResponse?.meta || { page: 1, limit: 10, total: 0, totalPage: 1 };

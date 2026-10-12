@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { fetchServerApi, BACKEND_API_URL } from "@/lib/serverApi";
+import { fetchServerApi, BACKEND_API_URL, formatErrorMessage } from "@/lib/serverApi";
 import {
   loginValidationSchema,
   registerValidationSchema,
@@ -42,15 +42,26 @@ export async function loginAction(formData: FormData) {
   const { email, password } = validation.data;
 
   try {
-    const response = await fetch(`${BACKEND_API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${BACKEND_API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (netErr: unknown) {
+      throw new Error(formatErrorMessage(netErr));
+    }
 
-    const data = await response.json();
+    let data: any = null;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error(`Server returned status ${response.status} (${response.statusText || 'Offline or invalid response'}).`);
+    }
+
     if (!response.ok) {
-      throw new Error(data.message || "Invalid email or password");
+      throw new Error(data?.message || data?.errorMessages?.[0]?.message || "Invalid email or password");
     }
 
     const token = data.data?.accessToken;
@@ -69,7 +80,7 @@ export async function loginAction(formData: FormData) {
       maxAge: 60 * 60 * 24, // 1 day
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Authentication failed";
+    const message = formatErrorMessage(err, "Authentication failed");
     redirect(`/login?error=${encodeURIComponent(message)}`);
   }
 
@@ -96,18 +107,29 @@ export async function registerAction(formData: FormData) {
     if (specialization && specialization.trim()) payload.specialization = specialization.trim();
     if (hospital && hospital.trim()) payload.hospital = hospital.trim();
 
-    const response = await fetch(`${BACKEND_API_URL}/user/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${BACKEND_API_URL}/user/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (netErr: unknown) {
+      throw new Error(formatErrorMessage(netErr));
+    }
 
-    const data = await response.json();
+    let data: any = null;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error(`Server returned status ${response.status} (${response.statusText || 'Offline or invalid response'}).`);
+    }
+
     if (!response.ok) {
-      throw new Error(data.message || "Registration failed");
+      throw new Error(data?.message || data?.errorMessages?.[0]?.message || "Registration failed");
     }
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Registration failed";
+    const message = formatErrorMessage(err, "Registration failed");
     redirect(`/register?error=${encodeURIComponent(message)}`);
   }
 
@@ -135,21 +157,32 @@ export async function resetPasswordAction(formData: FormData) {
   }
 
   try {
-    const response = await fetch(`${BACKEND_API_URL}/auth/reset-password`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ id, code, newPassword }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${BACKEND_API_URL}/auth/reset-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ id, code, newPassword }),
+      });
+    } catch (netErr: unknown) {
+      throw new Error(formatErrorMessage(netErr));
+    }
 
-    const data = await response.json();
+    let data: any = null;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error(`Server returned status ${response.status} (${response.statusText || 'Offline or invalid response'}).`);
+    }
+
     if (!response.ok) {
-      throw new Error(data.message || "Password reset failed");
+      throw new Error(data?.message || data?.errorMessages?.[0]?.message || "Password reset failed");
     }
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Password reset failed";
+    const message = formatErrorMessage(err, "Password reset failed");
     redirect(`/reset-password?id=${id}&token=${encodeURIComponent(authToken)}&error=${encodeURIComponent(message)}`);
   }
 
@@ -182,7 +215,7 @@ export async function changePasswordAction(formData: FormData) {
 
     revalidatePath("/dashboard/change-password");
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to change password";
+    const message = formatErrorMessage(err, "Failed to change password");
     redirect(`/dashboard/change-password?error=${encodeURIComponent(message)}`);
   }
 
@@ -201,18 +234,29 @@ export async function forgotPasswordAction(formData: FormData) {
   const { email } = validation.data;
 
   try {
-    const response = await fetch(`${BACKEND_API_URL}/auth/forgot-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${BACKEND_API_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    } catch (netErr: unknown) {
+      throw new Error(formatErrorMessage(netErr));
+    }
 
-    const data = await response.json();
+    let data: any = null;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error(`Server returned status ${response.status} (${response.statusText || 'Offline or invalid response'}).`);
+    }
+
     if (!response.ok) {
-      throw new Error(data.message || "Failed to process forgot password request");
+      throw new Error(data?.message || data?.errorMessages?.[0]?.message || "Failed to process forgot password request");
     }
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to process forgot password request";
+    const message = formatErrorMessage(err, "Failed to process forgot password request");
     redirect(`/forgot-password?error=${encodeURIComponent(message)}`);
   }
 
