@@ -33,7 +33,7 @@ export default function PublicFooter() {
               <li><Link href="/login" className="hover:text-foreground transition-colors">Sign In Portal</Link></li>
               <li><Link href="/dashboard" className="hover:text-foreground transition-colors">Live Dashboard</Link></li>
               <li><Link href="/dashboard/doctors" className="hover:text-foreground transition-colors">Doctors Directory</Link></li>
-              <li><Link href="/dashboard/patients" className="hover:text-foreground transition-colors">Patient Registry</Link></li>
+              <li><Link href="/dashboard" className="hover:text-foreground transition-colors">Patient Portal</Link></li>
             </ul>
           </div>
         </div>

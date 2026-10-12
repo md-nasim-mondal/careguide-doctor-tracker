@@ -1,12 +1,39 @@
 import { fetchServerApi } from "@/lib/serverApi";
 import { getCurrentUser } from "@/lib/auth";
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
+import AlertBanner from "@/components/common/AlertBanner";
 import Link from "next/link";
 import type { DashboardAnalytics } from "@/types";
 
 export const instant = false;
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams?: Promise<{
+    unauthorized?: string;
+    error?: string;
+    success?: string;
+  }>;
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const unauthorizedCode = resolvedParams.unauthorized;
+  const errorParam = resolvedParams.error;
+  const successParam = resolvedParams.success;
+
+  let securityNotice = "";
+  if (unauthorizedCode === "patient_restricted") {
+    securityNotice = "Access Restricted: As a Patient, you have access to your personal medical records and the verified doctor directory. Clinic-wide patient records are restricted to attending physicians and clinic administrators.";
+  } else if (unauthorizedCode === "admin_required") {
+    securityNotice = "Access Denied: Administrative privileges (Admin / Super Admin) are required to access user account management.";
+  } else if (unauthorizedCode === "doctor_required") {
+    securityNotice = "Access Denied: Doctor clinical portal credentials are required to view that area.";
+  } else if (unauthorizedCode === "patient_portal_only") {
+    securityNotice = "Access Restricted: That area is reserved for patient portal access.";
+  } else if (unauthorizedCode) {
+    securityNotice = "Access Denied: You do not have permission to view the requested page.";
+  }
+
   const user = await getCurrentUser();
   const role = user?.role || "ADMIN";
 
@@ -55,6 +82,11 @@ export default async function DashboardPage() {
 
     return (
       <div className="w-full space-y-6">
+        {/* Security & Access Notice */}
+        {securityNotice && <AlertBanner message={securityNotice} variant="error" />}
+        {errorParam && <AlertBanner message={errorParam} variant="error" />}
+        {successParam && <AlertBanner message={successParam} variant="success" />}
+
         {/* Server Connection Error Alert */}
         {patientFetchError && (
           <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
@@ -235,6 +267,11 @@ export default async function DashboardPage() {
 
     return (
       <div className="w-full space-y-6">
+        {/* Security & Access Notice */}
+        {securityNotice && <AlertBanner message={securityNotice} variant="error" />}
+        {errorParam && <AlertBanner message={errorParam} variant="error" />}
+        {successParam && <AlertBanner message={successParam} variant="success" />}
+
         {/* Server Connection Error Alert */}
         {doctorFetchError && (
           <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
@@ -417,6 +454,11 @@ export default async function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Security & Access Notice */}
+      {securityNotice && <AlertBanner message={securityNotice} variant="error" />}
+      {errorParam && <AlertBanner message={errorParam} variant="error" />}
+      {successParam && <AlertBanner message={successParam} variant="success" />}
 
       {error && (
         <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">

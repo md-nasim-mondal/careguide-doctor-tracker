@@ -131,7 +131,7 @@ const getDoctorPatients = async (doctorId: string, authUser?: IAuthUser) => {
 
   if (authUser?.role === Role.DOCTOR) {
     const doctor = await Doctor.findOne({ email: authUser.email });
-    if (doctor && doctor._id.toString() !== doctorId) {
+    if (!doctor || doctor._id.toString() !== doctorId) {
       throw new AppError(httpStatus.FORBIDDEN, 'Doctors can only access their own assigned patient roster');
     }
   }

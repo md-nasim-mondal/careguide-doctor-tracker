@@ -1,6 +1,7 @@
 "use server";
 
 import { fetchServerApi } from "@/lib/serverApi";
+import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -12,7 +13,17 @@ export interface IGetUsersParams {
   limit?: number;
 }
 
+async function requireAdmin() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser || (currentUser.role !== "SUPER_ADMIN" && currentUser.role !== "ADMIN")) {
+    redirect("/dashboard?unauthorized=admin_required");
+  }
+  return currentUser;
+}
+
 export async function getAllUsersAction(params: IGetUsersParams = {}) {
+  await requireAdmin();
+
   const query = new URLSearchParams();
   if (params.searchTerm && params.searchTerm.trim()) query.append("searchTerm", params.searchTerm.trim());
   if (params.role && params.role.trim()) query.append("role", params.role.trim());
@@ -35,6 +46,8 @@ export async function getAllUsersAction(params: IGetUsersParams = {}) {
 }
 
 export async function updateUserRoleAction(userId: string, formData: FormData) {
+  await requireAdmin();
+
   const role = formData.get("role") as string;
   const isActive = formData.get("isActive") as string;
 
@@ -57,6 +70,8 @@ export async function updateUserRoleAction(userId: string, formData: FormData) {
 }
 
 export async function approveDoctorAction(userId: string) {
+  await requireAdmin();
+
   let redirectUrl = "/dashboard/users?success=" + encodeURIComponent("Doctor approved successfully! Doctor can now log in.");
   try {
     await fetchServerApi(`/user/${userId}/approve-doctor`, {
@@ -72,6 +87,8 @@ export async function approveDoctorAction(userId: string) {
 }
 
 export async function deleteUserAction(userId: string) {
+  await requireAdmin();
+
   let redirectUrl = "/dashboard/users?success=" + encodeURIComponent("User deleted successfully!");
   try {
     await fetchServerApi(`/user/${userId}`, {

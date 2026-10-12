@@ -1,5 +1,6 @@
 "use server";
 import { fetchServerApi } from "@/lib/serverApi";
+import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -9,6 +10,11 @@ import {
 } from "@/validations";
 
 export async function createPatientAction(formData: FormData) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser || currentUser.role === "PATIENT") {
+    redirect(`/dashboard?unauthorized=patient_restricted`);
+  }
+
   const validation = validateFormData(createPatientValidationSchema, formData);
   if (!validation.success) {
     redirect(`/dashboard/patients?action=add&error=${encodeURIComponent(validation.error)}`);
@@ -23,6 +29,7 @@ export async function createPatientAction(formData: FormData) {
       body: JSON.stringify({ name, age, condition, doctor, email: email || undefined, phone: phone || undefined }),
     });
     revalidatePath("/dashboard/patients");
+    revalidatePath("/dashboard");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
     redirectUrl = `/dashboard/patients?action=add&error=${encodeURIComponent(message)}`;
@@ -31,6 +38,11 @@ export async function createPatientAction(formData: FormData) {
 }
 
 export async function updatePatientAction(id: string, formData: FormData) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser || currentUser.role === "PATIENT") {
+    redirect(`/dashboard?unauthorized=patient_restricted`);
+  }
+
   const validation = validateFormData(updatePatientValidationSchema, formData);
   if (!validation.success) {
     redirect(`/dashboard/patients?action=edit&patientId=${id}&error=${encodeURIComponent(validation.error)}`);
@@ -45,6 +57,7 @@ export async function updatePatientAction(id: string, formData: FormData) {
       body: JSON.stringify({ name, age, condition, doctor, email: email || undefined, phone: phone || undefined }),
     });
     revalidatePath("/dashboard/patients");
+    revalidatePath("/dashboard");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
     redirectUrl = `/dashboard/patients?action=edit&patientId=${id}&error=${encodeURIComponent(message)}`;
@@ -53,12 +66,18 @@ export async function updatePatientAction(id: string, formData: FormData) {
 }
 
 export async function deletePatientAction(id: string) {
+  const currentUser = await getCurrentUser();
+  if (!currentUser || (currentUser.role !== "SUPER_ADMIN" && currentUser.role !== "ADMIN")) {
+    redirect(`/dashboard/patients?error=${encodeURIComponent("Unauthorized: Only administrators can delete patient records")}`);
+  }
+
   let redirectUrl = "/dashboard/patients?success=" + encodeURIComponent("Patient deleted successfully!");
   try {
     await fetchServerApi(`/patients/${id}`, {
       method: "DELETE",
     });
     revalidatePath("/dashboard/patients");
+    revalidatePath("/dashboard");
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An unknown error occurred";
     redirectUrl = `/dashboard/patients?error=${encodeURIComponent(message)}`;

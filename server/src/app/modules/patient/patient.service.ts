@@ -110,6 +110,16 @@ const getAllPatients = async (query: Record<string, string>, authUser?: IAuthUse
     });
   }
 
+  // Role-based boundary: DOCTOR can only see their own assigned patients
+  if (authUser?.role === Role.DOCTOR) {
+    const doctor = await Doctor.findOne({ email: authUser.email });
+    if (!doctor) {
+      baseQuery = baseQuery.find({ _id: null });
+    } else {
+      baseQuery = baseQuery.find({ doctor: doctor._id });
+    }
+  }
+
   if (queryObj.date) {
     const targetDate = new Date(queryObj.date);
     const nextDay = new Date(targetDate);
@@ -167,6 +177,21 @@ const getPatientById = async (id: string, authUser?: IAuthUser) => {
       patient.name.toLowerCase() === authUser.name.toLowerCase();
     if (!isOwner) {
       throw new AppError(httpStatus.FORBIDDEN, 'Access denied. Patients can only view their own medical record');
+    }
+  }
+
+  // Role-based boundary: DOCTOR can only view their own assigned patients
+  if (authUser?.role === Role.DOCTOR) {
+    const doctor = await Doctor.findOne({ email: authUser.email });
+    const doctorIdStr = doctor ? doctor._id.toString() : '';
+    const docAny = patient.doctor as unknown as { _id?: { toString(): string } } | { toString(): string } | undefined;
+    const assignedDoctorId = docAny
+      ? (typeof docAny === 'object' && '_id' in docAny && docAny._id
+          ? docAny._id.toString()
+          : docAny.toString())
+      : '';
+    if (!doctor || assignedDoctorId !== doctorIdStr) {
+      throw new AppError(httpStatus.FORBIDDEN, 'Access denied. Doctors can only view their own assigned patients');
     }
   }
 
