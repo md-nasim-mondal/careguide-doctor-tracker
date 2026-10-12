@@ -33,15 +33,9 @@ export default function PublicNavbar() {
         <div className="hidden md:flex items-center gap-2.5">
           <Link
             href="/login"
-            className="px-3.5 py-1.5 text-xs sm:text-sm font-medium text-foreground hover:text-primary transition"
+            className="px-4 py-2 text-xs sm:text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition shadow-xs"
           >
-            Sign In
-          </Link>
-          <Link
-            href="/register"
-            className="px-3.5 py-1.5 text-xs sm:text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition shadow-xs"
-          >
-            Register
+            Sign In to Portal
           </Link>
         </div>
 
@@ -99,18 +93,11 @@ export default function PublicNavbar() {
 
           <div className="pt-3 border-t border-border flex flex-col gap-2">
             <Link
-              href="/register"
+              href="/login"
               onClick={() => setIsOpen(false)}
               className="w-full text-center py-2 bg-primary text-primary-foreground text-xs sm:text-sm font-semibold rounded-lg hover:bg-primary/90 transition"
             >
-              Create New Account
-            </Link>
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className="w-full text-center py-2 border border-border text-foreground text-xs sm:text-sm font-medium rounded-lg hover:bg-muted transition"
-            >
-              Staff &amp; Patient Portal Login
+              Sign In to Portal
             </Link>
           </div>
         </div>

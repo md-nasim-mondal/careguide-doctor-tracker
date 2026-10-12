@@ -9,9 +9,60 @@ import { Doctor } from './doctor.model';
 import { doctorAllowedUpdateFields, doctorSearchableFields } from './doctor.constant';
 import { withTransaction } from '../../utils/withTransaction';
 
+import bcryptjs from 'bcryptjs';
+import { User } from '../user/user.model';
+import { IsActive, Role } from '../user/user.interface';
+import { sendEmail } from '../../utils/sendEmail';
+import { envVars } from '../../config/env';
+
 const createDoctor = async (payload: IDoctor) => {
-  const doctor = await Doctor.create(payload);
-  return doctor;
+  return await withTransaction(async (session) => {
+    const doctor = await Doctor.create([payload], session ? { session } : {});
+    const createdDoctor = doctor[0];
+
+    // Automatically provision or sync User account with DOCTOR role
+    const existingUser = await User.findOne({ email: payload.email }).session(session || null);
+    const defaultPassword = "Doctor@1234";
+
+    if (!existingUser) {
+      const hashedPassword = await bcryptjs.hash(defaultPassword, Number(envVars.BCRYPT_SALT_ROUND) || 10);
+      await User.create(
+        [
+          {
+            name: payload.name,
+            email: payload.email,
+            phone: payload.phone,
+            password: hashedPassword,
+            role: Role.DOCTOR,
+            isActive: IsActive.ACTIVE,
+            isVerified: true,
+            auths: [{ provider: "credentials", providerId: payload.email }],
+          },
+        ],
+        session ? { session } : {}
+      );
+    } else {
+      existingUser.role = Role.DOCTOR;
+      existingUser.isActive = IsActive.ACTIVE;
+      existingUser.isVerified = true;
+      await existingUser.save(session ? { session } : {});
+    }
+
+    // Send Welcome Email (graceful mock/notification if SMTP not configured)
+    await sendEmail({
+      to: payload.email,
+      subject: "Welcome to DocPulse - Doctor Account Created",
+      templateName: "welcomeDoctor",
+      templateData: {
+        name: payload.name,
+        email: payload.email,
+        hospital: payload.hospital,
+        tempPassword: existingUser ? undefined : defaultPassword,
+      },
+    });
+
+    return createdDoctor;
+  });
 };
 
 const getAllDoctors = async (query: Record<string, string>) => {

@@ -31,7 +31,6 @@ export default function PublicFooter() {
             <h4 className="text-sm font-semibold mb-3">Portal Access</h4>
             <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
               <li><Link href="/login" className="hover:text-foreground transition-colors">Sign In Portal</Link></li>
-              <li><Link href="/register" className="hover:text-foreground transition-colors">Create Account</Link></li>
               <li><Link href="/dashboard" className="hover:text-foreground transition-colors">Live Dashboard</Link></li>
               <li><Link href="/dashboard/doctors" className="hover:text-foreground transition-colors">Doctors Directory</Link></li>
               <li><Link href="/dashboard/patients" className="hover:text-foreground transition-colors">Patient Registry</Link></li>

@@ -68,18 +68,12 @@ export default async function ForgotPasswordPage({ searchParams }: PageProps) {
         </form>
 
         {/* Footer Links */}
-        <div className="mt-6 flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
+        <div className="mt-6 text-center text-xs sm:text-sm text-muted-foreground">
           <Link
             href="/login"
-            className="text-primary font-medium hover:underline flex items-center gap-1"
+            className="text-primary font-medium hover:underline inline-flex items-center gap-1"
           >
-            ← Back to Login
-          </Link>
-          <Link
-            href="/register"
-            className="text-muted-foreground hover:text-foreground font-medium"
-          >
-            New account? Register
+            ← Back to Login Portal
           </Link>
         </div>
       </div>

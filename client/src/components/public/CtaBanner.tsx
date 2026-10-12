@@ -15,13 +15,13 @@ export default function CtaBanner() {
             href="/login"
             className="w-full sm:w-auto px-6 py-3 bg-background text-foreground font-bold rounded-lg shadow-md hover:bg-background/90 transition text-sm"
           >
-            Sign In to Portal
+            Access Portal
           </Link>
           <Link
-            href="/register"
+            href="/contact"
             className="w-full sm:w-auto px-6 py-3 bg-primary-foreground/15 border border-primary-foreground/30 text-primary-foreground font-semibold rounded-lg hover:bg-primary-foreground/25 transition text-sm"
           >
-            Create New Account
+            Contact Clinic Support
           </Link>
         </div>
       </div>

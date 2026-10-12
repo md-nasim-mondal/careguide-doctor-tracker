@@ -202,6 +202,96 @@ export const emailTemplates = {
     </body>
     </html>
   `,
+  welcomeDoctor: (name: string, email: string, hospital: string, tempPassword?: string) => `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 0; background-color: #f8fafc; }
+        .wrapper { width: 100%; padding: 40px 0; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .header { background: linear-gradient(135deg, #059669 0%, #0d9488 100%); padding: 32px; text-align: center; color: #ffffff; }
+        .content { padding: 36px 32px; }
+        .card { background-color: #f1f5f9; border-radius: 12px; padding: 20px; margin: 24px 0; border: 1px solid #e2e8f0; }
+        .footer { background-color: #f8fafc; padding: 20px; text-align: center; font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; }
+        .btn { display: inline-block; padding: 12px 24px; background-color: #059669; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px; }
+        h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        h2 { color: #059669; margin-top: 0; font-size: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="wrapper">
+        <div class="container">
+          <div class="header">
+            <h1>👨‍⚕️ Welcome to DocPulse</h1>
+          </div>
+          <div class="content">
+            <h2>Doctor Account Created</h2>
+            <p>Dear <strong>${name}</strong>,</p>
+            <p>You have been registered as an attending doctor on the <strong>DocPulse Doctor Tracker</strong> platform by the administration.</p>
+            <div class="card">
+              <p style="margin: 6px 0;"><strong>Medical Center:</strong> ${hospital}</p>
+              <p style="margin: 6px 0;"><strong>Login Email:</strong> ${email}</p>
+              ${tempPassword ? `<p style="margin: 6px 0;"><strong>Default Password:</strong> <code style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">${tempPassword}</code></p>` : ""}
+            </div>
+            <p>You can now log in to the portal to manage your assigned patient directory, view health updates, and review treatment progress.</p>
+            <div style="text-align: center;">
+              <a href="http://localhost:3000/login" class="btn">Log In to Doctor Portal</a>
+            </div>
+          </div>
+          <div class="footer">
+            &copy; ${new Date().getFullYear()} DocPulse Healthcare Tracker. All rights reserved.
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `,
+  welcomePatient: (name: string, condition: string, doctorName: string) => `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 0; background-color: #f8fafc; }
+        .wrapper { width: 100%; padding: 40px 0; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .header { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); padding: 32px; text-align: center; color: #ffffff; }
+        .content { padding: 36px 32px; }
+        .card { background-color: #f1f5f9; border-radius: 12px; padding: 20px; margin: 24px 0; border: 1px solid #e2e8f0; }
+        .footer { background-color: #f8fafc; padding: 20px; text-align: center; font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; }
+        .btn { display: inline-block; padding: 12px 24px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px; }
+        h1 { margin: 0; font-size: 24px; font-weight: 700; }
+        h2 { color: #2563eb; margin-top: 0; font-size: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="wrapper">
+        <div class="container">
+          <div class="header">
+            <h1>🩺 DocPulse Patient Care</h1>
+          </div>
+          <div class="content">
+            <h2>Patient Record Registered</h2>
+            <p>Dear <strong>${name}</strong>,</p>
+            <p>A new patient record has been registered for you in the <strong>DocPulse Doctor Tracker</strong> system.</p>
+            <div class="card">
+              <p style="margin: 6px 0;"><strong>Recorded Condition:</strong> ${condition}</p>
+              <p style="margin: 6px 0;"><strong>Attending Doctor:</strong> Dr. ${doctorName}</p>
+            </div>
+            <p>Your healthcare team is now actively monitoring your care and scheduled consultations.</p>
+          </div>
+          <div class="footer">
+            &copy; ${new Date().getFullYear()} DocPulse Healthcare Tracker. All rights reserved.
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `,
 };
 
 export type TEmailTemplateName = keyof typeof emailTemplates;

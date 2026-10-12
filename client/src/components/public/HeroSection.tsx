@@ -26,10 +26,10 @@ export default function HeroSection() {
               Sign In to Portal
             </Link>
             <Link
-              href="/register"
+              href="/about"
               className="w-full sm:w-auto px-6 py-3 bg-card border border-border text-foreground font-semibold rounded-lg hover:bg-muted transition text-center text-sm"
             >
-              Create Account
+              Learn More
             </Link>
           </div>
 

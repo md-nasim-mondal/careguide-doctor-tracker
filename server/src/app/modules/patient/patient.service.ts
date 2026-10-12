@@ -7,16 +7,33 @@ import { Patient } from './patient.model';
 import { patientSearchableFields } from './patient.constant';
 import { withTransaction } from '../../utils/withTransaction';
 
+import { sendEmail } from '../../utils/sendEmail';
+
 const createPatient = async (payload: IPatient) => {
   return await withTransaction(async (session) => {
+    let doctorName = "Assigned Specialist";
     if (payload.doctor) {
       const doctorExists = await Doctor.findById(payload.doctor).session(session || null);
       if (!doctorExists) {
         throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
       }
+      doctorName = doctorExists.name;
     }
 
     const [patient] = await Patient.create([payload], session ? { session } : {});
+
+    // Send notification email (logged/mocked gracefully if SMTP not configured)
+    await sendEmail({
+      to: "patient@docpulse.local",
+      subject: "DocPulse - Patient Registration Record",
+      templateName: "welcomePatient",
+      templateData: {
+        name: payload.name,
+        condition: payload.condition,
+        doctorName: doctorName,
+      },
+    });
+
     return patient;
   });
 };

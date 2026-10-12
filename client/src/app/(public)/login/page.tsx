@@ -98,15 +98,9 @@ export default async function LoginPage({ searchParams }: PageProps) {
           <p className="font-mono">Password: admin_password_123</p>
         </div>
 
-        {/* Footer Link */}
-        <div className="mt-6 text-center text-xs sm:text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="text-primary font-semibold hover:underline"
-          >
-            Create an Account
-          </Link>
+        {/* Info Note */}
+        <div className="mt-6 text-center text-xs text-muted-foreground">
+          Accounts are provisioned by clinic administrators. Doctors &amp; Patients receive credentials via email upon registration.
         </div>
       </div>
     </div>

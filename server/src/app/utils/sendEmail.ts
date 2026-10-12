@@ -62,6 +62,19 @@ export const sendEmail = async ({
         templateData.amount as string,
         templateData.paymentId as string
       );
+    } else if (templateName === "welcomeDoctor" && templateData) {
+      html = (templateFn as (name: string, email: string, hospital: string, tempPassword?: string) => string)(
+        templateData.name as string,
+        templateData.email as string,
+        templateData.hospital as string,
+        templateData.tempPassword as string | undefined
+      );
+    } else if (templateName === "welcomePatient" && templateData) {
+      html = (templateFn as (name: string, condition: string, doctorName: string) => string)(
+        templateData.name as string,
+        templateData.condition as string,
+        templateData.doctorName as string
+      );
     } else {
       html = (templateFn as () => string)();
     }
