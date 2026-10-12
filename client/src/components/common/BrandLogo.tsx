@@ -48,14 +48,14 @@ export default function BrandLogo({
   };
 
   const content = (
-    <div className={`group inline-flex items-center gap-2.5 ${className}`}>
+    <div className={`group inline-flex items-center gap-2 min-w-0 ${className}`}>
       <BrandLogoIcon size={iconSizes[size]} />
       {showText && (
-        <div className="flex flex-col leading-tight">
-          <span className={`font-extrabold tracking-tight text-foreground ${textSizes[size]}`}>
+        <div className="flex flex-col leading-tight min-w-0">
+          <span className={`font-extrabold tracking-tight text-foreground truncate ${textSizes[size]}`}>
             Doc<span className="text-primary">Pulse</span>
           </span>
-          <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground -mt-0.5">
+          <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-muted-foreground -mt-0.5 truncate">
             Doctor Tracker
           </span>
         </div>

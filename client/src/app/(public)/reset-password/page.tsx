@@ -15,7 +15,7 @@ export default async function ResetPasswordPage({ searchParams }: PageProps) {
   const success = resolvedParams.success ? decodeURIComponent(resolvedParams.success) : "";
 
   return (
-    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-8 px-3 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-6 sm:py-8 px-2.5 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-4 sm:p-8 transition-all">
         {/* Header */}
         <div className="text-center mb-6">

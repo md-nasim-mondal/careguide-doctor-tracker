@@ -24,8 +24,8 @@ export default function GlobalErrorPage({ error, reset }: ErrorProps) {
     rawMessage.includes("unreachable");
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-xl p-6 sm:p-8 text-center space-y-6 animate-fade-in">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-2.5 sm:p-6">
+      <div className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-xl p-4 sm:p-8 text-center space-y-5 sm:space-y-6 animate-fade-in">
         {/* Brand Icon & Status Badge */}
         <div className="flex flex-col items-center gap-3">
           <div className="inline-flex p-3 rounded-2xl bg-destructive/10 text-destructive border border-destructive/20 shadow-xs">

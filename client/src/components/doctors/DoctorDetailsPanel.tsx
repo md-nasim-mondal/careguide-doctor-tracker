@@ -32,7 +32,7 @@ export default function DoctorDetailsPanel({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="text-xl shrink-0">👨‍⚕️</span>
-            <h3 className="text-base sm:text-lg font-bold text-foreground break-words leading-tight">
+            <h3 className="text-base sm:text-lg font-bold text-foreground wrap-break-word leading-tight">
               {selectedDoctor.name}
             </h3>
           </div>
@@ -133,7 +133,7 @@ export default function DoctorDetailsPanel({
         <div className="space-y-2 text-sm bg-muted/30 p-3.5 rounded-lg border border-border/50">
           <div>
             <span className="text-muted-foreground text-xs uppercase font-bold block">Hospital / Chamber</span>
-            <span className="font-medium text-foreground break-words">{selectedDoctor.hospital}</span>
+            <span className="font-medium text-foreground wrap-break-word">{selectedDoctor.hospital}</span>
           </div>
           <div>
             <span className="text-muted-foreground text-xs uppercase font-bold block">Phone</span>

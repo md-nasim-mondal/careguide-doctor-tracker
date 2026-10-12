@@ -66,16 +66,16 @@ export default function UserEditModal({
             <option value="BLOCKED">BLOCKED</option>
           </select>
         </div>
-        <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
+        <div className="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-2 pt-2">
           <Link
             href={cancelHref}
-            className="px-4 py-2 text-xs sm:text-sm rounded-lg border border-border bg-muted hover:bg-muted/80 text-foreground"
+            className="w-full sm:w-auto text-center px-4 py-2 text-xs sm:text-sm rounded-lg border border-border bg-muted hover:bg-muted/80 text-foreground"
           >
             Cancel
           </Link>
           <button
             type="submit"
-            className="px-4 py-2 text-xs sm:text-sm rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 shadow-xs cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 text-xs sm:text-sm rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 shadow-xs cursor-pointer"
           >
             Save Changes
           </button>

@@ -5,8 +5,8 @@ export const instant = false;
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-8 px-3 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-6 sm:p-8 text-center transition-all">
+    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-6 sm:py-8 px-2 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-4 sm:p-8 text-center transition-all">
         {/* Header */}
         <div className="inline-flex items-center justify-center mb-4">
           <BrandLogoIcon size={48} />

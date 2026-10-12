@@ -22,7 +22,7 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
 
   return (
     <div className="p-4 sm:p-8 max-w-4xl mx-auto min-h-[70vh] flex items-center justify-center">
-      <div className="w-full bg-card border border-border rounded-2xl shadow-lg p-6 sm:p-8 text-center space-y-5 animate-fade-in">
+      <div className="w-full bg-card border border-border rounded-2xl shadow-lg p-4 sm:p-8 text-center space-y-5 animate-fade-in">
         <div className="inline-flex p-3 rounded-2xl bg-destructive/10 text-destructive border border-destructive/20">
           <span className="text-3xl">🔌</span>
         </div>

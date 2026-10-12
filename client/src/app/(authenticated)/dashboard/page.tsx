@@ -427,38 +427,38 @@ export default async function DashboardPage() {
 
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-        <div className="bg-linear-to-br from-primary to-primary/90 text-primary-foreground p-5 sm:p-6 rounded-2xl shadow-sm flex items-center justify-between">
-          <div>
+        <div className="bg-linear-to-br from-primary to-primary/90 text-primary-foreground p-4 sm:p-6 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+          <div className="min-w-0">
             <p className="text-xs sm:text-sm font-medium opacity-90">Total Registered Doctors</p>
-            <p className="text-3xl sm:text-4xl font-extrabold mt-1 tracking-tight">
+            <p className="text-2xl sm:text-4xl font-extrabold mt-1 tracking-tight">
               {analytics.totalDoctors}
             </p>
             <Link
               href="/dashboard/doctors"
-              className="text-[11px] underline opacity-90 hover:opacity-100 mt-2 inline-block"
+              className="text-[11px] underline opacity-90 hover:opacity-100 mt-2 inline-block truncate max-w-full"
             >
               View all doctors directory →
             </Link>
           </div>
-          <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-3xl shrink-0">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/15 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
             🩺
           </div>
         </div>
 
-        <div className="bg-linear-to-br from-emerald-600 to-emerald-700 text-white p-5 sm:p-6 rounded-2xl shadow-sm flex items-center justify-between">
-          <div>
+        <div className="bg-linear-to-br from-emerald-600 to-emerald-700 text-white p-4 sm:p-6 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+          <div className="min-w-0">
             <p className="text-xs sm:text-sm font-medium opacity-90">Total Registered Patients</p>
-            <p className="text-3xl sm:text-4xl font-extrabold mt-1 tracking-tight">
+            <p className="text-2xl sm:text-4xl font-extrabold mt-1 tracking-tight">
               {analytics.totalPatients}
             </p>
             <Link
               href="/dashboard/patients"
-              className="text-[11px] underline opacity-90 hover:opacity-100 mt-2 inline-block"
+              className="text-[11px] underline opacity-90 hover:opacity-100 mt-2 inline-block truncate max-w-full"
             >
               View patient registry →
             </Link>
           </div>
-          <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-3xl shrink-0">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/15 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
             👥
           </div>
         </div>

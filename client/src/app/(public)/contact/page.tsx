@@ -21,7 +21,7 @@ export default async function ContactPage({ searchParams }: PageProps) {
   const errorMessage = resolved.error || "";
 
   return (
-    <div className="py-10 sm:py-16 md:py-24 max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 space-y-10 sm:space-y-16 text-foreground">
+    <div className="py-8 sm:py-16 md:py-24 max-w-6xl mx-auto px-2.5 sm:px-6 lg:px-8 space-y-8 sm:space-y-16 text-foreground">
       {/* Intro Header */}
       <div className="text-center space-y-3 sm:space-y-4 max-w-2xl mx-auto">
         <span className="text-xs font-semibold px-3 py-1 bg-primary/10 text-primary rounded-full uppercase tracking-wider">

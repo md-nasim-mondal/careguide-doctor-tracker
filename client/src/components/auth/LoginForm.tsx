@@ -98,7 +98,7 @@ export default function LoginForm() {
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
             <label className="block text-xs sm:text-sm font-semibold text-foreground">
               Password <span className="text-destructive">*</span>
             </label>

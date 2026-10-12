@@ -25,17 +25,17 @@ export function DashboardCharts({
   registrationsOverTime,
 }: DashboardChartsProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mt-4 sm:mt-8">
       {/* Patients Per Doctor Chart */}
-      <div className="bg-card p-6 border border-border rounded shadow-sm text-card-foreground">
-        <h2 className="text-xl font-semibold mb-4 text-center">Patients per Doctor</h2>
-        <div className="h-72 w-full">
+      <div className="bg-card p-3.5 sm:p-6 border border-border rounded-2xl shadow-sm text-card-foreground min-w-0 overflow-hidden">
+        <h2 className="text-sm sm:text-lg font-bold mb-3 sm:mb-4 text-center">Patients per Doctor</h2>
+        <div className="h-64 sm:h-72 w-full min-w-0">
           {patientsPerDoctor.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={patientsPerDoctor}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="doctorName" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                <XAxis dataKey="doctorName" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }}
                   cursor={{ fill: "var(--muted)" }}
@@ -44,7 +44,7 @@ export function DashboardCharts({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground border-2 border-dashed border-border rounded">
+            <div className="flex h-full items-center justify-center text-xs text-muted-foreground border-2 border-dashed border-border rounded-xl">
               No patient data assigned to doctors.
             </div>
           )}
@@ -52,15 +52,15 @@ export function DashboardCharts({
       </div>
 
       {/* Registrations Over Time */}
-      <div className="bg-card p-6 border border-border rounded shadow-sm text-card-foreground">
-        <h2 className="text-xl font-semibold mb-4 text-center">Registrations Over Time</h2>
-        <div className="h-72 w-full">
+      <div className="bg-card p-3.5 sm:p-6 border border-border rounded-2xl shadow-sm text-card-foreground min-w-0 overflow-hidden">
+        <h2 className="text-sm sm:text-lg font-bold mb-3 sm:mb-4 text-center">Registrations Over Time</h2>
+        <div className="h-64 sm:h-72 w-full min-w-0">
           {registrationsOverTime.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={registrationsOverTime}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="_id" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                <XAxis dataKey="_id" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{ backgroundColor: "var(--card)", borderColor: "var(--border)", color: "var(--foreground)" }}
                 />
@@ -68,7 +68,7 @@ export function DashboardCharts({
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground border-2 border-dashed border-border rounded">
+            <div className="flex h-full items-center justify-center text-xs text-muted-foreground border-2 border-dashed border-border rounded-xl">
               No registration history found.
             </div>
           )}

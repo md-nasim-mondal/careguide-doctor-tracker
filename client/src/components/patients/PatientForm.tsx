@@ -113,16 +113,16 @@ export default function PatientForm({
         </select>
       )}
 
-      <div className="sm:col-span-2 flex justify-end gap-2 pt-2">
+      <div className="sm:col-span-2 flex flex-col sm:flex-row justify-end gap-2 pt-2">
         <Link
           href={`/dashboard/patients${buildQuery({ action: undefined, patientId: undefined })}`}
-          className="px-4 py-2 border border-border rounded hover:bg-muted text-xs sm:text-sm font-medium flex items-center"
+          className="w-full sm:w-auto text-center px-4 py-2 border border-border rounded-xl hover:bg-muted text-xs sm:text-sm font-medium flex items-center justify-center"
         >
           Cancel
         </Link>
         <button
           type="submit"
-          className="px-6 py-2 bg-success text-success-foreground rounded hover:opacity-90 font-medium text-xs sm:text-sm cursor-pointer shadow-xs"
+          className="w-full sm:w-auto px-6 py-2 bg-success text-success-foreground rounded-xl hover:opacity-90 font-medium text-xs sm:text-sm cursor-pointer shadow-xs"
         >
           {isEditing
             ? isDoctor

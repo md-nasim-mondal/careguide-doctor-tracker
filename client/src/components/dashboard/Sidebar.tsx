@@ -87,12 +87,12 @@ export function Sidebar({ user }: SidebarProps) {
   return (
     <>
       {/* Mobile Top Navbar with Hamburger */}
-      <div className="md:hidden flex items-center justify-between px-3 sm:px-4 h-14 bg-card border-b border-border sticky top-0 z-40">
+      <div className="md:hidden flex items-center justify-between px-2.5 sm:px-4 h-14 bg-card border-b border-border sticky top-0 z-40">
         <BrandLogo size="sm" href="/dashboard" />
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle Navigation Menu"
-          className="p-1.5 rounded-lg border border-border text-foreground hover:bg-muted transition"
+          className="p-1.5 rounded-lg border border-border text-foreground hover:bg-muted transition text-sm shrink-0"
         >
           {isOpen ? "✕" : "☰"}
         </button>
@@ -108,7 +108,7 @@ export function Sidebar({ user }: SidebarProps) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-50 md:z-30 h-screen w-64 max-w-[85vw] bg-card border-r border-border flex flex-col transition-transform duration-200 ease-in-out md:translate-x-0 ${
+        className={`fixed md:sticky top-0 left-0 z-50 md:z-30 h-screen w-64 max-w-[88vw] bg-card border-r border-border flex flex-col transition-transform duration-200 ease-in-out md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
