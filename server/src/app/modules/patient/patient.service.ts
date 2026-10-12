@@ -40,6 +40,14 @@ const getAllPatients = async (query: Record<string, string>) => {
     delete queryObj.date;
   }
 
+  // Handle condition filter if present (case-insensitive regex)
+  if (queryObj.condition) {
+    baseQuery = baseQuery.find({
+      condition: { $regex: queryObj.condition, $options: 'i' },
+    });
+    delete queryObj.condition;
+  }
+
   const patientQuery = new QueryBuilder(baseQuery, queryObj)
     .search(patientSearchableFields)
     .filter()

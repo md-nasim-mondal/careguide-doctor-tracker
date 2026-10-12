@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createDoctorAction } from "@/actions/doctors";
+import PhoneInputWithCountry from "@/components/common/PhoneInputWithCountry";
 import type { DoctorFormProps } from "@/types";
 
 export default function DoctorForm({ buildQuery }: DoctorFormProps) {
@@ -26,12 +27,13 @@ export default function DoctorForm({ buildQuery }: DoctorFormProps) {
         placeholder="Hospital"
         required
       />
-      <input
-        name="phone"
-        className="p-2.5 border border-input rounded bg-background text-xs sm:text-sm"
-        placeholder="Phone"
-        required
-      />
+      <div className="flex flex-col justify-center">
+        <PhoneInputWithCountry
+          name="phone"
+          placeholder="17XXXXXXXX"
+          required
+        />
+      </div>
       <input
         name="email"
         type="email"

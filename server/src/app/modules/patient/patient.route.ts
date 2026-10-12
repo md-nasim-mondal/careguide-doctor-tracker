@@ -14,9 +14,9 @@ router.post(
   PatientControllers.createPatient
 );
 
-router.get('/conditions', checkAuth(...Object.values(Role)), PatientControllers.getConditions);
+router.get('/conditions', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getConditions);
 
-router.get('/', checkAuth(...Object.values(Role)), PatientControllers.getPatients);
+router.get('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getPatients);
 
 router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getPatient);
 

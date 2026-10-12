@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { registerAction } from "@/actions/auth";
+import PhoneInputWithCountry from "@/components/common/PhoneInputWithCountry";
 
 export default function RegisterForm() {
   const [selectedRole, setSelectedRole] = useState<"RECEIVER" | "SENDER">("RECEIVER");
@@ -88,13 +89,11 @@ export default function RegisterForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
-            Phone (Optional)
+            Phone Number (Optional)
           </label>
-          <input
-            type="tel"
+          <PhoneInputWithCountry
             name="phone"
-            placeholder="01700000000"
-            className="w-full px-3 py-2 text-sm rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
+            placeholder="17XXXXXXXX"
           />
         </div>
 

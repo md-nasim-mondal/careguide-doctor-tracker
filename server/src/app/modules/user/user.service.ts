@@ -262,6 +262,20 @@ const approveDoctorUser = async (userId: string, decodedToken: JwtPayload) => {
   user.isVerified = true;
   await user.save();
 
+  // If user is a Doctor (Role.SENDER), ensure a corresponding Doctor profile exists
+  if (user.role === Role.SENDER) {
+    const existingDoctor = await Doctor.findOne({ email: user.email });
+    if (!existingDoctor) {
+      await Doctor.create({
+        name: user.name,
+        email: user.email,
+        phone: user.phone || "01700000000",
+        specialization: "General Medicine",
+        hospital: "DocPulse Medical Center",
+      });
+    }
+  }
+
   return user;
 };
 

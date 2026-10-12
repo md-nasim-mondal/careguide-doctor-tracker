@@ -39,8 +39,8 @@ export const createUserZodSchema = z.object({
         }),
     phone: z
         .string({ message: "Phone Number must be string" })
-        .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-            message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+        .regex(/^\+?[0-9\s\-()]{7,20}$/, {
+            message: "Phone number must be a valid phone number format with optional country code.",
         })
         .optional(),
     address: z
@@ -60,8 +60,8 @@ export const updateUserZodSchema = z.object({
         .max(50, { message: "Name cannot exceed 50 characters." }).optional(),
     phone: z
         .string({ message: "Phone Number must be string" })
-        .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-            message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+        .regex(/^\+?[0-9\s\-()]{7,20}$/, {
+            message: "Phone number must be a valid phone number format with optional country code.",
         })
         .optional(),
     role: z
