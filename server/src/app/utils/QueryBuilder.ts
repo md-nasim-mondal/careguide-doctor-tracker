@@ -18,6 +18,14 @@ export class QueryBuilder<T> {
       delete filter[field];
     }
 
+    // Strip out empty string, null, or undefined query parameters
+    for (const key of Object.keys(filter)) {
+      if (filter[key] === "" || filter[key] === null || filter[key] === undefined) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete filter[key];
+      }
+    }
+
     this.modelQuery = this.modelQuery.find(filter);
 
     return this;

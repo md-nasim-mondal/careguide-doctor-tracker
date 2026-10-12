@@ -82,6 +82,14 @@ const getAllDoctors = async (query: Record<string, string>) => {
     delete queryObj.date;
   }
 
+  // Handle specialization filter if present (case-insensitive regex)
+  if (queryObj.specialization && queryObj.specialization.trim()) {
+    baseQuery = baseQuery.find({
+      specialization: { $regex: queryObj.specialization.trim(), $options: 'i' },
+    });
+    delete queryObj.specialization;
+  }
+
   const doctorQuery = new QueryBuilder(
     baseQuery,
     queryObj

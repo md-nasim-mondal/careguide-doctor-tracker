@@ -152,7 +152,19 @@ import { syncDoctorsAndPatientsToUsers } from "../../utils/syncUsers";
 
 const getAllUsers = async (query: Record<string, string>) => {
   await syncDoctorsAndPatientsToUsers();
-  const queryBuilder = new QueryBuilder(User.find(), query);
+  const queryObj = { ...query };
+
+  let baseQuery = User.find();
+  if (queryObj.role && queryObj.role.trim()) {
+    baseQuery = baseQuery.find({ role: queryObj.role.trim() });
+    delete queryObj.role;
+  }
+  if (queryObj.isActive && queryObj.isActive.trim()) {
+    baseQuery = baseQuery.find({ isActive: queryObj.isActive.trim() });
+    delete queryObj.isActive;
+  }
+
+  const queryBuilder = new QueryBuilder(baseQuery, queryObj);
   const usersData = queryBuilder
     .filter()
     .search(userSearchableFields)

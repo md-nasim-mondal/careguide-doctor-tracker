@@ -14,10 +14,10 @@ export interface IGetUsersParams {
 
 export async function getAllUsersAction(params: IGetUsersParams = {}) {
   const query = new URLSearchParams();
-  if (params.searchTerm) query.append("searchTerm", params.searchTerm);
-  if (params.role) query.append("role", params.role);
-  if (params.isActive) query.append("isActive", params.isActive);
-  if (params.page) query.append("page", params.page.toString());
+  if (params.searchTerm && params.searchTerm.trim()) query.append("searchTerm", params.searchTerm.trim());
+  if (params.role && params.role.trim()) query.append("role", params.role.trim());
+  if (params.isActive && params.isActive.trim()) query.append("isActive", params.isActive.trim());
+  if (params.page && params.page > 1) query.append("page", params.page.toString());
   if (params.limit) query.append("limit", params.limit.toString());
 
   try {
