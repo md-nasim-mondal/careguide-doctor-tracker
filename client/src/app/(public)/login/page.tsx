@@ -1,13 +1,21 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
 import { BrandLogoIcon } from "@/components/common/BrandLogo";
 import LoginForm from "@/components/auth/LoginForm";
 
 export const instant = false;
 
 type PageProps = {
-  searchParams: Promise<{ error?: string; success?: string }>;
+  searchParams: Promise<{ error?: string; success?: string; redirect?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: PageProps) {
+  // If user is already authenticated with a valid session, redirect to dashboard or target URL immediately
+  const user = await getCurrentUser();
+  if (user) {
+    redirect("/dashboard");
+  }
+
   const resolvedParams = await searchParams;
   const error = resolvedParams.error ? decodeURIComponent(resolvedParams.error) : "";
   const success = resolvedParams.success ? decodeURIComponent(resolvedParams.success) : "";

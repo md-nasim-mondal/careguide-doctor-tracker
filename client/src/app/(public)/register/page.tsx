@@ -1,9 +1,15 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
 import { BrandLogoIcon } from "@/components/common/BrandLogo";
 
 export const instant = false;
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const user = await getCurrentUser();
+  if (user) {
+    redirect("/dashboard");
+  }
   return (
     <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-6 sm:py-8 px-2 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-card rounded-2xl shadow-lg border border-border p-4 sm:p-8 text-center transition-all">

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
 import { forgotPasswordAction } from "@/actions/auth";
 
 export const instant = false;
@@ -8,6 +10,10 @@ type PageProps = {
 };
 
 export default async function ForgotPasswordPage({ searchParams }: PageProps) {
+  const user = await getCurrentUser();
+  if (user) {
+    redirect("/dashboard");
+  }
   const resolvedParams = await searchParams;
   const error = resolvedParams.error ? decodeURIComponent(resolvedParams.error) : "";
   const success = resolvedParams.success ? decodeURIComponent(resolvedParams.success) : "";

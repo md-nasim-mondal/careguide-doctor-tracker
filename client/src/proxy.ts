@@ -54,6 +54,7 @@ export function proxy(request: NextRequest) {
   // Public paths accessible without login
   const isPublicPath =
     pathname === '/' ||
+    pathname === '/features' ||
     pathname === '/about' ||
     pathname === '/contact' ||
     isAuthOnlyPath;
