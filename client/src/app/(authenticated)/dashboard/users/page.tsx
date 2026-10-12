@@ -4,6 +4,8 @@ import { getMeAction } from "@/actions/auth";
 import { getAllUsersAction, updateUserRoleAction, approveDoctorAction, deleteUserAction } from "@/actions/users";
 import AlertBanner from "@/components/common/AlertBanner";
 
+export const instant = false;
+
 interface PageProps {
   searchParams: Promise<{
     searchTerm?: string;
