@@ -10,6 +10,8 @@ import notFound from "./app/middlewares/notFound";
 import { router } from "./app/routes";
 import { careguidePostmanCollection } from "./app/utils/postmanData";
 import { getServerLandingPageHtml } from "./app/utils/serverLandingPage";
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocument } from "./app/utils/swaggerDocument";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -55,6 +57,29 @@ if (envVars.NODE_ENV !== "production") {
   });
 }
 
+// Swagger API Documentation UI & JSON spec
+app.get("/api/docs/swagger.json", (_req: Request, res: Response) => {
+  res.setHeader("Content-Type", "application/json");
+  res.status(200).json(swaggerDocument);
+});
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    customSiteTitle: "DocPulse Doctor Tracker - Swagger API Docs",
+    customCss: ".swagger-ui .topbar { display: none }",
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      docExpansion: "list",
+      filter: true,
+    },
+  })
+);
+app.use("/docs", (_req: Request, res: Response) => {
+  res.redirect("/api/docs");
+});
+
 // Postman Collection Endpoints
 const servePostmanCollection = (req: Request, res: Response) => {
   const isDownload = req.query.download === "true" || req.path.includes("download");
@@ -80,6 +105,7 @@ app.get("/health", (_req: Request, res: Response) => {
     message: "DocPulse Doctor Tracker API is healthy",
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
+    swaggerDocs: "/api/docs",
     postman: "/postman.json",
   });
 });
@@ -98,7 +124,7 @@ app.get("/", (req: Request, res: Response) => {
     success: true,
     message: "DocPulse Doctor Tracker API Engine Online",
     version: "1.0.0",
-    docs: "/api/v1",
+    docs: "/api/docs",
     health: "/health",
     postmanCollection: "/postman.json",
   });

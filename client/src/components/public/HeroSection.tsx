@@ -33,6 +33,16 @@ export default function HeroSection() {
             >
               Sign In to Portal
             </Link>
+            <a
+              href={`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000"}/api/docs`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-5 py-2.5 bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-semibold rounded-xl transition text-center text-xs sm:text-sm flex items-center justify-center gap-1.5"
+            >
+              <span>⚡</span>
+              <span>Swagger API Docs</span>
+              <span className="text-[10px] opacity-70">↗</span>
+            </a>
             <Link
               href="/about"
               className="w-full sm:w-auto px-6 py-2.5 bg-card border border-border text-foreground font-semibold rounded-xl hover:bg-muted transition text-center text-xs sm:text-sm"

@@ -6,9 +6,12 @@ import UserNavDropdown from "./UserNavDropdown";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import { getCurrentUser } from "@/lib/auth";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+
 const NAV_LINKS: NavLinkItem[] = [
   { name: "Home", href: "/" },
   { name: "Features", href: "/features" },
+  { name: "API Docs", href: `${backendUrl}/api/docs`, isExternal: true },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];

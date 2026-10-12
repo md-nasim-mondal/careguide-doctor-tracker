@@ -3,6 +3,7 @@ import { envVars } from "../config/env";
 export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: string, reqHost: string): string => {
   const currentEnv = envVars.NODE_ENV || "development";
   const baseUrl = `${reqProtocol}://${reqHost}/api/v1`;
+  const swaggerUrl = `${reqProtocol}://${reqHost}/api/docs`;
   const postmanDownloadUrl = `${reqProtocol}://${reqHost}/postman.json`;
   const healthUrl = `${reqProtocol}://${reqHost}/health`;
   const frontendUrl = envVars.FRONTEND_URL || "http://localhost:3000";
@@ -241,6 +242,17 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
       background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.2);
       transform: translateY(-2px);
+    }
+
+    .btn-swagger {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-swagger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45);
     }
 
     .btn-outline {
@@ -529,14 +541,17 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
       </p>
 
       <div class="hero-actions">
+        <a href="${swaggerUrl}" target="_blank" class="btn btn-swagger">
+          <span>⚡</span> Interactive Swagger UI
+        </a>
         <a href="${postmanDownloadUrl}" download="docpulse-doctor-tracker.postman_collection.json" class="btn btn-primary">
-          <span>📥</span> Download Postman Collection
+          <span>📥</span> Download Postman
         </a>
         <a href="${frontendUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
           <span>🌐</span> Visit Web Application
         </a>
         <a href="${healthUrl}" target="_blank" class="btn btn-outline">
-          <span>🩺</span> Live Health Check
+          <span>🩺</span> Health Check
         </a>
       </div>
     </section>
@@ -560,6 +575,25 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
       <div class="info-card">
         <div class="info-card-label">Uptime</div>
         <div class="info-card-val mono">${formatUptime(uptimeSeconds)}</div>
+      </div>
+    </div>
+
+    <!-- Swagger Interactive Docs Box -->
+    <div class="postman-box" style="border-color: rgba(16, 185, 129, 0.4); background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.15) 100%);">
+      <div class="postman-left">
+        <div class="postman-icon" style="background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.4);">⚡</div>
+        <div class="postman-text">
+          <h3 style="color: #34d399;">Interactive Swagger OpenAPI 3.0 Documentation</h3>
+          <p>Explore live API schemas, request/response models, test endpoints with Bearer JWT tokens directly from your browser.</p>
+        </div>
+      </div>
+      <div class="postman-actions">
+        <a href="${swaggerUrl}" target="_blank" class="btn btn-swagger">
+          <span>🚀</span> Open Swagger UI (/api/docs)
+        </a>
+        <a href="${swaggerUrl}/swagger.json" target="_blank" class="btn btn-secondary">
+          <span>📄</span> Raw OpenAPI JSON
+        </a>
       </div>
     </div>
 
@@ -681,6 +715,12 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
             <td><span class="method method-get">GET</span></td>
             <td class="endpoint-path">/health</td>
             <td>System Health</td>
+            <td><span class="tag-auth">Public</span></td>
+          </tr>
+          <tr>
+            <td><span class="method method-get">GET</span></td>
+            <td class="endpoint-path">/api/docs</td>
+            <td>Swagger UI Interactive Docs</td>
             <td><span class="tag-auth">Public</span></td>
           </tr>
           <tr>

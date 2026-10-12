@@ -74,6 +74,9 @@ importers:
       redis:
         specifier: ^5.8.2
         version: 5.12.1
+      swagger-ui-express:
+        specifier: ^5.0.1
+        version: 5.0.1(express@5.3.0(supports-color@7.2.0))
       zod:
         specifier: ^4.1.5
         version: 4.6.5
@@ -135,6 +138,9 @@ importers:
       '@types/pdfkit':
         specifier: ^0.17.6
         version: 0.17.6
+      '@types/swagger-ui-express':
+        specifier: ^4.1.8
+        version: 4.1.8
       eslint:
         specifier: ^9.35.0
         version: 9.39.5(supports-color@7.2.0)
@@ -274,6 +280,9 @@ packages:
     peerDependencies:
       '@redis/client': ^5.12.1
 
+  '@scarf/scarf@1.4.0':
+    resolution: {integrity: sha512-xxeapPiUXdZAE3che6f3xogoJPeZgig6omHEy1rIY5WVsB3H2BHNnZH+gHG6x91SCWyQCzWGsuL2Hh3ClO5/qQ==}
+
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
 
@@ -390,6 +399,9 @@ packages:
 
   '@types/strip-json-comments@0.0.30':
     resolution: {integrity: sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==}
+
+  '@types/swagger-ui-express@4.1.8':
+    resolution: {integrity: sha512-AhZV8/EIreHFmBV5wAs0gzJUNq9JbbSXgJLQubCC0jtIo6prnI9MIRRxnU4MZX9RB9yXxF1V4R7jtLl/Wcj31g==}
 
   '@types/webidl-conversions@7.0.3':
     resolution: {integrity: sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA==}
@@ -1456,6 +1468,15 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  swagger-ui-dist@5.33.1:
+    resolution: {integrity: sha512-H872wWkA53bFIsGgi7OWgmq+CRWw3nFQGdJWRqOB9wNwTm6e5ol34+qPDkV4AJlK+gglM2EsJiOOzsGsEGbluA==}
+
+  swagger-ui-express@5.0.1:
+    resolution: {integrity: sha512-SrNU3RiBGTLLmFU8GIJdOdanJTl4TOmT27tt3bWWHppqYmAZ6IDuEuBvMU6nZq0zLEe6b/1rACXCgLZqO6ZfrA==}
+    engines: {node: '>= v0.10.32'}
+    peerDependencies:
+      express: '>=4.0.0 || >=5.0.0-beta'
+
   synckit@0.11.13:
     resolution: {integrity: sha512-eNRKgb3z66Yp3D2CixVujOUvXLFUTij/zVnV8KRyvFdQwpz7I5DS8UfRkTeLzb64u+dkzDSdelE24izu+zSSUg==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -1716,6 +1737,8 @@ snapshots:
     dependencies:
       '@redis/client': 5.12.1
 
+  '@scarf/scarf@1.4.0': {}
+
   '@swc/helpers@0.5.23':
     dependencies:
       tslib: 2.8.1
@@ -1856,6 +1879,11 @@ snapshots:
   '@types/strip-bom@3.0.0': {}
 
   '@types/strip-json-comments@0.0.30': {}
+
+  '@types/swagger-ui-express@4.1.8':
+    dependencies:
+      '@types/express': 5.0.6
+      '@types/serve-static': 2.2.0
 
   '@types/webidl-conversions@7.0.3': {}
 
@@ -2949,6 +2977,15 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
+
+  swagger-ui-dist@5.33.1:
+    dependencies:
+      '@scarf/scarf': 1.4.0
+
+  swagger-ui-express@5.0.1(express@5.3.0(supports-color@7.2.0)):
+    dependencies:
+      express: 5.3.0(supports-color@7.2.0)
+      swagger-ui-dist: 5.33.1
 
   synckit@0.11.13:
     dependencies:

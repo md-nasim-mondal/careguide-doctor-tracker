@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 export interface NavLinkItem {
   name: string;
   href: string;
+  isExternal?: boolean;
 }
 
 interface NavLinksProps {
@@ -18,6 +19,9 @@ export default function NavLinks({ links, isMobile = false, onItemClick }: NavLi
   const pathname = usePathname();
 
   const isLinkActive = (href: string) => {
+    if (href.startsWith("http")) {
+      return false;
+    }
     if (href === "/") {
       return pathname === "/";
     }
@@ -36,6 +40,8 @@ export default function NavLinks({ links, isMobile = false, onItemClick }: NavLi
             <Link
               key={link.href}
               href={link.href}
+              target={link.isExternal ? "_blank" : undefined}
+              rel={link.isExternal ? "noopener noreferrer" : undefined}
               onClick={onItemClick}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition ${
                 active
@@ -47,11 +53,13 @@ export default function NavLinks({ links, isMobile = false, onItemClick }: NavLi
                 {active && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
                 {link.name}
               </span>
-              {active && (
+              {link.isExternal ? (
+                <span className="text-[10px] text-muted-foreground font-semibold">↗</span>
+              ) : active ? (
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   Active
                 </span>
-              )}
+              ) : null}
             </Link>
           );
         })}
@@ -67,6 +75,8 @@ export default function NavLinks({ links, isMobile = false, onItemClick }: NavLi
           <Link
             key={link.href}
             href={link.href}
+            target={link.isExternal ? "_blank" : undefined}
+            rel={link.isExternal ? "noopener noreferrer" : undefined}
             className={`relative px-3.5 py-1.5 rounded-full text-xs lg:text-sm font-medium transition-all duration-200 group flex items-center gap-1.5 ${
               active
                 ? "text-primary font-semibold bg-primary/10 shadow-2xs"
@@ -77,6 +87,9 @@ export default function NavLinks({ links, isMobile = false, onItemClick }: NavLi
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             )}
             <span>{link.name}</span>
+            {link.isExternal && (
+              <span className="text-[10px] opacity-70 group-hover:opacity-100">↗</span>
+            )}
             {active && (
               <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-linear-to-r from-primary to-sky-400 rounded-full" />
             )}
