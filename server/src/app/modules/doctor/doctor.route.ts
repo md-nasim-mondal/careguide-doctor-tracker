@@ -14,9 +14,9 @@ router.post(
   DoctorControllers.createDoctor
 );
 
-router.get('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), DoctorControllers.getDoctors);
+router.get('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR, Role.PATIENT), DoctorControllers.getDoctors);
 
-router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), DoctorControllers.getDoctor);
+router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR, Role.PATIENT), DoctorControllers.getDoctor);
 
 router.put(
   '/:id',
@@ -27,7 +27,7 @@ router.put(
 
 router.delete('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), DoctorControllers.deleteDoctor);
 
-router.get('/:id/patients', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), DoctorControllers.getDoctorPatients);
+router.get('/:id/patients', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR), DoctorControllers.getDoctorPatients);
 
 router.post(
   '/:id/patients',

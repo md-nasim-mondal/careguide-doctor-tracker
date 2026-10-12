@@ -9,20 +9,20 @@ const router = express.Router();
 
 router.post(
   '/',
-  checkAuth(Role.SUPER_ADMIN, Role.ADMIN),
+  checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR),
   validateRequest(PatientValidation.createPatientValidationSchema),
   PatientControllers.createPatient
 );
 
-router.get('/conditions', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getConditions);
+router.get('/conditions', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR, Role.PATIENT), PatientControllers.getConditions);
 
-router.get('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getPatients);
+router.get('/', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR, Role.PATIENT), PatientControllers.getPatients);
 
-router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getPatient);
+router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR, Role.PATIENT), PatientControllers.getPatient);
 
 router.put(
   '/:id',
-  checkAuth(Role.SUPER_ADMIN, Role.ADMIN),
+  checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.DOCTOR),
   validateRequest(PatientValidation.updatePatientValidationSchema),
   PatientControllers.updatePatient
 );
