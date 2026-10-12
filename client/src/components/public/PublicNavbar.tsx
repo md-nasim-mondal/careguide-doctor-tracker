@@ -1,31 +1,80 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import BrandLogo from "@/components/common/BrandLogo";
+
+const NAV_LINKS = [
+  { name: "Home", href: "/" },
+  { name: "Features", href: "/#features" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
 
 export default function PublicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const [currentHash, setCurrentHash] = useState("");
+
+  useEffect(() => {
+    setCurrentHash(window.location.hash);
+    const handleHashChange = () => setCurrentHash(window.location.hash);
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, [pathname]);
+
+  const isLinkActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/" && (!currentHash || currentHash === "#");
+    }
+    if (href.startsWith("/#")) {
+      const targetHash = href.substring(1);
+      return pathname === "/" && currentHash === targetHash;
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
-    <header className="border-b border-border bg-card/95 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-border bg-card/95 backdrop-blur-md sticky top-0 z-50 transition-all">
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
         <div className="flex items-center gap-3 sm:gap-6 min-w-0">
           <BrandLogo href="/" size="sm" />
 
-          <nav className="hidden md:flex items-center gap-5 text-sm font-medium">
-            <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
-              Home
-            </Link>
-            <Link href="/#features" className="text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </Link>
-            <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
-              About
-            </Link>
-            <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
-              Contact
-            </Link>
+          {/* Desktop Navigation with Active Indicators */}
+          <nav className="hidden md:flex items-center gap-1.5 text-sm font-medium">
+            {NAV_LINKS.map((link) => {
+              const active = isLinkActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => {
+                    if (link.href.includes("#")) {
+                      setCurrentHash(link.href.split("#")[1] ? `#${link.href.split("#")[1]}` : "");
+                    } else {
+                      setCurrentHash("");
+                    }
+                  }}
+                  className={`relative px-3.5 py-1.5 rounded-full text-xs lg:text-sm font-medium transition-all duration-200 group flex items-center gap-1.5 ${
+                    active
+                      ? "text-primary font-semibold bg-primary/10 shadow-2xs"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  }`}
+                >
+                  {/* Subtle active pulse dot */}
+                  {active && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  )}
+                  <span>{link.name}</span>
+
+                  {/* Active bottom accent bar */}
+                  {active && (
+                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-linear-to-r from-primary to-sky-400 rounded-full" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
@@ -33,9 +82,10 @@ export default function PublicNavbar() {
         <div className="hidden md:flex items-center gap-2.5">
           <Link
             href="/login"
-            className="px-4 py-2 text-xs sm:text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition shadow-xs"
+            className="px-4 py-2 text-xs sm:text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition shadow-xs flex items-center gap-1.5"
           >
-            Sign In to Portal
+            <span>Sign In to Portal</span>
+            <span className="text-xs opacity-70">→</span>
           </Link>
         </div>
 
@@ -60,42 +110,46 @@ export default function PublicNavbar() {
       {/* Mobile Menu Dropdown */}
       {isOpen && (
         <div className="md:hidden border-t border-border bg-card px-4 py-4 space-y-3 shadow-lg animate-fade-in">
-          <nav className="flex flex-col space-y-2 text-sm font-medium">
-            <Link
-              href="/"
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition"
-            >
-              Home
-            </Link>
-            <Link
-              href="/#features"
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition"
-            >
-              Features
-            </Link>
-            <Link
-              href="/about"
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition"
-            >
-              About Mission
-            </Link>
-            <Link
-              href="/contact"
-              onClick={() => setIsOpen(false)}
-              className="px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition"
-            >
-              Contact Support
-            </Link>
+          <nav className="flex flex-col space-y-1.5 text-sm font-medium">
+            {NAV_LINKS.map((link) => {
+              const active = isLinkActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => {
+                    setIsOpen(false);
+                    if (link.href.includes("#")) {
+                      setCurrentHash(link.href.split("#")[1] ? `#${link.href.split("#")[1]}` : "");
+                    } else {
+                      setCurrentHash("");
+                    }
+                  }}
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition ${
+                    active
+                      ? "bg-primary/15 text-primary font-bold border-l-4 border-primary pl-3"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    {active && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
+                    {link.name}
+                  </span>
+                  {active && (
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                      Active
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="pt-3 border-t border-border flex flex-col gap-2">
             <Link
               href="/login"
               onClick={() => setIsOpen(false)}
-              className="w-full text-center py-2 bg-primary text-primary-foreground text-xs sm:text-sm font-semibold rounded-lg hover:bg-primary/90 transition"
+              className="w-full text-center py-2 bg-primary text-primary-foreground text-xs sm:text-sm font-semibold rounded-lg hover:bg-primary/90 transition shadow-xs"
             >
               Sign In to Portal
             </Link>
