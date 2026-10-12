@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getCurrentUser } from "@/lib/auth";
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 export const metadata: Metadata = {
   title: "DocPulse - Dashboard",
@@ -23,6 +24,9 @@ export default async function AuthenticatedLayout({
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+        {/* Slim Top Header with Title, Go to Website & Theme Switcher */}
+        <DashboardHeader user={user} />
+
         <main className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-3 sm:py-6">
           {children}
         </main>

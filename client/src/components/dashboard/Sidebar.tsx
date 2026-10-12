@@ -183,32 +183,12 @@ export function Sidebar({ user }: SidebarProps) {
           })}
         </nav>
 
-        {/* Bottom Actions, Theme Switcher, Home Website Link & Logout */}
-        <div className="p-3 sm:p-4 border-t border-border mt-auto space-y-2 bg-card">
-          <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-muted/40 border border-border/80">
-            <span className="text-xs font-medium text-foreground flex items-center gap-1.5">
-              <span>🎨</span>
-              <span>Theme</span>
-            </span>
-            <ThemeToggle align="right" showLabel={true} />
-          </div>
-
-          <Link
-            href="/"
-            onClick={() => setIsOpen(false)}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-foreground bg-muted/60 hover:bg-muted border border-border transition shadow-2xs group"
-          >
-            <span className="flex items-center gap-2">
-              <span className="group-hover:scale-110 transition-transform">🌐</span>
-              <span>Back to Home Website</span>
-            </span>
-            <span className="text-xs text-muted-foreground group-hover:translate-x-0.5 transition-transform">↗</span>
-          </Link>
-
+        {/* Bottom Actions: Logout */}
+        <div className="p-3 sm:p-4 border-t border-border mt-auto bg-card">
           <form action={logoutAction} className="w-full">
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-destructive border border-destructive/20 hover:bg-destructive/10 transition"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-destructive border border-destructive/20 hover:bg-destructive/10 transition shadow-2xs cursor-pointer"
             >
               <span>🚪</span>
               <span>Sign Out</span>
