@@ -5,6 +5,17 @@ DocPulse is an enterprise-grade healthcare management application designed to st
 
 ---
 
+## 🌐 Live Deployment Links
+
+| Environment | Service | Live URL | Description |
+| :--- | :--- | :--- | :--- |
+| **Frontend** | Next.js (Vercel) | [https://careguide-doctor-tracker.vercel.app/](https://careguide-doctor-tracker.vercel.app/) | Responsive client application & clinical portals |
+| **Backend API** | Express.js (Render) | [https://doctor-tracker-k09x.onrender.com](https://doctor-tracker-k09x.onrender.com) | Production RESTful API server & system diagnostics |
+| **Swagger Docs** | OpenAPI 3.0 | [https://doctor-tracker-k09x.onrender.com/api/docs](https://doctor-tracker-k09x.onrender.com/api/docs) | Interactive Swagger UI API documentation & testing console |
+| **Postman Spec** | Postman Collection | [https://doctor-tracker-k09x.onrender.com/postman.json](https://doctor-tracker-k09x.onrender.com/postman.json) | Complete v2.1 collection with auto-JWT authorization |
+
+---
+
 ## Setup Guide
 
 Follow the instructions below to install and run the complete DocPulse platform locally.
@@ -214,6 +225,14 @@ flowchart TD
 ### 10. Offline Backend Server Diagnostics
 *Intelligent error banner alerting users when the Express server (port 5000) is unreachable, providing developer instructions.*
 ![Offline Error Handling](docs/screenshots/offline_error_handling.png)
+
+### 11. Backend Landing Page & System Monitor
+*Live server status dashboard with uptime monitoring, environment specifications, and quick import utilities.*
+![Backend Landing Page](docs/screenshots/backend_landing_desktop.png)
+
+### 12. Interactive Swagger UI API Documentation
+*OpenAPI 3.0 interactive testing console with Bearer token authentication, full schema models, and response previews.*
+![Swagger API Documentation](docs/screenshots/swagger_docs_desktop.png)
 
 ---
 
