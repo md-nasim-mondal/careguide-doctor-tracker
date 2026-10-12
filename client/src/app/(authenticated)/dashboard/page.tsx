@@ -32,8 +32,8 @@ export default async function DashboardPage() {
     }
   }
 
-  // 1. Role: PATIENT / RECEIVER (Patient / Portal User)
-  if (role === "PATIENT" || role === "RECEIVER") {
+  // 1. Role: PATIENT (Patient / Portal User)
+  if (role === "PATIENT") {
     let patientRecord = null;
     let availableDoctors: Array<{ _id: string; name: string; specialization: string; hospital: string; phone: string; email: string }> = [];
 
@@ -193,8 +193,8 @@ export default async function DashboardPage() {
     );
   }
 
-  // 2. Role: DOCTOR / SENDER (Doctor / Care Specialist)
-  if (role === "DOCTOR" || role === "SENDER") {
+  // 2. Role: DOCTOR (Doctor / Care Specialist)
+  if (role === "DOCTOR") {
     let doctorProfile: { _id: string; name: string; email: string; phone: string; specialization: string; hospital: string } | null = null;
     let assignedPatients: Array<{ _id: string; name: string; age?: number; condition?: string; createdAt?: string }> = [];
 

@@ -5,8 +5,6 @@ export enum Role {
   ADMIN = "ADMIN",
   DOCTOR = "DOCTOR",
   PATIENT = "PATIENT",
-  SENDER = "DOCTOR",
-  RECEIVER = "PATIENT",
 }
 
 //auth providers

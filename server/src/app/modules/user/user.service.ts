@@ -1,7 +1,6 @@
 import bcryptjs from "bcryptjs";
 import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
-import mongoose from "mongoose";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
 import { IAuthProvider, IUser, IsActive, Role } from "./user.interface";
@@ -17,12 +16,7 @@ import { withTransaction } from "../../utils/withTransaction";
 const createUser = async (payload: Partial<IUser> & { specialization?: string; hospital?: string }) => {
   const { email, password, specialization, hospital, role: reqRole, ...rest } = payload;
 
-  const roleStr = String(reqRole || "");
-  const role = roleStr === "SENDER" || roleStr === Role.DOCTOR
-    ? Role.DOCTOR
-    : roleStr === "RECEIVER" || roleStr === Role.PATIENT
-    ? Role.PATIENT
-    : (reqRole as Role) || Role.PATIENT;
+  const role = reqRole || Role.PATIENT;
   const isDoctorRegistration = role === Role.DOCTOR;
 
   const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
@@ -45,8 +39,8 @@ const createUser = async (payload: Partial<IUser> & { specialization?: string; h
       providerId: email as string,
     };
 
-    // If registering as Doctor (SENDER), default to INACTIVE pending admin approval
-    // If registering as Patient (RECEIVER), activate immediately
+    // If registering as Doctor, default to INACTIVE pending admin approval
+    // If registering as Patient, activate immediately
     const initialStatus = isDoctorRegistration ? IsActive.INACTIVE : IsActive.ACTIVE;
 
     const [newUser] = await User.create(
@@ -108,9 +102,7 @@ const updateUser = async (
 ) => {
   const isNonAdmin =
     decodedToken.role === Role.DOCTOR ||
-    decodedToken.role === Role.PATIENT ||
-    decodedToken.role === Role.SENDER ||
-    decodedToken.role === Role.RECEIVER;
+    decodedToken.role === Role.PATIENT;
 
   if (isNonAdmin) {
     if (userId !== decodedToken.userId) {
@@ -256,8 +248,8 @@ const approveDoctorUser = async (userId: string, decodedToken: JwtPayload) => {
   user.isVerified = true;
   await user.save();
 
-  // If user is a Doctor (Role.DOCTOR / Role.SENDER), ensure a corresponding Doctor profile exists
-  if (user.role === Role.DOCTOR || (user.role as string) === "SENDER") {
+  // If user is a Doctor, ensure a corresponding Doctor profile exists
+  if (user.role === Role.DOCTOR) {
     const existingDoctor = await Doctor.findOne({ email: user.email });
     if (!existingDoctor) {
       await Doctor.create({

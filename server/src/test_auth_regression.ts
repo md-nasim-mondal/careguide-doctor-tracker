@@ -63,13 +63,13 @@ async function runRegressionTests() {
     throw new Error("Super admin user not found in database");
   }
 
-  // Create temporary test user with insufficient role (RECEIVER)
+  // Create temporary test user with insufficient role (PATIENT)
   const testReceiverEmail = `test_receiver_${Date.now()}@example.com`;
   const receiverUser = await User.create({
     name: "Receiver Test User",
     email: testReceiverEmail,
     password: "hashed_dummy_password",
-    role: Role.RECEIVER,
+    role: Role.PATIENT,
     isActive: IsActive.ACTIVE,
     isDeleted: false,
     isVerified: true,
@@ -170,7 +170,7 @@ async function runRegressionTests() {
     }
     console.log("✅ Passed: Valid admin token successfully accesses /doctors and /patients (HTTP 200)");
 
-    // 6. Request with valid token but insufficient role (RECEIVER)
+    // 6. Request with valid token but insufficient role (PATIENT)
     console.log("\n[Test 6] Request with valid token & insufficient role -> Assert HTTP 403");
     const insufficientRoleToken = jwt.sign(
       {

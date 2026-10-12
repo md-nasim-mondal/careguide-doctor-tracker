@@ -18,7 +18,7 @@ export function Sidebar({ user }: SidebarProps) {
   const role = user?.role || "ADMIN";
 
   const getNavLinks = () => {
-    if (role === "PATIENT" || role === "RECEIVER") {
+    if (role === "PATIENT") {
       return [
         { name: "My Health Portal", href: "/dashboard", icon: "🩺" },
         { name: "Doctor Directory", href: "/dashboard/doctors", icon: "👨‍⚕️" },
@@ -26,7 +26,7 @@ export function Sidebar({ user }: SidebarProps) {
       ];
     }
 
-    if (role === "DOCTOR" || role === "SENDER") {
+    if (role === "DOCTOR") {
       return [
         { name: "Doctor Dashboard", href: "/dashboard", icon: "🏥" },
         { name: "Doctors Directory", href: "/dashboard/doctors", icon: "🩺" },
@@ -62,14 +62,12 @@ export function Sidebar({ user }: SidebarProps) {
           dotClass: "bg-blue-600",
         };
       case "DOCTOR":
-      case "SENDER":
         return {
           label: "Doctor / Specialist",
           badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800",
           dotClass: "bg-emerald-600",
         };
       case "PATIENT":
-      case "RECEIVER":
         return {
           label: "Patient",
           badgeClass: "bg-slate-100 text-slate-800 border-slate-200/80 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",

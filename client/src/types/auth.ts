@@ -1,4 +1,4 @@
-export type UserRole = "SUPER_ADMIN" | "ADMIN" | "DOCTOR" | "PATIENT" | "SENDER" | "RECEIVER";
+export type UserRole = "SUPER_ADMIN" | "ADMIN" | "DOCTOR" | "PATIENT";
 
 export interface IUserProfile {
   _id: string;

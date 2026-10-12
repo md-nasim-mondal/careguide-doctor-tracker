@@ -1,5 +1,4 @@
 import httpStatus from 'http-status-codes';
-import mongoose from 'mongoose';
 import AppError from '../../errorHelpers/AppError';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { Doctor } from '../doctor/doctor.model';
