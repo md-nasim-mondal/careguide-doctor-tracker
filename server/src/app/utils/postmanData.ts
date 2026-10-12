@@ -1,8 +1,8 @@
 export const careguidePostmanCollection = {
   info: {
     _postman_id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
-    name: "CareGuide Doctor Tracker API",
-    description: "Complete API collection for CareGuide Doctor Tracker system. Includes Authentication, Users, Doctors, Patients, Dashboard Analytics, and Contact modules.",
+    name: "DocPulse Doctor Tracker API",
+    description: "Complete API collection for DocPulse Doctor Tracker system. Includes Authentication, Users, Doctors, Patients, Dashboard Analytics, and Contact modules.",
     schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   variable: [

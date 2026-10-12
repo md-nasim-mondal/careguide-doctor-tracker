@@ -61,7 +61,7 @@ const servePostmanCollection = (req: Request, res: Response) => {
   if (isDownload) {
     res.setHeader(
       "Content-Disposition",
-      'attachment; filename="careguide-doctor-tracker.postman_collection.json"'
+      'attachment; filename="docpulse-doctor-tracker.postman_collection.json"'
     );
   }
   res.setHeader("Content-Type", "application/json");
@@ -70,13 +70,14 @@ const servePostmanCollection = (req: Request, res: Response) => {
 
 app.get("/postman.json", servePostmanCollection);
 app.get("/download-postman", servePostmanCollection);
+app.get("/docpulse-doctor-tracker.postman_collection.json", servePostmanCollection);
 app.get("/api/v1/postman.json", servePostmanCollection);
 
 // Health Check Endpoint
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
-    message: "CareGuide Doctor Tracker API is healthy",
+    message: "DocPulse Doctor Tracker API is healthy",
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
     postman: "/postman.json",
@@ -85,7 +86,7 @@ app.get("/health", (_req: Request, res: Response) => {
 
 // Root Information / Landing Page Endpoint
 app.get("/", (req: Request, res: Response) => {
-  // If request explicitly prefers JSON (API clients, curl, etc.)
+  // If request explicitly prefers HTML (browsers)
   if (req.accepts("html") && !req.xhr && !req.headers["sec-ch-ua-platform"]?.includes("curl")) {
     const protocol = req.protocol || "http";
     const host = req.get("host") || "localhost:5000";
@@ -95,7 +96,7 @@ app.get("/", (req: Request, res: Response) => {
 
   return res.status(200).json({
     success: true,
-    message: "CareGuide Doctor Tracker API Engine Online",
+    message: "DocPulse Doctor Tracker API Engine Online",
     version: "1.0.0",
     docs: "/api/v1",
     health: "/health",

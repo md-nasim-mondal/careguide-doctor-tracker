@@ -25,7 +25,7 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CareGuide Doctor Tracker | Backend API</title>
+  <title>DocPulse - Doctor & Patient Tracker | Backend API</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -510,7 +510,7 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
       <a href="/" class="brand">
         <div class="brand-icon">🩺</div>
         <div class="brand-text">
-          <h1>CareGuide Tracker <span class="badge-api">REST API</span></h1>
+          <h1>DocPulse <span class="badge-api">REST API</span></h1>
         </div>
       </a>
       <div class="status-pill">
@@ -522,14 +522,14 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
 
   <main>
     <section class="hero">
-      <div class="hero-eyebrow">🚀 CareGuide Doctor & Patient Tracker Server</div>
-      <h2 class="hero-title">Backend API Engine Online</h2>
+      <div class="hero-eyebrow">🚀 DocPulse - Doctor & Patient Tracking System</div>
+      <h2 class="hero-title">DocPulse API Engine Online</h2>
       <p class="hero-desc">
-        High-performance RESTful API powering healthcare professional management, patient assignment tracking, role-based security, and clinic metrics.
+        High-performance RESTful API powering healthcare professional management, patient assignment tracking, role-based security, and clinical workload analytics.
       </p>
 
       <div class="hero-actions">
-        <a href="${postmanDownloadUrl}" download="careguide-doctor-tracker.postman_collection.json" class="btn btn-primary">
+        <a href="${postmanDownloadUrl}" download="docpulse-doctor-tracker.postman_collection.json" class="btn btn-primary">
           <span>📥</span> Download Postman Collection
         </a>
         <a href="${frontendUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
@@ -568,12 +568,12 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
       <div class="postman-left">
         <div class="postman-icon">🚀</div>
         <div class="postman-text">
-          <h3>Postman Collection Ready (v2.1)</h3>
-          <p>Complete set of pre-configured endpoints with auto JWT token extraction on login, mock queries, and error tests.</p>
+          <h3>DocPulse Postman Collection Ready (v2.1)</h3>
+          <p>Complete set of pre-configured endpoints with auto JWT token extraction on login, mock queries, and clinical workload tests.</p>
         </div>
       </div>
       <div class="postman-actions">
-        <a href="${postmanDownloadUrl}" download="careguide-doctor-tracker.postman_collection.json" class="btn-postman">
+        <a href="${postmanDownloadUrl}" download="docpulse-doctor-tracker.postman_collection.json" class="btn-postman">
           <span>📥</span> Download JSON
         </a>
         <a href="${postmanDownloadUrl}" target="_blank" class="btn btn-secondary">
@@ -695,7 +695,7 @@ export const getServerLandingPageHtml = (uptimeSeconds: number, reqProtocol: str
   </main>
 
   <footer>
-    <p>© 2026 CareGuide Doctor Tracker. Designed for high availability & seamless clinical administration.</p>
+    <p>© 2026 DocPulse Doctor Tracker. Built with Next.js, Express & TypeScript. High availability & clinical safeguards.</p>
   </footer>
 </body>
 </html>`;
