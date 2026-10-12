@@ -17,20 +17,27 @@ let server: Server;
 
 const startServer = async () => {
   try {
+    // 1. Immediately bind and open HTTP port so Render and cloud hosts detect health checks
+    const port = Number(envVars.PORT) || 5000;
+    server = app.listen(port, "0.0.0.0", () => {
+      console.log(`🚀 Server is listening on port ${port} (0.0.0.0)`);
+      console.log(`🔑 Authentication System: ${envVars.AUTH_SYSTEM.toUpperCase()}`);
+    });
+
+    // 2. Connect to MongoDB
     await mongoose.connect(envVars.DB_URL, {
       dbName: envVars.DB_NAME,
     });
-
     console.log("✅ Connected to Database successfully!");
-    await seedSuperAdmin();
-    await syncDoctorsAndPatientsToUsers();
 
-    server = app.listen(envVars.PORT, () => {
-      console.log(`🚀 Server is listening at http://localhost:${envVars.PORT}`);
-      console.log(`🔑 Authentication System: ${envVars.AUTH_SYSTEM.toUpperCase()}`);
-    });
+    // 3. Run background seed and synchronization asynchronously without blocking port readiness
+    seedSuperAdmin()
+      .then(() => syncDoctorsAndPatientsToUsers())
+      .catch((err) => {
+        console.error("⚠️ Background seed/sync warning:", err);
+      });
   } catch (error) {
-    console.error("❌ Failed to connect to Database:", error);
+    console.error("❌ Failed to start Server or connect to Database:", error);
     process.exit(1);
   }
 };
