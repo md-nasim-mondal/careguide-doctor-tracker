@@ -1,8 +1,8 @@
 {
   "$schema": "http://json.schemastore.org/package.json",
-  "name": "derival81-community-based-savings-app-server",
+  "name": "docpulse-doctor-tracker-server",
   "version": "1.0.0",
-  "description": "derival81-community-based-savings-app-server",
+  "description": "DocPulse Doctor Tracker - Standalone RESTful backend server for managing doctors, patient assignments, and medical analytics.",
   "main": "dist/server.js",
   "type": "commonjs",
   "scripts": {
@@ -15,14 +15,16 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
+    "docpulse",
+    "doctor-tracker",
+    "patient-management",
+    "healthcare",
     "nodejs",
     "express",
     "typescript",
-    "mongodb",
-    "starter",
-    "template"
+    "mongodb"
   ],
-  "author": "",
+  "author": "Md. Nasim Mondal",
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.35.0",

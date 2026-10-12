@@ -55,7 +55,7 @@ async function runRegressionTests() {
 
   // Connect to DB to fetch super admin & create a test receiver user
   await mongoose.connect(envVars.DB_URL, {
-    dbName: "derival81-savings-app-db",
+    dbName: envVars.DB_NAME || "docpulse-doctor-tracker-db",
   });
 
   const superAdmin = await User.findOne({ email: "admin@example.com" });
