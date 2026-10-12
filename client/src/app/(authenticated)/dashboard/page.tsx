@@ -54,7 +54,7 @@ export default async function DashboardPage() {
     const assignedDoctor = typeof patientRecord?.doctor === "object" ? patientRecord.doctor : null;
 
     return (
-      <div className="w-full max-w-6xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         {/* Server Connection Error Alert */}
         {patientFetchError && (
           <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
@@ -234,7 +234,7 @@ export default async function DashboardPage() {
     }
 
     return (
-      <div className="w-full max-w-6xl mx-auto space-y-6">
+      <div className="w-full space-y-6">
         {/* Server Connection Error Alert */}
         {doctorFetchError && (
           <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs sm:text-sm flex items-start gap-2">
@@ -381,7 +381,7 @@ export default async function DashboardPage() {
 
   // 3. Default: ADMIN / SUPER_ADMIN
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       {/* Top Banner */}
       <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>

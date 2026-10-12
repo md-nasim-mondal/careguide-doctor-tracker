@@ -97,8 +97,8 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
   };
 
   return (
-    <div className="p-2.5 sm:p-6 md:p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
-      <div className="mb-4 sm:mb-6">
+    <div className="w-full space-y-6 text-foreground">
+      <div>
         <h1 className="text-xl sm:text-3xl font-bold text-foreground">
           {canManage ? "Doctor Management" : "Doctors & Specialists Directory"}
         </h1>
@@ -129,23 +129,29 @@ export default async function DoctorsPage({ searchParams }: PageProps) {
       {showAddForm && <DoctorForm buildQuery={buildQuery} />}
 
       {/* Main Grid: Doctors Table + Details Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <DoctorsTable
-          doctors={initialDoctors}
-          currentPage={page}
-          totalPages={totalPages}
-          buildQuery={buildQuery}
-        />
+      <div className={`grid grid-cols-1 ${selectedDoctor ? "xl:grid-cols-3" : ""} gap-6`}>
+        <div className={selectedDoctor ? "xl:col-span-2 min-w-0" : "w-full min-w-0"}>
+          <DoctorsTable
+            doctors={initialDoctors}
+            currentPage={page}
+            totalPages={totalPages}
+            buildQuery={buildQuery}
+          />
+        </div>
 
-        <DoctorDetailsPanel
-          selectedDoctor={selectedDoctor}
-          assignedPatients={assignedPatients}
-          isEditing={isEditing}
-          isAddingPatient={isAddingPatient}
-          canManage={canManage}
-          isPatient={isPatient}
-          buildQuery={buildQuery}
-        />
+        {selectedDoctor && (
+          <div className="xl:col-span-1 min-w-0">
+            <DoctorDetailsPanel
+              selectedDoctor={selectedDoctor}
+              assignedPatients={assignedPatients}
+              isEditing={isEditing}
+              isAddingPatient={isAddingPatient}
+              canManage={canManage}
+              isPatient={isPatient}
+              buildQuery={buildQuery}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -49,8 +49,8 @@ export default function DoctorsTable({
       data={doctors}
       keyExtractor={(doc) => doc._id}
       emptyMessage="No doctors found."
-      className="lg:col-span-2"
-      minWidthClass="min-w-120"
+      className="w-full"
+      minWidthClass="min-w-[500px]"
       pagination={
         <Pagination
           currentPage={currentPage}

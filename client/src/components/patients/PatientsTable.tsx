@@ -107,7 +107,7 @@ export default function PatientsTable({
       data={patients}
       keyExtractor={(p) => p._id}
       emptyMessage="No patients found."
-      minWidthClass="min-w-137.5"
+      minWidthClass="min-w-[550px]"
       pagination={
         <Pagination
           currentPage={currentPage}

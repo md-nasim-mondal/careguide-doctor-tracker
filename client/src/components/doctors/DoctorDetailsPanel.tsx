@@ -28,25 +28,30 @@ export default function DoctorDetailsPanel({
   return (
     <div className="bg-card border border-border rounded-xl p-4 sm:p-6 sticky top-20 text-foreground shadow-sm space-y-6">
       {/* Header & Quick Actions */}
-      <div className="flex justify-between items-start gap-2 border-b border-border pb-4">
-        <div>
-          <h3 className="text-lg sm:text-xl font-bold truncate">{selectedDoctor.name}</h3>
-          <p className="text-xs text-muted-foreground">{selectedDoctor.specialization}</p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-border pb-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className="text-xl shrink-0">👨‍⚕️</span>
+            <h3 className="text-base sm:text-lg font-bold text-foreground break-words leading-tight">
+              {selectedDoctor.name}
+            </h3>
+          </div>
+          <p className="text-xs text-muted-foreground mt-0.5 ml-7">{selectedDoctor.specialization}</p>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex flex-wrap items-center gap-1.5 shrink-0 self-start sm:self-auto">
           {canManage && (
             <>
               {isEditing ? (
                 <Link
                   href={`/dashboard/doctors${buildQuery({ doctorId: selectedDoctor._id, action: undefined })}`}
-                  className="text-primary hover:underline text-xs sm:text-sm font-medium"
+                  className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-muted text-foreground border border-border hover:bg-muted/80 transition shadow-2xs whitespace-nowrap"
                 >
                   Cancel
                 </Link>
               ) : (
                 <Link
                   href={`/dashboard/doctors${buildQuery({ doctorId: selectedDoctor._id, action: "edit" })}`}
-                  className="text-primary hover:underline text-xs sm:text-sm font-medium"
+                  className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition shadow-2xs whitespace-nowrap"
                 >
                   Edit
                 </Link>
@@ -55,7 +60,7 @@ export default function DoctorDetailsPanel({
               <form action={deleteDoctorAction.bind(null, selectedDoctor._id)} className="inline">
                 <button
                   type="submit"
-                  className="text-destructive hover:underline text-xs sm:text-sm font-medium cursor-pointer"
+                  className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition cursor-pointer shadow-2xs whitespace-nowrap"
                 >
                   Delete
                 </button>
@@ -65,8 +70,8 @@ export default function DoctorDetailsPanel({
 
           <Link
             href={`/dashboard/doctors${buildQuery({ doctorId: undefined, action: undefined })}`}
-            className="text-muted-foreground hover:text-foreground text-sm font-bold ml-1"
-            title="Close"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition text-base font-bold ml-0.5 border border-transparent hover:border-border"
+            title="Close Panel"
           >
             &times;
           </Link>
@@ -126,18 +131,18 @@ export default function DoctorDetailsPanel({
         </form>
       ) : (
         <div className="space-y-2 text-sm bg-muted/30 p-3.5 rounded-lg border border-border/50">
-          <p>
+          <div>
             <span className="text-muted-foreground text-xs uppercase font-bold block">Hospital / Chamber</span>
-            {selectedDoctor.hospital}
-          </p>
-          <p>
+            <span className="font-medium text-foreground break-words">{selectedDoctor.hospital}</span>
+          </div>
+          <div>
             <span className="text-muted-foreground text-xs uppercase font-bold block">Phone</span>
-            {selectedDoctor.phone}
-          </p>
-          <p>
+            <span className="font-medium text-foreground break-all">{selectedDoctor.phone}</span>
+          </div>
+          <div>
             <span className="text-muted-foreground text-xs uppercase font-bold block">Email</span>
-            {selectedDoctor.email}
-          </p>
+            <span className="font-medium text-foreground break-all">{selectedDoctor.email}</span>
+          </div>
         </div>
       )}
 

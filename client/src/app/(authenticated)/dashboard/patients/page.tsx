@@ -118,8 +118,8 @@ export default async function PatientsPage({ searchParams }: PageProps) {
   const isAllowedToEdit = canManage || (isDoctor && currentDoctorId && editingDoctorId === currentDoctorId);
 
   return (
-    <div className="p-2.5 sm:p-6 md:p-8 max-w-6xl mx-auto text-foreground bg-background min-h-screen">
-      <div className="mb-4 sm:mb-6">
+    <div className="w-full space-y-6 text-foreground">
+      <div>
         <h1 className="text-xl sm:text-3xl font-bold text-foreground">
           {isDoctor ? "Patient Care & Clinical Records" : "Patient Management"}
         </h1>
