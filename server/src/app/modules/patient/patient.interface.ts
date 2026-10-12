@@ -5,4 +5,6 @@ export interface IPatient {
   age: number;
   condition: string;
   doctor: Types.ObjectId;
+  email?: string;
+  phone?: string;
 }

@@ -18,6 +18,8 @@ const createPatientValidationSchema = z.object({
       .string({ message: "Doctor ID must be a string" })
       .regex(/^[0-9a-fA-F]{24}$/, "Doctor ID must be a valid 24-character hexadecimal ObjectId")
       .optional(),
+    email: z.string().email("Invalid email address").optional(),
+    phone: z.string().optional(),
   }),
 });
 
@@ -30,6 +32,8 @@ const updatePatientValidationSchema = z.object({
       .string({ message: "Doctor ID must be a string" })
       .regex(/^[0-9a-fA-F]{24}$/, "Doctor ID must be a valid 24-character hexadecimal ObjectId")
       .optional(),
+    email: z.string().email("Invalid email address").optional(),
+    phone: z.string().optional(),
   }),
 });
 

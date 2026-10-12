@@ -14,13 +14,13 @@ export async function createPatientAction(formData: FormData) {
     redirect(`/dashboard/patients?action=add&error=${encodeURIComponent(validation.error)}`);
   }
 
-  const { name, age, condition, doctor } = validation.data;
+  const { name, age, condition, doctor, email, phone } = validation.data;
 
   let redirectUrl = "/dashboard/patients?success=" + encodeURIComponent("Patient created successfully!");
   try {
     await fetchServerApi("/patients", {
       method: "POST",
-      body: JSON.stringify({ name, age, condition, doctor }),
+      body: JSON.stringify({ name, age, condition, doctor, email: email || undefined, phone: phone || undefined }),
     });
     revalidatePath("/dashboard/patients");
   } catch (err: unknown) {
@@ -36,13 +36,13 @@ export async function updatePatientAction(id: string, formData: FormData) {
     redirect(`/dashboard/patients?action=edit&patientId=${id}&error=${encodeURIComponent(validation.error)}`);
   }
 
-  const { name, age, condition, doctor } = validation.data;
+  const { name, age, condition, doctor, email, phone } = validation.data;
 
   let redirectUrl = "/dashboard/patients?success=" + encodeURIComponent("Patient updated successfully!");
   try {
     await fetchServerApi(`/patients/${id}`, {
       method: "PUT",
-      body: JSON.stringify({ name, age, condition, doctor }),
+      body: JSON.stringify({ name, age, condition, doctor, email: email || undefined, phone: phone || undefined }),
     });
     revalidatePath("/dashboard/patients");
   } catch (err: unknown) {

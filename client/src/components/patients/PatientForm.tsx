@@ -50,6 +50,20 @@ export default function PatientForm({
         placeholder="Condition"
         required
       />
+      <input
+        name="email"
+        type="email"
+        defaultValue={patient?.email || ""}
+        className="p-2.5 border border-input rounded bg-background text-xs sm:text-sm"
+        placeholder="Email (optional, auto-generated if blank)"
+      />
+      <input
+        name="phone"
+        type="tel"
+        defaultValue={patient?.phone || ""}
+        className="p-2.5 border border-input rounded bg-background text-xs sm:text-sm"
+        placeholder="Phone Number (optional)"
+      />
       <select
         name="doctor"
         defaultValue={selectedDoctorId}

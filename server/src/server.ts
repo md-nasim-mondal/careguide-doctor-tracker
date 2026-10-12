@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
+import { syncDoctorsAndPatientsToUsers } from "./app/utils/syncUsers";
 
 // Manually set Google DNS servers
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
@@ -18,6 +19,7 @@ const startServer = async () => {
 
     console.log("✅ Connected to Database successfully!");
     await seedSuperAdmin();
+    await syncDoctorsAndPatientsToUsers();
 
     server = app.listen(envVars.PORT, () => {
       console.log(`🚀 Server is listening at http://localhost:${envVars.PORT}`);

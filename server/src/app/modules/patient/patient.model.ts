@@ -7,6 +7,8 @@ const patientSchema = new Schema<IPatient>(
     age: { type: Number, required: true },
     condition: { type: String, required: true },
     doctor: { type: Schema.Types.ObjectId, ref: 'Doctor', required: true, index: true },
+    email: { type: String, sparse: true, index: true },
+    phone: { type: String },
   },
   {
     timestamps: true,

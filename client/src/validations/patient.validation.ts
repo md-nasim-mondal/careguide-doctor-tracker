@@ -16,6 +16,12 @@ export const createPatientValidationSchema = z.object({
   doctor: z
     .string()
     .min(1, "Assigned doctor is required"),
+  email: z
+    .string()
+    .email("Invalid email address")
+    .optional()
+    .or(z.literal("")),
+  phone: z.string().optional(),
 });
 
 export const updatePatientValidationSchema = z.object({
@@ -23,4 +29,10 @@ export const updatePatientValidationSchema = z.object({
   age: z.coerce.number().int().positive().max(130).optional(),
   condition: z.string().min(2, "Condition must be at least 2 characters long").optional(),
   doctor: z.string().optional(),
+  email: z
+    .string()
+    .email("Invalid email address")
+    .optional()
+    .or(z.literal("")),
+  phone: z.string().optional(),
 });

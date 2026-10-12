@@ -6,6 +6,8 @@ export interface PatientItem {
   age: number;
   condition: string;
   doctor: DoctorOption | string;
+  email?: string;
+  phone?: string;
   createdAt: string;
 }
 
@@ -15,6 +17,8 @@ export interface PatientFormModel {
   age?: number;
   condition?: string;
   doctor?: DoctorOption | string;
+  email?: string;
+  phone?: string;
 }
 
 export interface PatientFilterBarProps {

@@ -148,7 +148,10 @@ const updateUser = async (
   return newUpdatedUser;
 };
 
+import { syncDoctorsAndPatientsToUsers } from "../../utils/syncUsers";
+
 const getAllUsers = async (query: Record<string, string>) => {
+  await syncDoctorsAndPatientsToUsers();
   const queryBuilder = new QueryBuilder(User.find(), query);
   const usersData = queryBuilder
     .filter()
