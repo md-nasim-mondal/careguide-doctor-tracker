@@ -55,7 +55,7 @@ export default function UserNavDropdown({ user }: UserNavDropdownProps) {
         <div className="w-8 h-8 rounded-full bg-linear-to-tr from-sky-500 to-primary text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-105 transition-transform">
           {initial}
         </div>
-        <div className="hidden sm:flex flex-col text-left leading-tight max-w-[110px]">
+        <div className="hidden sm:flex flex-col text-left leading-tight max-w-27.5">
           <span className="text-xs font-bold text-foreground truncate">{user.name}</span>
           <span className="text-[10px] text-muted-foreground truncate">{roleInfo.label}</span>
         </div>

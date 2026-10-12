@@ -178,7 +178,7 @@ const updateDoctor = async (id: string, payload: Partial<IDoctor>) => {
 
   for (const field of doctorAllowedUpdateFields) {
     if (payload[field] !== undefined) {
-      updateData[field] = payload[field];
+      (updateData as Record<string, unknown>)[field] = payload[field];
     }
   }
 

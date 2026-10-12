@@ -1,9 +1,15 @@
 import bcryptjs from "bcryptjs";
+import { Types } from "mongoose";
 import { envVars } from "../config/env";
 import { Doctor } from "../modules/doctor/doctor.model";
 import { Patient } from "../modules/patient/patient.model";
 import { IAuthProvider, IsActive, Role } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
+import { IDoctor } from "../modules/doctor/doctor.interface";
+
+export interface IDoctorWithId extends IDoctor {
+  _id: Types.ObjectId;
+}
 
 const SAMPLE_DOCTORS = [
   {
@@ -180,7 +186,7 @@ export const seedMockData = async (): Promise<void> => {
     const defaultPatientPassword = await bcryptjs.hash("Patient@1234", saltRounds);
 
     const doctorCount = await Doctor.countDocuments();
-    let createdDoctors: any[] = [];
+    let createdDoctors: IDoctorWithId[] = [];
 
     // 1. Seed at least 20 Doctors if DB has fewer than 10
     if (doctorCount < 10) {
@@ -189,7 +195,7 @@ export const seedMockData = async (): Promise<void> => {
         const existing = await Doctor.findOne({ email: docData.email });
         if (!existing) {
           const newDoc = await Doctor.create(docData);
-          createdDoctors.push(newDoc);
+          createdDoctors.push(newDoc as unknown as IDoctorWithId);
 
           // Create User login for doctor
           const userExists = await User.findOne({ email: docData.email });
@@ -210,12 +216,12 @@ export const seedMockData = async (): Promise<void> => {
             });
           }
         } else {
-          createdDoctors.push(existing);
+          createdDoctors.push(existing as unknown as IDoctorWithId);
         }
       }
       console.log(`✅ Seeded ${createdDoctors.length} Doctors.`);
     } else {
-      createdDoctors = await Doctor.find({});
+      createdDoctors = (await Doctor.find({})) as unknown as IDoctorWithId[];
     }
 
     // 2. Seed at least 20 Patients if DB has fewer than 10
