@@ -21,8 +21,8 @@ export const registerValidationSchema = z.object({
     .string()
     .optional()
     .refine(
-      (val) => !val || /^(?:\+8801\d{9}|01\d{9})$/.test(val),
-      "Phone number must be valid for Bangladesh (e.g., 01XXXXXXXXX or +8801XXXXXXXXX)"
+      (val) => !val || /^\+?[1-9]\d{6,14}$/.test(val.replace(/[\s-]/g, "")),
+      "Phone number must be valid with country code (e.g., +8801700000000 or +12025550123)"
     ),
   role: z.enum(["RECEIVER", "SENDER"]).optional(),
   specialization: z.string().optional(),

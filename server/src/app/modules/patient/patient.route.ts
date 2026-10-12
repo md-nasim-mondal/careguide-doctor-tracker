@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  checkAuth(Role.SUPER_ADMIN, Role.ADMIN),
+  checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.SENDER),
   validateRequest(PatientValidation.createPatientValidationSchema),
   PatientControllers.createPatient
 );
@@ -18,15 +18,15 @@ router.get('/conditions', checkAuth(...Object.values(Role)), PatientControllers.
 
 router.get('/', checkAuth(...Object.values(Role)), PatientControllers.getPatients);
 
-router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.getPatient);
+router.get('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.SENDER), PatientControllers.getPatient);
 
 router.put(
   '/:id',
-  checkAuth(Role.SUPER_ADMIN, Role.ADMIN),
+  checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.SENDER),
   validateRequest(PatientValidation.updatePatientValidationSchema),
   PatientControllers.updatePatient
 );
 
-router.delete('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN), PatientControllers.deletePatient);
+router.delete('/:id', checkAuth(Role.SUPER_ADMIN, Role.ADMIN, Role.SENDER), PatientControllers.deletePatient);
 
 export const PatientRoutes = router;

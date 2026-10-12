@@ -63,20 +63,31 @@ const createUser = async (payload: Partial<IUser> & { specialization?: string; h
 
     // If Doctor registered, also link/create Doctor profile if specialization & hospital provided
     if (isDoctorRegistration) {
-      const existingDoc = await Doctor.findOne({ email }).session(session || null);
-      if (!existingDoc) {
-        await Doctor.create(
-          [
-            {
-              name: newUser.name,
-              email: newUser.email,
-              phone: newUser.phone || "01700000000",
-              specialization: specialization || "General Medicine",
-              hospital: hospital || "DocPulse Medical Center",
-            },
-          ],
-          session ? { session } : {}
-        );
+      try {
+        const existingDoc = await Doctor.findOne({ email }).session(session || null);
+        if (!existingDoc) {
+          await Doctor.create(
+            [
+              {
+                name: newUser.name,
+                email: newUser.email,
+                phone: newUser.phone || "+8801700000000",
+                specialization: specialization || "General Medicine",
+                hospital: hospital || "DocPulse Medical Center",
+              },
+            ],
+            session ? { session } : {}
+          );
+        } else {
+          // If Doctor already exists with this email, update details
+          existingDoc.name = newUser.name;
+          if (newUser.phone) existingDoc.phone = newUser.phone;
+          if (specialization) existingDoc.specialization = specialization;
+          if (hospital) existingDoc.hospital = hospital;
+          await existingDoc.save({ session });
+        }
+      } catch (docErr) {
+        console.warn("Notice: Doctor profile linking skipped/already exists:", docErr);
       }
     }
 
@@ -158,6 +169,19 @@ const updateUser = async (
     new: true,
     runValidators: true,
   });
+
+  if (newUpdatedUser && payload.role === Role.SENDER) {
+    const docExists = await Doctor.findOne({ email: newUpdatedUser.email });
+    if (!docExists) {
+      await Doctor.create({
+        name: newUpdatedUser.name,
+        email: newUpdatedUser.email,
+        phone: newUpdatedUser.phone || "+8801700000000",
+        specialization: "General Medicine",
+        hospital: "DocPulse Medical Center",
+      });
+    }
+  }
 
   return newUpdatedUser;
 };
@@ -241,6 +265,11 @@ const deleteUser = async (userId: string, decodedToken: JwtPayload) => {
     throw new AppError(httpStatus.FORBIDDEN, "Only a Super Admin can delete another Super Admin");
   }
 
+  // Also remove linked doctor profile if user was a doctor
+  if (user.role === Role.SENDER) {
+    await Doctor.findOneAndDelete({ email: user.email });
+  }
+
   await User.findByIdAndDelete(userId);
   return null;
 };
@@ -261,6 +290,20 @@ const approveDoctorUser = async (userId: string, decodedToken: JwtPayload) => {
   user.isActive = IsActive.ACTIVE;
   user.isVerified = true;
   await user.save();
+
+  // If Doctor profile record doesn't exist yet, ensure it is created
+  if (user.role === Role.SENDER) {
+    const doctorExists = await Doctor.findOne({ email: user.email });
+    if (!doctorExists) {
+      await Doctor.create({
+        name: user.name,
+        email: user.email,
+        phone: user.phone || "+8801700000000",
+        specialization: "General Medicine",
+        hospital: "DocPulse Medical Center",
+      });
+    }
+  }
 
   return user;
 };

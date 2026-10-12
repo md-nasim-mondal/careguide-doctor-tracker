@@ -1,5 +1,4 @@
 import httpStatus from 'http-status-codes';
-import mongoose from 'mongoose';
 import AppError from '../../errorHelpers/AppError';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { Doctor } from '../doctor/doctor.model';
@@ -38,6 +37,14 @@ const getAllPatients = async (query: Record<string, string>) => {
       },
     });
     delete queryObj.date;
+  }
+
+  // Handle condition filter if present (case-insensitive regex)
+  if (queryObj.condition) {
+    baseQuery = baseQuery.find({
+      condition: { $regex: queryObj.condition, $options: 'i' },
+    });
+    delete queryObj.condition;
   }
 
   const patientQuery = new QueryBuilder(baseQuery, queryObj)
