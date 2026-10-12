@@ -39,6 +39,7 @@ export const createUserZodSchema = z.object({
     specialization: z.string().optional(),
     hospital: z.string().optional(),
 })
+
 export const updateUserZodSchema = z.object({
     name: z
         .string({ message: "Name must be string" })
