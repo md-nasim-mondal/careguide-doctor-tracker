@@ -5,7 +5,7 @@ import MobileMenu from "./MobileMenu";
 
 const NAV_LINKS: NavLinkItem[] = [
   { name: "Home", href: "/" },
-  { name: "Features", href: "/#features" },
+  { name: "Features", href: "/features" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
