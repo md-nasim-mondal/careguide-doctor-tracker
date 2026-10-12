@@ -44,4 +44,8 @@ const userSchema = new Schema<IUser>(
   }
 );
 
+userSchema.index({ role: 1, isActive: 1, isDeleted: 1 });
+userSchema.index({ createdAt: -1 });
+userSchema.index({ name: 1 });
+
 export const User = model<IUser>("User", userSchema);

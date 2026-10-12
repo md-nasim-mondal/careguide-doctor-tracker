@@ -112,7 +112,7 @@ const getAllPatients = async (query: Record<string, string>, authUser?: IAuthUse
 
   // Role-based boundary: DOCTOR can only see their own assigned patients
   if (authUser?.role === Role.DOCTOR) {
-    const doctor = await Doctor.findOne({ email: authUser.email });
+    const doctor = await Doctor.findOne({ email: authUser.email }).select('_id').lean();
     if (!doctor) {
       baseQuery = baseQuery.find({ _id: null });
     } else {
@@ -165,7 +165,7 @@ const getAllPatients = async (query: Record<string, string>, authUser?: IAuthUse
 };
 
 const getPatientById = async (id: string, authUser?: IAuthUser) => {
-  const patient = await Patient.findById(id).populate('doctor');
+  const patient = await Patient.findById(id).populate('doctor').lean();
   if (!patient) {
     throw new AppError(httpStatus.NOT_FOUND, 'Patient not found');
   }
@@ -182,7 +182,7 @@ const getPatientById = async (id: string, authUser?: IAuthUser) => {
 
   // Role-based boundary: DOCTOR can only view their own assigned patients
   if (authUser?.role === Role.DOCTOR) {
-    const doctor = await Doctor.findOne({ email: authUser.email });
+    const doctor = await Doctor.findOne({ email: authUser.email }).select('_id').lean();
     const doctorIdStr = doctor ? doctor._id.toString() : '';
     const docAny = patient.doctor as unknown as { _id?: { toString(): string } } | { toString(): string } | undefined;
     const assignedDoctorId = docAny

@@ -40,5 +40,5 @@ router.delete(
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   UserControllers.deleteUser
 );
-// /api/v1/user/:id
+
 export const UserRoutes = router;

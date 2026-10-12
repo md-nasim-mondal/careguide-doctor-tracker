@@ -14,6 +14,7 @@ import { User } from '../user/user.model';
 import { IsActive, Role } from '../user/user.interface';
 import { sendEmail } from '../../utils/sendEmail';
 import { envVars } from '../../config/env';
+import { IAuthUser } from '../../interfaces';
 
 const createDoctor = async (payload: IDoctor) => {
   return await withTransaction(async (session) => {
@@ -115,14 +116,12 @@ const getAllDoctors = async (query: Record<string, string>) => {
 };
 
 const getDoctorById = async (id: string) => {
-  const doctor = await Doctor.findById(id);
+  const doctor = await Doctor.findById(id).lean();
   if (!doctor) {
     throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
   }
   return doctor;
 };
-
-import { IAuthUser } from '../../interfaces';
 
 const getDoctorPatients = async (doctorId: string, authUser?: IAuthUser) => {
   if (authUser?.role === Role.PATIENT) {
@@ -130,13 +129,13 @@ const getDoctorPatients = async (doctorId: string, authUser?: IAuthUser) => {
   }
 
   if (authUser?.role === Role.DOCTOR) {
-    const doctor = await Doctor.findOne({ email: authUser.email });
+    const doctor = await Doctor.findOne({ email: authUser.email }).select('_id').lean();
     if (!doctor || doctor._id.toString() !== doctorId) {
       throw new AppError(httpStatus.FORBIDDEN, 'Doctors can only access their own assigned patient roster');
     }
   }
 
-  const patients = await Patient.find({ doctor: doctorId }).populate('doctor');
+  const patients = await Patient.find({ doctor: doctorId }).populate('doctor').lean();
   return patients;
 };
 

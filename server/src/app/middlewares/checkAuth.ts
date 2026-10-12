@@ -49,8 +49,9 @@ export const checkAuth =
         throw new AppError(httpStatus.UNAUTHORIZED, "Invalid authentication");
       }
 
-      // Check if user exists and is active
-      const isUserExist = await User.findById(user.userId);
+      const isUserExist = await User.findById(user.userId)
+        .select("_id email role name isActive isDeleted")
+        .lean();
 
       if (!isUserExist) {
         throw new AppError(httpStatus.UNAUTHORIZED, "User does not exist");
@@ -67,7 +68,6 @@ export const checkAuth =
         );
       }
 
-      // Role authorization
       if (authRoles.length > 0 && !authRoles.includes(isUserExist.role as Role)) {
         throw new AppError(httpStatus.FORBIDDEN, "You do not have permission to access this resource");
       }

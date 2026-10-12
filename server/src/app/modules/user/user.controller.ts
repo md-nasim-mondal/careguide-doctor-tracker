@@ -122,5 +122,3 @@ export const UserControllers = {
   deleteUser,
   approveDoctor,
 };
-
-// route matching -> controller -> service -> model -> DB

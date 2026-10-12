@@ -15,9 +15,11 @@ const patientSchema = new Schema<IPatient>(
   },
 );
 
-patientSchema.index({ createdAt: -1 });
+patientSchema.index({ doctor: 1, createdAt: -1 });
+patientSchema.index({ condition: 1, createdAt: -1 });
 patientSchema.index({ name: 1 });
-patientSchema.index({ condition: 1 });
+patientSchema.index({ email: 1 });
+patientSchema.index({ createdAt: -1 });
 
 export const Patient = model<IPatient>('Patient', patientSchema);
 

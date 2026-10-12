@@ -123,15 +123,6 @@ const updateUser = async (
     throw new AppError(401, "You are not authorized!");
   }
 
-  /**
-   * email - can not update
-   * name, phone, password address
-   * password - re hashing
-   *  only admin superadmin - role, isDeleted...
-   *
-   * promoting to superadmin - superadmin
-   */
-
   if (payload.role && isNonAdmin) {
     throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
   }
@@ -183,13 +174,14 @@ const getAllUsers = async (query: Record<string, string>) => {
 };
 
 const getSingleUser = async (id: string) => {
-  const user = await User.findById(id).select("-password");
+  const user = await User.findById(id).select("-password").lean();
   return {
     data: user,
   };
 };
+
 const getMe = async (userId: string) => {
-  const user = await User.findById(userId).select("-password");
+  const user = await User.findById(userId).select("-password").lean();
   return {
     data: user,
   };
