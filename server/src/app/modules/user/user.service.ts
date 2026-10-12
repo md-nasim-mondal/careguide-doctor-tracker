@@ -139,10 +139,7 @@ const updateUser = async (
   return newUpdatedUser;
 };
 
-import { syncDoctorsAndPatientsToUsers } from "../../utils/syncUsers";
-
 const getAllUsers = async (query: Record<string, string>) => {
-  await syncDoctorsAndPatientsToUsers();
   const queryObj = { ...query };
 
   let baseQuery = User.find();
