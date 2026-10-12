@@ -5,7 +5,7 @@ import { sendResponse } from '../../utils/sendResponse';
 import { PatientServices } from './patient.service';
 
 export const createPatient = catchAsync(async (req: Request, res: Response) => {
-  const patient = await PatientServices.createPatient(req.body);
+  const patient = await PatientServices.createPatient(req.body, req.user);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -15,7 +15,7 @@ export const createPatient = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getPatients = catchAsync(async (req: Request, res: Response) => {
-  const result = await PatientServices.getAllPatients(req.query as Record<string, string>);
+  const result = await PatientServices.getAllPatients(req.query as Record<string, string>, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -25,7 +25,7 @@ export const getPatients = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getPatient = catchAsync(async (req: Request, res: Response) => {
-  const patient = await PatientServices.getPatientById(req.params.id as string);
+  const patient = await PatientServices.getPatientById(req.params.id as string, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -35,7 +35,7 @@ export const getPatient = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const updatePatient = catchAsync(async (req: Request, res: Response) => {
-  const patient = await PatientServices.updatePatient(req.params.id as string, req.body);
+  const patient = await PatientServices.updatePatient(req.params.id as string, req.body, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -45,7 +45,7 @@ export const updatePatient = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const deletePatient = catchAsync(async (req: Request, res: Response) => {
-  await PatientServices.deletePatient(req.params.id as string);
+  await PatientServices.deletePatient(req.params.id as string, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

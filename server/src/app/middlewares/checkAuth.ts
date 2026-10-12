@@ -72,7 +72,14 @@ export const checkAuth =
         throw new AppError(httpStatus.FORBIDDEN, "You do not have permission to access this resource");
       }
 
-      req.user = user;
+      req.user = {
+        userId: isUserExist._id.toString(),
+        email: isUserExist.email,
+        role: isUserExist.role as Role,
+        name: isUserExist.name,
+        isActive: isUserExist.isActive,
+        isDeleted: isUserExist.isDeleted,
+      };
       next();
     } catch (error) {
       next(error);

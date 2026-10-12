@@ -14,7 +14,13 @@ import { User } from '../user/user.model';
 import { IsActive, Role } from '../user/user.interface';
 import { envVars } from '../../config/env';
 
-const createPatient = async (payload: IPatient) => {
+import { IAuthUser } from '../../interfaces';
+
+const createPatient = async (payload: IPatient, authUser?: IAuthUser) => {
+  if (authUser?.role === Role.PATIENT) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Patients cannot create directory records');
+  }
+
   return await withTransaction(async (session) => {
     let doctorName = "Assigned Specialist";
     if (payload.doctor) {
@@ -23,6 +29,13 @@ const createPatient = async (payload: IPatient) => {
         throw new AppError(httpStatus.NOT_FOUND, 'Doctor not found');
       }
       doctorName = doctorExists.name;
+    } else if (authUser?.role === Role.DOCTOR) {
+      // Auto-assign to the creating doctor if not explicitly provided
+      const doctor = await Doctor.findOne({ email: authUser.email }).session(session || null);
+      if (doctor) {
+        payload.doctor = doctor._id;
+        doctorName = doctor.name;
+      }
     }
 
     // Auto-generate or use provided patient email
@@ -76,11 +89,23 @@ const createPatient = async (payload: IPatient) => {
   });
 };
 
-const getAllPatients = async (query: Record<string, string>) => {
+const getAllPatients = async (query: Record<string, string>, authUser?: IAuthUser) => {
   const queryObj = { ...query };
 
   // Handle specific date filter if present
   let baseQuery = Patient.find();
+
+  // Role-based boundary: PATIENT can only see their own personal record
+  if (authUser?.role === Role.PATIENT) {
+    const escapedName = (authUser.name || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    baseQuery = baseQuery.find({
+      $or: [
+        { email: authUser.email },
+        { name: new RegExp(`^${escapedName}$`, 'i') },
+      ],
+    });
+  }
+
   if (queryObj.date) {
     const targetDate = new Date(queryObj.date);
     const nextDay = new Date(targetDate);
@@ -125,15 +150,30 @@ const getAllPatients = async (query: Record<string, string>) => {
   };
 };
 
-const getPatientById = async (id: string) => {
+const getPatientById = async (id: string, authUser?: IAuthUser) => {
   const patient = await Patient.findById(id).populate('doctor');
   if (!patient) {
     throw new AppError(httpStatus.NOT_FOUND, 'Patient not found');
   }
+
+  // Role-based boundary: PATIENT can only view their own record
+  if (authUser?.role === Role.PATIENT) {
+    const isOwner =
+      (patient.email && patient.email.toLowerCase() === authUser.email.toLowerCase()) ||
+      patient.name.toLowerCase() === authUser.name.toLowerCase();
+    if (!isOwner) {
+      throw new AppError(httpStatus.FORBIDDEN, 'Access denied. Patients can only view their own medical record');
+    }
+  }
+
   return patient;
 };
 
-const updatePatient = async (id: string, payload: Partial<IPatient>) => {
+const updatePatient = async (id: string, payload: Partial<IPatient>, authUser?: IAuthUser) => {
+  if (authUser?.role === Role.PATIENT) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Patients cannot modify medical records');
+  }
+
   return await withTransaction(async (session) => {
     const existingPatient = await Patient.findById(id).session(session || null);
     if (!existingPatient) {
@@ -157,7 +197,11 @@ const updatePatient = async (id: string, payload: Partial<IPatient>) => {
   });
 };
 
-const deletePatient = async (id: string) => {
+const deletePatient = async (id: string, authUser?: IAuthUser) => {
+  if (authUser && authUser.role !== Role.SUPER_ADMIN && authUser.role !== Role.ADMIN) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Only administrators can delete patient records');
+  }
+
   return await withTransaction(async (session) => {
     const patient = await Patient.findByIdAndDelete(
       id,

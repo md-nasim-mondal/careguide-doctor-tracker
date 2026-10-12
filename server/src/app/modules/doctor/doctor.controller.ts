@@ -35,7 +35,7 @@ export const getDoctor = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getDoctorPatients = catchAsync(async (req: Request, res: Response) => {
-  const patients = await DoctorServices.getDoctorPatients(req.params.id as string);
+  const patients = await DoctorServices.getDoctorPatients(req.params.id as string, req.user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
